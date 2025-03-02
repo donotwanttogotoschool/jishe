@@ -1,0 +1,181 @@
+@use '../abstracts/' as *;
+
+/* Swiper
+-------------------------------------------------------------- */
+/* animation slider */ 
+
+.swiper-container {
+    &:hover {
+        cursor: ew-resize
+    }
+}
+
+.timing-function {
+    -webkit-transition-timing-function: linear;
+    transition-timing-function: linear;
+}
+.swiper-pagination {
+    @include flex(center,center);
+    width: 100%;
+    z-index: 9;
+    opacity: 1;
+    position: relative;
+    &.style2 {
+        span {
+            background-color: $bg_2;
+            &::after {
+                border: 1px solid $bg_2;
+            }
+            &.swiper-pagination-bullet-active {
+                background-color: $bg_2;
+                border: 1px solid  $bg_2;
+            }
+        }
+    }
+    &.style3 {
+        span {
+            background-color: transparent;
+            border: 1px solid  $bg_2;
+            &::after {
+                border: 1px solid $bg_2;
+            }
+            &.swiper-pagination-bullet-active {
+                background-color: $bg_2;
+                border: 1px solid  $bg_2;
+            }
+        }
+    }
+    span {
+        opacity: 1;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        border: 1px solid #FFFFFF;
+        margin: 0 8px;
+        position: relative;
+        &::after {
+            width: 16px;
+            height: 16px;
+            left: -5px;
+            top: -5px;
+            position: absolute;
+            content: "";
+            border: 1px solid $color-hover;
+            border-radius: 50%;
+            opacity: 0;
+        }
+        &.swiper-pagination-bullet-active {
+            background-color: $color-hover;
+            border-color: $color-hover;
+            &::after {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.swiper.swiper-vertical {
+    height: 624px;
+    .swiper-wrapper {
+        .swiper-slide {
+            height: auto !important;
+        }
+    }
+    
+} 
+
+.swiper_vertical {
+    .item {
+        img {
+            width: 200px;
+            height: 300px;
+            border-radius: 1000px;
+        }
+    }
+    .swiper {
+        margin-left: 24px;
+    }
+}
+
+.swiper-vertical>.swiper-wrapper {
+    flex-direction: column;
+}
+
+.swiper {
+    .img-box {
+        // background-image: linear-gradient(40.04deg, #A7D22A 0%, #29F8EB 100%);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        padding: 2px;
+        &::before {
+            @include transition3;
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            left: 0;
+            top: 0;
+            border: 2px solid $color-hover;
+            z-index: 2;
+            opacity: 0;
+        }
+        &::after {
+            @include transition3;
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            left: 0;
+            top: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 3;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 61.65%);
+        }
+        &:hover {
+            &::before {
+                opacity: 1;
+            }
+        }
+        .image {
+            position: relative;
+            padding: 22px;
+            z-index: 4;
+            border-radius: 12px;
+            img {
+                width: 100%;
+                height: auto;
+                border-radius: 12px;
+            }
+            // &:hover {
+            //     border-color: $color-hover;
+            // }
+        }
+
+    }
+}
+
+
+.mySwiper4 {
+    overflow: visible;
+}
+
+.mySwiper5 {
+    overflow: visible;
+}
+
+.sl-brand-11 {
+    .swiper-slide {
+        width: auto !important;
+    }
+}
+
+.sl-brand-12 .swiper-slide .image span:nth-child(1) img {
+    min-width: 40px;
+    max-width: 40px;
+}
+.sl-brand-12 .swiper-slide .image span:nth-child(2) img {
+    max-height: 90px;
+}

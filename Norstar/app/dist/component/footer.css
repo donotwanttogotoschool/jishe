@@ -1,0 +1,246 @@
+/* Footer
+-------------------------------------------------------------- */
+.home27 #footer .button-style:hover .btn-main,
+.home2 #footer .button-style:hover .btn-main {
+  background-color: #fff !important;
+  color: #171717 !important;
+}
+
+#footer {
+  position: relative;
+  padding: 80px 0;
+  background-color: #171717;
+}
+#footer .container {
+  z-index: 1;
+  position: relative;
+}
+#footer.style2 {
+  padding-bottom: 40px;
+  background-color: #FAF9F5;
+}
+#footer.style2.black {
+  padding-top: 0;
+  background-color: #171717;
+}
+#footer.style2.black .cta {
+  background-color: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  margin-bottom: 40px;
+}
+#footer.style2.black .cta .tf-button {
+  border-radius: 4px;
+  padding: 12px 32px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 26px;
+  font-family: "DM Sans", sans-serif;
+}
+#footer.style2.black .footer-left .header__logo {
+  margin-bottom: 4px;
+}
+#footer.style2.black .footer-left ul {
+  margin-bottom: 10px;
+}
+#footer.style2.black .footer-left p {
+  color: #fff;
+}
+#footer.style2.black .footer-contact.style1 {
+  padding-left: 38px;
+  padding-top: 18px;
+}
+#footer.style2.black .footer-contact.style2 {
+  padding-left: 110px;
+  padding-top: 18px;
+}
+#footer.style2.black .footer-contact a,
+#footer.style2.black .footer-contact p {
+  font-family: "DM Sans", sans-serif;
+  color: #fff;
+}
+#footer.style2.black .footer-contact a {
+  font-weight: 700;
+}
+#footer.style2 .cta {
+  margin-bottom: 60px;
+  background: #FFFFFF;
+  box-shadow: 0px 5px 5px rgba(39, 63, 68, 0.1);
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+#footer.style2 .cta .footer-form {
+  width: 52%;
+  padding-top: 0;
+  margin-top: -1px;
+}
+#footer.style2 .cta .footer-form form fieldset {
+  margin-bottom: 42px !important;
+}
+#footer.style2 .cta .footer-form form fieldset.mb-52 {
+  margin-bottom: 33px !important;
+}
+#footer.style2 .cta .footer-form form fieldset.mb-50 {
+  margin-bottom: 50px;
+}
+#footer.style2 .cta .content {
+  padding-right: 15%;
+  width: 48%;
+}
+#footer.style2 .cta input,
+#footer.style2 .cta textarea {
+  color: #171717;
+  font-size: 18px;
+  line-height: 36px;
+  border-bottom: 1px solid #A0A3AA !important;
+  font-family: "DM Sans", sans-serif;
+}
+#footer.style2 .cta input::placeholder,
+#footer.style2 .cta textarea::placeholder {
+  color: #A0A3AA !important;
+  font-size: 18px;
+  line-height: 36px;
+  font-family: "DM Sans", sans-serif;
+}
+#footer.style2 .cta textarea:focus,
+#footer.style2 .cta input:focus {
+  border-color: #3C60DC;
+}
+#footer.style2 .cta .footer-form .button.style2 {
+  position: relative;
+  border-radius: 10px;
+  color: #171717;
+  background: linear-gradient(266.86deg, rgba(118, 205, 103, 0.1) 0%, rgba(51, 114, 236, 0.1) 99.53%);
+}
+#footer.style2 .cta .footer-form .button.style2::after {
+  border-radius: 10px;
+  position: absolute;
+  content: "";
+  border: 1px solid #3C60DC;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#footer.style2 .cta .footer-form .button.style2:hover::after {
+  border-color: transparent;
+}
+#footer.style2 .footer-left .header__logo {
+  margin-bottom: 12px;
+}
+#footer.style2 .footer-left p {
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 22px;
+  font-family: "DM Sans", sans-serif;
+  color: #3A3B3E;
+}
+#footer.style2 .footer-left .social li {
+  margin-right: 24px;
+}
+#footer.style2 .footer-left .social li:last-child {
+  margin-right: 0;
+}
+#footer.style2 .footer-left .social li img {
+  width: 20px;
+  height: 20px;
+}
+#footer.style2 .footer-contact {
+  padding-top: 20px;
+}
+#footer.style2 .footer-contact.style1 {
+  padding-left: 80px;
+}
+#footer.style2 .footer-contact.style2 {
+  padding-left: 190px;
+}
+#footer.style2 .footer-contact p {
+  font-size: 16px;
+  line-height: 26px;
+  color: #3A3B3E;
+  margin-bottom: 8px;
+  font-family: "DM Sans", sans-serif;
+}
+#footer.style2 .footer-contact a {
+  font-size: 24px;
+  font-family: 500;
+  line-height: 36px;
+  font-family: "Montserrat", sans-serif;
+  color: #171717;
+}
+#footer .overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: url("./../../assets/images/backgroup/bg_footer.png") center center no-repeat;
+  background-size: cover;
+}
+#footer .footer-content {
+  padding-right: 20%;
+}
+#footer .footer-content .title {
+  margin-bottom: 20px;
+  font-size: 80px;
+  line-height: 96px;
+  color: #fff;
+  position: relative;
+}
+#footer .footer-content .title a {
+  position: absolute;
+  left: 225px;
+  top: -5px;
+}
+#footer .footer-content .social li {
+  margin-right: 24px;
+}
+#footer .footer-content .social li:last-child {
+  margin-right: 0;
+}
+#footer .footer-content .social li img {
+  width: 36px;
+  height: 36px;
+  transform: scale(1);
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#footer .footer-content .social li a:hover img {
+  transform: scale(1.3);
+}
+#footer .footer-content .copyright {
+  margin-top: 20px;
+  font-size: 14px;
+  line-height: 22px;
+}
+#footer .footer-form {
+  text-align: right;
+  padding-top: 5px;
+}
+#footer .footer-form form {
+  text-align: left;
+  max-width: 690px;
+  margin-left: auto;
+}
+#footer .footer-form form fieldset {
+  margin-bottom: 60px;
+}
+#footer .footer-form form fieldset.mb-52 {
+  margin-bottom: 52px;
+}
+#footer .footer-form form fieldset.mb-50 {
+  margin-bottom: 50px;
+}
+
+/*# sourceMappingURL=footer.css.map */

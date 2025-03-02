@@ -1,0 +1,286 @@
+@use '../abstracts/' as *;
+
+/* Footer
+-------------------------------------------------------------- */
+.flat-tabs {
+    .menu-tab {
+        @include flex(flex-start, flex-start);
+        border-bottom: 1px solid $txt-color;
+
+        li {
+            font-size: 24px;
+            line-height: 40px;
+            color: $bg_2;
+            font-weight: 700;
+            font-family: $font-main-1;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &:active {}
+        }
+    }
+
+    .content-tab {
+        position: relative;
+        overflow: hidden;
+    }
+}
+
+.content-inner {
+    top: 0;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    transform: scale(0.9) translate(0, 0%);
+    opacity: 0;
+    visibility: hidden;
+    z-index: -1;
+
+    &.active {
+        @include transition5;
+        z-index: 1;
+        opacity: 1;
+        visibility: visible;
+        position: relative;
+        transform: scale(1) translate(0, 0%);
+    }
+}
+
+.flat-tabs-style2 {
+    position: relative;
+    z-index: 2;
+    margin-top: -64px;
+
+    .menu-tab {
+        padding-bottom: 60px;
+        border: none;
+        justify-content: flex-end;
+
+        li {
+            position: relative;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &::after {
+                position: absolute;
+                content: "";
+                bottom: 4px;
+                left: 0;
+                height: 2px;
+                width: 100%;
+                background-color: #171717;
+                @include transition3;
+                opacity: 0;
+            }
+
+            &.active {
+                &::after {
+                    opacity: 1;
+                }
+            }
+
+            margin-left: 24px;
+
+            span {
+                @include transition3;
+                font-weight: 700;
+                font-size: 20px;
+                line-height: 32px;
+                color: #A0A3AA;
+                font-family: $font-main-4;
+            }
+
+            &:nth-child(1) {
+                margin-right: 0;
+                margin-left: 0;
+            }
+
+            &:hover,
+            &.active {
+                span {
+                    color: $bg_2;
+                }
+            }
+        }
+    }
+
+    .content-inner {
+        @include flex(inherit, space-between);
+    }
+}
+
+.tf-about {
+    .flat-tabs {
+        .content-tab {
+            padding-top: 32px;
+        }
+
+        .content-inner {
+            p {
+                font-weight: 400;
+            }
+        }
+    }
+
+    .menu-tab {
+        li {
+            font-size: 24px;
+            line-height: 44px;
+            color: $bg_2;
+            position: relative;
+            margin-right: 38px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            &::after {
+                position: absolute;
+                content: "";
+                bottom: -1px;
+                left: 50%;
+                transform: translateX(-50%);
+                height: 2px;
+                width: 50%;
+                background-color: #171717;
+                opacity: 0;
+            }
+
+            &.active {
+                &::after {
+                    @include transition5;
+                    width: 100%;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+
+#tab--content {
+    position: relative;
+    overflow-x: hidden;
+}
+
+
+.tabcontent {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    box-sizing: border-box;
+
+    .image {
+        .img {
+            transform: translateX(-50%);
+            -moz-transform: translateX(-50%);
+            -webkit-transform: translateX(-50%);
+            opacity: 0;
+            visibility: hidden;
+            transition: all ease-in-out .4s;
+            -moz-transition: all ease-in-out .4s;
+            -webkit-transition: all ease-in-out .4s;
+        }
+
+        .icon {
+            opacity: 0;
+            visibility: hidden;
+
+        }
+    }
+
+    &.tab-active {
+        opacity: 1;
+        visibility: visible;
+        transition: all ease-in-out .3s;
+        -moz-transition: all ease-in-out .3s;
+        -webkit-transition: all ease-in-out .3s;
+
+        .image {
+            .img {
+                transition: all ease-in-out .8s;
+                -moz-transition: all ease-in-out .8s;
+                -webkit-transition: all ease-in-out .8s;
+                transform: translateX(0%);
+                -moz-transform: translateX(0%);
+                -webkit-transform: translateX(0%);
+
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .icon {
+                transition: all .8s ease 0s;
+                opacity: 1;
+                visibility: visible;
+                -webkit-transform: rotate(5deg) translateY(0);
+                transform: rotate(5deg) translateY(0);
+            }
+        }
+    }
+}
+
+.tabcontent:first-child {
+    position: relative;
+}
+
+.tabcontent.tab-active {
+    opacity: 1;
+    visibility: visible;
+    border-top: 0px;
+    display: block;
+    transform: translateX(0%);
+    -moz-transform: translateX(0%);
+    -webkit-transform: translateX(0%);
+}
+
+.icetab {
+    &:last-child {
+        .service-box {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border: none;
+        }
+    }
+
+    &.active {
+        .service-box {
+            .number {
+                color: $color-hover;
+            }
+
+            .content {
+                .title {
+                    color: $white;
+                }
+            }
+
+            .icon {
+                svg {
+                    path {
+                        fill: $white;
+                    }
+                }
+            }
+
+            .effect-arow {
+                .effect {
+                    left: 200%;
+                    opacity: 0;
+                    visibility: hidden;
+                }
+
+                .effect-absolute {
+                    left: 0;
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+        }
+    }
+}

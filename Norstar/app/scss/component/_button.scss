@@ -1,0 +1,515 @@
+@use '../abstracts/' as *;
+
+/* Button
+-------------------------------------------------------------- */
+$spacing: 80px;
+$hover-margin: -$spacing;
+$hover-size: $spacing * 2;
+
+$border: 2px;
+$spacing-2: 50px;
+$hover-size: $spacing-2 * 2 - $border * 2;
+$hover-margin: -($spacing-2 - 2);
+
+$spacing-3: 70px;
+$hover-size: $spacing-3 * 2 - $border * 2;
+$hover-margin: -($spacing-3 - 2);
+
+.button {
+    width: $spacing * 2;
+    height: $spacing * 2;
+    background-color: $color-hover;
+    color: $bg_2;
+    font-size: 18px;
+    line-height: 24px;
+    border-radius: 50%;
+    font-weight: 700;
+    position: relative;
+    @include flex(center, center);
+    @include transition2;
+
+    &.style-2 {
+        width: $spacing-2 * 2;
+        height: $spacing-2 * 2;
+
+        &.hover-circle {
+            &:hover {
+                span {
+                    color: $bg_2;
+                }
+            }
+        }
+    }
+
+    &.style-3 {
+        width: $spacing-3 * 2;
+        height: $spacing-3 * 2;
+
+        &.hover-circle {
+            &:hover {
+                span {
+                    color: $bg_6;
+                }
+            }
+        }
+    }
+
+    &.style-4 {
+        color: $bg_2;
+        flex-direction: column;
+        border: 1px solid #171717;
+        background-color: transparent;
+
+        svg {
+            path {
+                @include transition3;
+            }
+        }
+
+        span {
+            @include transition3;
+        }
+
+        &:hover {
+            background-color: #5EDDA0;
+            border-color: #5EDDA0;
+
+            svg {
+                path {
+                    stroke: $white;
+                }
+            }
+
+            span {
+                color: $white;
+            }
+        }
+    }
+
+    &.style2 {
+        border-radius: 10px;
+        background-color: $bg_6;
+        color: $white;
+        padding: 15px 24px;
+        height: auto;
+        width: auto;
+        font-family: $font-main-1;
+        font-size: 16px;
+
+        .icon {
+            position: relative;
+            margin-left: 12px;
+            width: 15px;
+            height: 15px;
+            display: flex;
+
+            svg,
+            img {
+                position: absolute;
+                top: 1px;
+
+                &.show {
+                    opacity: 0;
+                    visibility: hidden;
+                    transform: translateX(-100%);
+                }
+            }
+        }
+
+        &:hover {
+            background-color: $bg_2;
+            color: $white;
+
+            .icon {
+
+                svg,
+                img {
+                    &.show {
+                        opacity: 1;
+                        visibility: visible;
+                        @include transition3;
+                        transform: translateX(0);
+                    }
+
+                    &.effect {
+                        transform: translateX(100%);
+                        @include transition3;
+                        opacity: 0;
+                        visibility: hidden;
+                    }
+                }
+            }
+
+        }
+
+        svg {
+            @include transition3;
+        }
+
+        img {
+            @include transition3;
+        }
+    }
+
+    &.style3 {
+        border-radius: 1000px;
+        background-color: $bg_6;
+        color: $white;
+        padding: 15px 40px;
+        height: auto;
+        width: auto;
+        font-family: $font-main-1;
+        font-size: 16px;
+
+        &:hover {
+            background-color: $bg_2;
+            color: $white;
+
+            img {
+                transform: translate3d(5px, -5px, -5px);
+            }
+        }
+
+        img {
+            @include transition3;
+            margin-left: 12px;
+        }
+
+        &.gradient {
+            background-image: $gradient;
+            color: $bg_2;
+            background-size: 300% 100%;
+            moz-transition: all .4s ease-in-out;
+            -o-transition: all .4s ease-in-out;
+            -webkit-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+
+            &:hover {
+                background-position: 100% 0;
+                moz-transition: all .4s ease-in-out;
+                -o-transition: all .4s ease-in-out;
+                -webkit-transition: all .4s ease-in-out;
+                transition: all .4s ease-in-out;
+            }
+        }
+    }
+
+    &.hover-circle {
+        transform: translateY(0);
+
+        .text {
+            z-index: 10;
+            position: relative;
+        }
+
+        span {
+            @include transition2;
+        }
+
+        .effect {
+            background-color: $white;
+            display: block;
+            height: 0;
+            left: 50%;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            width: 0;
+            border-radius: 50%;
+        }
+
+        &:hover {
+            transform: translateY(-8px);
+            background-color: $white;
+
+            // .text {
+            //     color: $white;
+            // }
+            span {
+                color: $bg_2;
+            }
+
+            .effect {
+                height: $hover-size;
+                margin-left: $hover-margin;
+                margin-top: $hover-margin;
+                width: $hover-size;
+            }
+        }
+    }
+}
+
+.button-style {
+    height: 50px;
+    position: relative;
+    background-color: transparent;
+    z-index: 9;
+
+    .btn-main {
+        height: 50px;
+        border-radius: 4px;
+        box-sizing: border-box;
+        padding: 10px 30px;
+        display: block;
+        @include transition3;
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 700;
+        font-family: $font-main-1;
+        color: $bg_2;
+        background-color: $color-hover;
+        text-transform: capitalize;
+    }
+
+    &.style1 {
+        .btn-main {
+            padding: 12px 34px;
+            background-color: $color-hover;
+        }
+
+        .btn-absolute {
+            background-color: $white;
+        }
+    }
+
+    &.style2 {
+        height: 52px;
+
+        .btn-main {
+            border-radius: 0;
+            background-color: #BBADFF;
+            height: 52px;
+            padding: 14px 26px;
+        }
+
+        .btn-absolute {
+            height: 52px;
+            background-color: #000000;
+            border-right: 4px solid $white;
+            border-bottom: 4px solid $white;
+            border-radius: 0;
+            right: -8px;
+            bottom: -8px;
+        }
+
+        &:hover {
+            .btn-absolute {
+                border-radius: 0;
+            }
+
+            .btn-main {
+                transform: translate3d(8px, 8px, 8px);
+            }
+        }
+    }
+
+    &.style3 {
+        .btn-main {
+            background-color: $color-hover;
+            border: 2px solid $bg_2;
+
+            &.border-none {
+                border: none;
+            }
+        }
+    }
+
+    &.style4 {
+        .btn-main {
+            background-color: $white;
+            border: 2px solid $bg_2;
+
+        }
+    }
+
+    &.style5 {
+        .btn-main {
+            border-radius: 0;
+            background-color: $color-hover;
+        }
+
+        .btn-absolute {
+            background-color: #000000;
+            border-right: 2px solid $white;
+            border-bottom: 2px solid $white;
+            border-radius: 0;
+        }
+    }
+
+    &.style6 {
+        height: 64px;
+
+        .btn-absolute {
+            border-radius: 0;
+            background-color: $white;
+            height: 64px;
+            right: -8px;
+            bottom: -8px;
+        }
+
+        .btn-main {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 24px;
+            height: 64px;
+            padding: 12px 28px;
+            letter-spacing: 1px;
+            background-color: $color-hover;
+            border-radius: 0;
+            text-transform: uppercase;
+            @include flex(center, center);
+        }
+
+        .icon {
+            position: relative;
+            margin-left: 12px;
+            width: 28px;
+            height: 16px;
+            display: flex;
+
+            svg,
+            img {
+                position: absolute;
+                top: 1px;
+                @include transition3;
+
+                &.show {
+                    opacity: 0;
+                    visibility: hidden;
+                    transform: translateX(-100%);
+                }
+            }
+        }
+
+        &:hover {
+            .icon {
+
+                svg,
+                img {
+                    &.show {
+                        opacity: 1;
+                        visibility: visible;
+                        @include transition3;
+                        transform: translateX(0);
+                    }
+
+                    &.effect {
+                        transform: translateX(100%);
+                        @include transition3;
+                        opacity: 0;
+                        visibility: hidden;
+                    }
+                }
+            }
+
+        }
+
+        &:hover {
+            .btn-main {
+                transform: translate3d(6px, 6px, 6px);
+            }
+
+            .btn-absolute {
+                border-radius: 0px;
+            }
+        }
+    }
+
+    &.not-move {
+        &:hover {
+            .btn-main {
+                transform: translate3d(0, 0, 0);
+            }
+        }
+    }
+
+    &:hover {
+
+        .btn-main {
+            transform: translate3d(6px, 6px, 6px);
+        }
+
+        .btn-absolute {
+            border-radius: 6px;
+        }
+    }
+
+    .btn-absolute {
+        @include transition3;
+        width: 100%;
+        height: 100%;
+        right: -6px;
+        bottom: -6px;
+        background-color: #000000;
+        border-radius: 4px;
+        position: absolute;
+        display: block;
+        z-index: -1;
+        height: 50px;
+    }
+}
+
+
+.effect-arow {
+    position: relative;
+    min-width: 42px;
+    overflow: hidden;
+
+    .effect-absolute,
+    .effect {
+        position: absolute;
+        @include transition3;
+    }
+
+    .effect {
+        position: relative;
+        left: 0;
+        top: 0;
+    }
+
+    .effect-absolute {
+        opacity: 0;
+        visibility: hidden;
+        left: -180%;
+    }
+
+}
+
+.gradient_effect {
+    background-size: 300% 100%;
+    --moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+
+    &:hover {
+        background-position: 100% 0;
+        --moz-transition: all .4s ease-in-out;
+        -o-transition: all .4s ease-in-out;
+        -webkit-transition: all .4s ease-in-out;
+        transition: all .4s ease-in-out;
+    }
+
+    &.gradient_2 {
+        &:hover {
+            color: $bg_2;
+        }
+    }
+}
+
+.tf-button-style2 {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 26px;
+    color: $bg_2;
+    padding: 11px 34px;
+}
+
+.hover-this .hover-anim {
+    pointer-events: none;
+    -webkit-transition: -webkit-transform 0.2s linear;
+    transition: -webkit-transform 0.2s linear;
+    -o-transition: transform 0.2s linear;
+    transition: transform 0.2s linear;
+    transition: transform 0.2s linear, -webkit-transform 0.2s linear;
+}
