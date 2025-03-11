@@ -453,309 +453,269 @@ option = {
         });
     }
 function echarts_5() {
- var myChart = echarts.init(document.getElementById('echart5'));
-let inputValue =80
-option = {
-	title: {
-        subtext: '文本2',
-        left: 'center',
-		bottom:15,
-        subtextStyle: {
-            color: 'rgba(255,255,255,.6)',
-            fontSize: 12
-        }
-    },
-
-  series: [
-    {
-      name: '',
-      type: 'gauge',
- 		radius: '90%',
-      startAngle: 200,
-      endAngle: -20,
-      detail: {formatter: '{value}'},
-      data: [{value: inputValue, name: ''}],
-      axisLine: {
-        lineStyle: {
-			width: 10,
-          color: [
-            [
-              0.8, new echarts.graphic.LinearGradient(//0.8值为颜色显示百分比80%
-              0, 0, 1, 0, [{
-              offset: 0,
-              color: '#ae3df6'
+    var myChart = echarts.init(document.getElementById('echart5'));
+    let inputValue = 95;
+    option = {
+        title: {
+            subtext: '医药典籍影响力',
+            left: 'center',
+            bottom: 15,
+            subtextStyle: {
+                color: 'rgba(255,255,255,.6)',
+                fontSize: 12
+            }
+        },
+        tooltip: {
+            formatter: "《本草纲目》《伤寒论》《黄帝内经》等医药典籍的历史贡献"
+        },
+        series: [{
+            name: '医药典籍',
+            type: 'gauge',
+            radius: '90%',
+            startAngle: 200,
+            endAngle: -20,
+            data: [{value: inputValue}],
+            axisLine: {
+                lineStyle: {
+                    width: 10,
+                    color: [[
+                        0.8, new echarts.graphic.LinearGradient(
+                            0, 0, 1, 0, [{
+                                offset: 0,
+                                color: '#ae3df6'
+                            }, {
+                                offset: 1,
+                                color: '#53bef9'
+                            }]
+                        )
+                    ], [1, '#1c4e85']]
+                }
             },
-              {
-                offset: 1,
-                color: '#53bef9'
-              }
-            ]
-              )
-            ],
-            [
-              1, '#1c4e85'
-            ]
-          ]
-        }
-      },
-	pointer: {       
-                    show: false,         //不显示指针
-                    length: "70%",         
-                    width:3,              
-                },
-      axisLabel: {
-        show: false
-      },
-      axisTick: {
-        show: false
-      },
-      splitLine: {
-        show: false
-      },
-      detail: {
-        offsetCenter: [0, 1],
-        color: '#fff',
-		  fontSize: 16,
-      }
-    },
-
-
-  ]
-
-}
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
+            pointer: {
+                show: true,
+                length: "70%",
+                width: 3,
+                itemStyle: {
+                    color: '#fff'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                show: false
+            },
+            detail: {
+                show: false
+            }
+        }]
     }
+    myChart.setOption(option);
+    window.addEventListener("resize",function(){
+        myChart.resize();
+    });
+}
 function echarts_6() {
- var myChart = echarts.init(document.getElementById('echart6'));
-let inputValue = 2
-option = {
-	title: {
-        subtext: '文本2',
-        left: 'center',
-		bottom:15,
-        subtextStyle: {
-            color: 'rgba(255,255,255,.6)',
-            fontSize: 12
-        }
-    },
-
-  series: [
-    {
-      name: '',
-      type: 'gauge',
- 		radius: '90%',
-      startAngle: 200,
-      endAngle: -20,
-      detail: {formatter: '{value}'},
-      data: [{value: inputValue, name: ''}],
-      axisLine: {
-        lineStyle: {
-			width: 10,
-          color: [
-            [
-              0.7, new echarts.graphic.LinearGradient(//0.8值为颜色显示百分比%
-              0, 0, 1, 0, [{
-              offset: 0,
-              color: '#1db0d2'
+    var myChart = echarts.init(document.getElementById('echart6'));
+    let inputValue = 92;
+    option = {
+        title: {
+            subtext: '农学著作系统性',
+            left: 'center',
+            bottom: 15,
+            subtextStyle: {
+                color: 'rgba(255,255,255,.6)',
+                fontSize: 12
+            }
+        },
+        tooltip: {
+            formatter: "《齐民要术》《农政全书》《种树书》等农学著作的完整性"
+        },
+        series: [{
+            name: '农学著作',
+            type: 'gauge',
+            radius: '90%',
+            startAngle: 200,
+            endAngle: -20,
+            data: [{value: inputValue}],
+            axisLine: {
+                lineStyle: {
+                    width: 10,
+                    color: [[
+                        0.7, new echarts.graphic.LinearGradient(
+                            0, 0, 1, 0, [{
+                                offset: 0,
+                                color: '#1db0d2'
+                            }, {
+                                offset: 1,
+                                color: '#44ceef'
+                            }]
+                        )
+                    ], [1, '#1c4e85']]
+                }
             },
-              {
-                offset: 1,
-                color: '#44ceef'
-              }
-            ]
-              )
-            ],
-            [
-              1, '#1c4e85'
-            ]
-          ]
-        }
-      },
-	pointer: {       
-                    show: false,         //不显示指针
-                    length: "70%",         
-                    width:3,              
-                },
-      axisLabel: {
-        show: false
-      },
-      axisTick: {
-        show: false
-      },
-      splitLine: {
-        show: false
-      },
-      detail: {
-        offsetCenter: [0, 1],
-        color: '#fff',
-		  fontSize: 16,
-      }
-    },
-
-
-  ]
-
-}
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
+            pointer: {
+                show: true,
+                length: "70%",
+                width: 3,
+                itemStyle: {
+                    color: '#fff'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                show: false
+            },
+            detail: {
+                show: false
+            }
+        }]
     }
+    myChart.setOption(option);
+    window.addEventListener("resize",function(){
+        myChart.resize();
+    });
+}
 function echarts_7() {
- var myChart = echarts.init(document.getElementById('echart7'));
-let inputValue = 10
-option = {
-	title: {
-        subtext: '文本3',
-        left: 'center',
-		bottom:15,
-        subtextStyle: {
-            color: 'rgba(255,255,255,.6)',
-            fontSize: 12
-        }
-    },
-
-  series: [
-    {
-      name: '',
-      type: 'gauge',
- 		radius: '90%',
-      startAngle: 200,
-      endAngle: -20,
-      detail: {formatter: '{value}'},
-      data: [{value: inputValue, name: ''}],
-      axisLine: {
-        lineStyle: {
-			width: 10,
-          color: [
-            [
-              0.2, new echarts.graphic.LinearGradient(//0.8值为颜色显示百分比80%
-              0, 0, 1, 0, [{
-              offset: 0,
-              color: '#1ea899'
+    var myChart = echarts.init(document.getElementById('echart7'));
+    let inputValue = 88;
+    option = {
+        title: {
+            subtext: '天文历法成就',
+            left: 'center',
+            bottom: 15,
+            subtextStyle: {
+                color: 'rgba(255,255,255,.6)',
+                fontSize: 12
+            }
+        },
+        tooltip: {
+            formatter: "《天文志》《授时历》《崇祯历书》等天文历法著作的科学价值"
+        },
+        series: [{
+            name: '天文历法',
+            type: 'gauge',
+            radius: '90%',
+            startAngle: 200,
+            endAngle: -20,
+            data: [{value: inputValue}],
+            axisLine: {
+                lineStyle: {
+                    width: 10,
+                    color: [[
+                        0.8, new echarts.graphic.LinearGradient(
+                            0, 0, 1, 0, [{
+                                offset: 0,
+                                color: '#1ea899'
+                            }, {
+                                offset: 1,
+                                color: '#29c582'
+                            }]
+                        )
+                    ], [1, '#1c4e85']]
+                }
             },
-              {
-                offset: 1,
-                color: '#29c582'
-              }
-            ]
-              )
-            ],
-            [
-              1, '#1c4e85'
-            ]
-          ]
-        }
-      },
-	pointer: {       
-                    show: false,         //不显示指针
-                    length: "70%",         
-                    width:3,              
-                },
-      axisLabel: {
-        show: false
-      },
-      axisTick: {
-        show: false
-      },
-      splitLine: {
-        show: false
-      },
-      detail: {
-        offsetCenter: [0, 1],
-        color: '#fff',
-		  fontSize: 16,
-      }
-    },
-
-
-  ]
-
-}
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
+            pointer: {
+                show: true,
+                length: "70%",
+                width: 3,
+                itemStyle: {
+                    color: '#fff'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                show: false
+            },
+            detail: {
+                show: false
+            }
+        }]
     }
+    myChart.setOption(option);
+    window.addEventListener("resize",function(){
+        myChart.resize();
+    });
+}
 function echarts_8() {
- var myChart = echarts.init(document.getElementById('echart8'));
-let inputValue = 2.5
-option = {
-	title: {
-        subtext: '文本4',
-        left: 'center',
-		bottom:15,
-        subtextStyle: {
-            color: 'rgba(255,255,255,.6)',
-            fontSize: 12
-        }
-    },
-
-  series: [
-    {
-      name: '',
-      type: 'gauge',
- 		radius: '90%',
-      startAngle: 200,
-      endAngle: -20,
-      detail: {formatter: '{value}'},
-      data: [{value: inputValue, name: ''}],
-      axisLine: {
-        lineStyle: {
-			width: 10,
-          color: [
-            [
-              0.4, new echarts.graphic.LinearGradient(//0.8值为颜色显示百分比80%
-              0, 0, 1, 0, [{
-              offset: 0,
-              color: '#e6658f'
+    var myChart = echarts.init(document.getElementById('echart8'));
+    let inputValue = 90;
+    option = {
+        title: {
+            subtext: '数学著作创新性',
+            left: 'center',
+            bottom: 15,
+            subtextStyle: {
+                color: 'rgba(255,255,255,.6)',
+                fontSize: 12
+            }
+        },
+        tooltip: {
+            formatter: "《九章算术》《算经十书》《数书九章》等数学著作的理论价值"
+        },
+        series: [{
+            name: '数学著作',
+            type: 'gauge',
+            radius: '90%',
+            startAngle: 200,
+            endAngle: -20,
+            data: [{value: inputValue}],
+            axisLine: {
+                lineStyle: {
+                    width: 10,
+                    color: [[
+                        0.8, new echarts.graphic.LinearGradient(
+                            0, 0, 1, 0, [{
+                                offset: 0,
+                                color: '#e6658f'
+                            }, {
+                                offset: 1,
+                                color: '#f8a58b'
+                            }]
+                        )
+                    ], [1, '#1c4e85']]
+                }
             },
-              {
-                offset: 1,
-                color: '#f8a58b'
-              }
-            ]
-              )
-            ],
-            [
-              1, '#1c4e85'
-            ]
-          ]
-        }
-      },
-	pointer: {       
-                    show: false,         //不显示指针
-                    length: "70%",         
-                    width:3,              
-                },
-      axisLabel: {
-        show: false
-      },
-      axisTick: {
-        show: false
-      },
-      splitLine: {
-        show: false
-      },
-      detail: {
-        offsetCenter: [0, 1],
-        color: '#fff',
-		  fontSize: 16,
-      }
-    },
-
-
-  ]
-
-}
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
+            pointer: {
+                show: true,
+                length: "70%",
+                width: 3,
+                itemStyle: {
+                    color: '#fff'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                show: false
+            },
+            detail: {
+                show: false
+            }
+        }]
     }
+    myChart.setOption(option);
+    window.addEventListener("resize",function(){
+        myChart.resize();
+    });
+}
 function echarts_9() {
         var myChart = echarts.init(document.getElementById('echart9'));
         option = {
