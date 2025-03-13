@@ -289,7 +289,7 @@
                         <div class="tf-title-style2 pl-65 d-rotate wow">
                             <p class="sub-title rotate-text">璀璨辉煌的中国古代科学技术</p>
                             <h4 class="title wow fadeIn chinese-text" data-wow-duration="1s" data-wow-delay=".3s">
-                                中国古代科技成就如璀璨星河，跨越山海，照亮了古代世界文明发展的道路。四大发明引领时代变革：造纸术让知识传播插上翅膀，指南针开启航海新纪元，火药改变了世界力量格局，活字印刷推动了人类文明进步。天文历法的精准智慧远播东瀛，对日本、朝鲜等国产生深远影响；中医药学的独特理论与实践沿着丝绸之路传遍欧亚，《本草纲目》等医典被译成多国文字，至今仍在造福世界各地病患；数学著作《九章算术》跨越语言藩篱，其中的算法原理启发了东西方数学家。农业技术更是如甘霖般滋润四方，水稻种植法、植桑养蚕术等传入东南亚，推动了亚洲农耕文明的进步。中国古代的冶铁技术、瓷器制作、纺织工艺等，通过商贸往来和文化交流，丰富了世界物质文明的画卷。这些科技成就，是中华文明对人类进步的重要贡献，在历史长河中写下了浓墨重彩的一笔。
+                                <div id="scienceChart" style="width: 100%; height: 400px;"></div>
                             </h4>
                             <a href="Home-Corperate.html" class="wow fadeIn" data-wow-duration="1s"
                                 data-wow-delay=".3s">了解更多</a>
@@ -777,12 +777,7 @@
                 </div>
 
                 <div style="flex: 1;">
-                    <p style="color: #444; line-height: 1.8; margin-bottom: 20px;">
-                        中医药学是中华文明的瑰宝，历经数千年发展积淀。从张仲景的《伤寒杂病论》开创理论体系，到华佗精研外科手术，再到李时珍历时27载编撰《本草纲目》收录药物近2000种。
-                    </p>
-                    <p style="color: #444; line-height: 1.8;">
-                        针灸、脉诊、药方、养生等独特医学体系，展现了中医的整体观念和天人合一的智慧。
-                    </p>
+                    <div id="scienceChart" style="width: 100%; height: 400px;"></div>
                 </div>
 
                 <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
@@ -905,12 +900,7 @@
                 </div>
 
                 <div style="flex: 1;">
-                    <p style="color: #444; line-height: 1.8; margin-bottom: 20px;">
-                        中国古代科技成就如璀璨星河，跨越山海，照亮了古代世界文明发展的道路。四大发明引领时代变革：造纸术让知识传播插上翅膀，指南针开启航海新纪元。
-                    </p>
-                    <p style="color: #444; line-height: 1.8;">
-                        中国古代的冶铁技术、瓷器制作、纺织工艺等，通过商贸往来和文化交流，丰富了世界物质文明的画卷。
-                    </p>
+                    <div id="influenceChart" style="width: 100%; height: 400px;"></div>
                 </div>
 
                 <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
@@ -968,6 +958,97 @@
         }
 
         document.addEventListener('DOMContentLoaded', initModalEvents);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var chartDom = document.getElementById('scienceChart');
+            var myChart = echarts.init(chartDom);
+
+            var option = {
+                title: {
+                    //text: '中国古代科技成就影响力趋势',
+                    //subtext: '不同朝代的科技影响力分布',
+                    top: 10,
+                    left: 10
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    type: 'scroll',
+                    bottom: 2,
+                    data: ['夏', '商', '西周', '东周', '秦', '西汉', '东汉', '三国', '晋', '南北朝',
+                        '隋', '唐', '五代十国', '宋', '元', '明', '清']
+                },
+                visualMap: {
+                    top: 'middle',
+                    right: 2,
+                    color: ['red', 'yellow'],
+                    calculable: true
+                },
+                radar: {
+                    indicator: [
+                        { text: '天文地理', max: 100 },
+                        { text: '数学计量', max: 100 },
+                        { text: '医学生物', max: 100 },
+                        { text: '工程建筑', max: 100 },
+                        { text: '农业科技', max: 100 },
+                        { text: '军事科技', max: 100 },
+                        { text: '化学冶金', max: 100 },
+                        { text: '物理', max: 100 }
+                    ]
+                },
+                series: (function () {
+                    var dynasties = ['夏', '商', '西周', '东周', '秦', '西汉', '东汉', '三国', '晋', '南北朝',
+                        '隋', '唐', '五代十国', '宋', '元', '明', '清'];
+                    var series = [];
+
+                    function getRandomValue(base, range) {
+                        return Math.round(base + Math.random() * range);
+                    }
+
+                    for (var i = 0; i < dynasties.length; i++) {
+                        series.push({
+                            type: 'radar',
+                            symbol: 'none',
+                            lineStyle: {
+                                width: 1
+                            },
+                            emphasis: {
+                                areaStyle: {
+                                    color: 'rgba(0,250,0,0.3)'
+                                }
+                            },
+                            data: [
+                                {
+                                    value: [
+                                        getRandomValue(50, 50), // 天文地理
+                                        getRandomValue(40, 60), // 数学计量
+                                        getRandomValue(30, 70), // 医学生物
+                                        getRandomValue(40, 60), // 工程建筑
+                                        getRandomValue(60, 40), // 农业科技
+                                        getRandomValue(50, 50), // 军事科技
+                                        getRandomValue(30, 70), // 化学冶金
+                                        getRandomValue(40, 60)  // 物理
+                                    ],
+                                    name: dynasties[i]
+                                }
+                            ]
+                        });
+                    }
+                    return series;
+                })()
+            };
+
+            myChart.setOption(option);
+
+            // 响应窗口大小变化
+            window.addEventListener('resize', function () {
+                myChart.resize();
+            });
+        });
     </script>
 </body>
 
