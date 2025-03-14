@@ -466,10 +466,11 @@
                         </div>
                     </div>
                     <div class="col-md-6 flex align-items-center">
-                        <div class="tf-title-style2 pl-65 wow fadeIn pr-10" data-wow-delay=".5s">
+                        <div class="tf-title-style2 pl-65 wow fadeIn pr-10" data-wow-delay=".5s" style="width: 100%;">
                             <p class="sub-title rotate-text">医药成就</p>
-                            <h4 class="title wow fadeIn chinese-text" data-wow-duration="1s" data-wow-delay=".3s">
-                                中医药学是中华文明的瑰宝，历经数千年发展积淀。从张仲景的《伤寒杂病论》开创理论体系，到华佗精研外科手术，再到李时珍历时27载编撰《本草纲目》收录药物近2000种。针灸、脉诊、药方、养生等独特医学体系，展现了中医的整体观念和天人合一的智慧。
+                            <h4 class="title wow fadeIn chinese-text" data-wow-duration="1s" data-wow-delay=".3s"
+                                style="width: 100%;">
+                                <div id="medicalChart" style="width: 100%; height: 400px; min-width: 600px;"></div>
                             </h4>
                             <a href="#" onclick="showModal('medical'); return false;">探索详情</a>
                         </div>
@@ -1040,6 +1041,66 @@
                     }
                     return series;
                 })()
+            };
+
+            myChart.setOption(option);
+
+            // 响应窗口大小变化
+            window.addEventListener('resize', function () {
+                myChart.resize();
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var chartDom = document.getElementById('medicalChart');
+            var myChart = echarts.init(chartDom);
+
+            var option = {
+                backgroundColor: '#FFFFFF',
+                polar: {
+                    radius: [30, '80%']
+                },
+                angleAxis: {
+                    max: 20,
+                    startAngle: 75,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#9370DB'
+                        }
+                    }
+                },
+                radiusAxis: {
+                    type: 'category',
+                    data: ['针灸', '脉诊', '药方', '养生'],
+                    axisLine: {
+                        lineStyle: {
+                            color: '#9370DB'
+                        }
+                    }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: '#E6E6FA',
+                    textStyle: {
+                        color: '#4B0082'
+                    }
+                },
+                series: [{
+                    type: 'bar',
+                    data: [15, 8, 20, 12],
+                    coordinateSystem: 'polar',
+                    itemStyle: {
+                        color: '#D8BFD8'
+                    },
+                    label: {
+                        show: true,
+                        position: 'middle',
+                        formatter: '{b}: {c} 本',
+                        color: '#4B0082'
+                    }
+                }]
             };
 
             myChart.setOption(option);
