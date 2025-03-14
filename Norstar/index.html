@@ -79,6 +79,70 @@
         .home-button:hover .home-text {
             color: #fff;
         }
+
+        .medical-stats {
+            padding: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-left: 3px solid #9370DB;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item .icon {
+            font-size: 20px;
+            margin-right: 15px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .stat-item .content {
+            color: #444;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .engineering-stats {
+            padding: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-left: 3px solid #9370DB;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item .icon {
+            font-size: 20px;
+            margin-right: 15px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .stat-item .content {
+            color: #444;
+            line-height: 1.8;
+            font-size: 16px;
+        }
     </style>
 </head>
 
@@ -486,7 +550,14 @@
                         <div class="tf-title-style2 pr-35 mobile-mb30 wow fadeIn" data-wow-delay=".3s">
                             <p class="sub-title rotate-text">工程技术</p>
                             <h4 class="title wow fadeIn chinese-text white">
-                                中国古代工程技术成就辉煌，涵盖水利、建筑、冶金等多个领域。都江堰水利工程巧妙利用地形，实现"水患变水利"，两千年来滋润着成都平原；郑国渠开凿助秦称雄，灵渠沟通南北水系。建筑领域，北京故宫展现了木构建筑的卓越成就，长城蜿蜒万里见证匠心，赵州桥开创石拱桥先河。冶金技术独步天下，青铜器铸造技艺精湛，北宋铁产量占世界八成。造船技术领先世界，郑和宝船规模宏大，远航技术超越欧洲数百年。此外，制瓷、制盐、纺织等工艺技术也达到很高水平，推动了古代工业文明的发展。这些工程奇迹不仅展现了中华民族的智慧，更为世界文明进步作出了重要贡献。
+                                <img src="./assets/images/common/工程技术时间轴.jpg" alt="工程技术时间轴"
+                                    style="width: 100%; margin-bottom: 20px;">
+                                <div class="engineering-timeline">
+                                    <!-- 时间轴内容 -->
+                                </div>
+                                <p style="margin-top: 20px; line-height: 1.6;">
+                                    中国古代水利工程技术成就辉煌。都江堰水利工程巧妙利用地形，实现"水患变水利"，两千年来滋润着成都平原；郑国渠开凿助秦称雄，灵渠沟通南北水系。这些水利工程奇迹不仅展现了中华民族的智慧，更为世界文明进步作出了重要贡献。
+                                </p>
                             </h4>
                             <a href="#" class="white" onclick="showModal('engineering'); return false;">探索详情</a>
                         </div>
@@ -531,28 +602,28 @@
                                     <div class="tf-title pd-16">
                                         <p class="sub-title white center mb-24 chinese-text">
                                             "中国古代科学技术对人类文明的贡献是不可估量的。四大发明不仅改变了中国，也改变了整个世界的面貌。"</p>
-                                        <h6 class="white center">李约瑟 // 《中国科学技术史》作者</h6>
+                                        <h6 class="white center">李约瑟 | 《中国科学技术史》作者</h6>
                                     </div>
                                 </div>
                                 <div class="swiper-slide">
                                     <div class="tf-title pd-16">
                                         <p class="sub-title white center mb-24 chinese-text">
                                             "中国古代的天文历法体系是世界上最早最完备的，它不仅准确预测天象，更为农业生产提供了科学指导。"</p>
-                                        <h6 class="white center">中国科学院自然科学史研究所 // 研究报告</h6>
+                                        <h6 class="white center">中国科学院自然科学史研究所 | 研究报告</h6>
                                     </div>
                                 </div>
                                 <div class="swiper-slide">
                                     <div class="tf-title pd-16">
                                         <p class="sub-title white center mb-24 chinese-text">
                                             "《本草纲目》集中国传统医药之大成，是东西方医学交流的重要桥梁，至今仍具有重要的科研价值。"</p>
-                                        <h6 class="white center">国家博物馆 // 典籍研究部</h6>
+                                        <h6 class="white center">国家博物馆 | 典籍研究部</h6>
                                     </div>
                                 </div>
                                 <div class="swiper-slide">
                                     <div class="tf-title pd-16">
                                         <p class="sub-title white center mb-24 chinese-text">
                                             "中国古代的数学成就令人惊叹，《九章算术》中的许多数学原理比西方早了近千年，这体现了中华文明的智慧结晶。"</p>
-                                        <h6 class="white center">中国科学院自然科学史研究所 // 数学史研究组</h6>
+                                        <h6 class="white center">中国科学院自然科学史研究所 | 数学史研究组</h6>
                                     </div>
                                 </div>
                             </div>
@@ -778,10 +849,31 @@
                 </div>
 
                 <div style="flex: 1;">
-                    <div id="scienceChart" style="width: 100%; height: 400px;"></div>
+                    <div class="medical-stats">
+                        <p class="stat-item">
+                            <span class="icon">📚</span>
+                            <span class="content">《本草纲目》收录药物1892种，药方11096个。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">🔸</span>
+                            <span class="content">中医针灸穴位达到361个，经络12条主经。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">📜</span>
+                            <span class="content">汉代张仲景《伤寒杂病论》收录方剂269首。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">📖</span>
+                            <span class="content">唐代《千金要方》记载处方5300余首。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">📗</span>
+                            <span class="content">宋代《太平惠民和剂局方》收载788个成药方。</span>
+                        </p>
+                    </div>
                 </div>
 
-                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <div style="margin-top: 10px; padding-top: 20px; border-top: 1px solid #eee;">
                     <div style="display: flex; gap: 10px;">
                         <span style="color: #666;">标签:</span>
                         <div style="display: flex; gap: 10px;">
@@ -837,12 +929,28 @@
                 </div>
 
                 <div style="flex: 1;">
-                    <p style="color: #444; line-height: 1.8; margin-bottom: 20px;">
-                        中国古代工程技术成就辉煌，涵盖水利、建筑、冶金等多个领域。都江堰水利工程巧妙利用地形，实现"水患变水利"，两千年来滋润着成都平原。
-                    </p>
-                    <p style="color: #444; line-height: 1.8;">
-                        建筑领域，北京故宫展现了木构建筑的卓越成就，长城蜿蜒万里见证匠心，赵州桥开创石拱桥先河。
-                    </p>
+                    <div class="engineering-stats">
+                        <p class="stat-item">
+                            <span class="icon">🌊</span>
+                            <span class="content">都江堰灌溉面积达1000多万亩，惠及四川盆地。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">⚡</span>
+                            <span class="content">郑国渠开凿全长300里，灌溉农田40余万亩。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">🌉</span>
+                            <span class="content">赵州桥跨度37.37米，世界最古老敞肩石拱桥。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">🏰</span>
+                            <span class="content">故宫占地72万平方米，建筑面积15万平方米。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">🧱</span>
+                            <span class="content">长城总长21196千米，横跨七大省区。</span>
+                        </p>
+                    </div>
                 </div>
 
                 <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
@@ -901,7 +1009,29 @@
                 </div>
 
                 <div style="flex: 1;">
-                    <div id="influenceChart" style="width: 100%; height: 400px;"></div>
+                    <div class="influence-stats">
+                        <p class="stat-item">
+                            <span class="icon">🧭</span>
+                            <span class="content">指南针传入欧洲后，促进了大航海时代的到来。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">🖨️</span>
+                            <span class="content">活字印刷术使欧洲印刷书籍数量在50年内增长3000倍。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">📜</span>
+                            <span class="content">造纸术传入阿拉伯后，巴格达建立了30多家造纸厂。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">🧨</span>
+                            <span class="content">火药技术西传后，改变了欧洲中世纪的城堡战争形式。</span>
+                        </p>
+                        <p class="stat-item">
+                            <span class="icon">🎨</span>
+                            <span class="content">瓷器外销量巨大，明清两代输出瓷器超过1亿件。</span>
+                        </p>
+                    </div>
+                    <div id="influenceChart" style="width: 100%; height: 100px;"></div>
                 </div>
 
                 <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
