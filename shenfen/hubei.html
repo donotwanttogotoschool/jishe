@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>湖北省古代科技文化数据大屏</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: "楷体", KaiTi, Arial, sans-serif;
+            background: #fef8ef; // 使用vintage主题的背景色
+            color: #333333;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 80px 1fr 1fr;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            background: rgba(254, 248, 239, 0.9); // 略微透明的vintage背景色
+        }
+
+        .title {
+            grid-column: 1 / 5;
+            grid-row: 1;
+            text-align: center;
+            font-size: 36px;
+            color: #724e58; // vintage主题的深色
+            text-shadow: 2px 2px 4px rgba(215, 171, 130, 0.3);
+            margin: 0;
+            padding: 10px 0;
+            background: rgba(215, 171, 130, 0.1);
+            border-radius: 10px;
+            position: relative;
+            /* 添加相对定位 */
+        }
+
+        .home-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 20px;
+            background: rgba(215, 171, 130, 0.3);
+            border: 1px solid #d7ab82;
+            border-radius: 5px;
+            color: #724e58;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: "楷体", KaiTi, Arial, sans-serif;
+        }
+
+        .home-button:hover {
+            background: rgba(215, 171, 130, 0.4);
+            box-shadow: 0 2px 4px rgba(215, 171, 130, 0.3);
+        }
+
+        .panel {
+            position: relative;
+            background: rgba(255, 252, 248, 0.8); // 更浅的vintage色调
+            border: 1px solid #d7ab82; // 使用vintage主题的边框色
+            border-radius: 10px;
+            padding: 15px;
+            box-sizing: border-box;
+            min-height: 0;
+            min-width: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(215, 171, 130, 0.2); // vintage风格阴影
+        }
+
+        .map-container {
+            grid-column: 2 / 4;
+            grid-row: 2;
+        }
+
+        #map {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100% !important;
+            height: calc(100% - 30px) !important;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            color: #724e58;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #d7ab82;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 15px;
+            background: rgba(215, 171, 130, 0.1);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        #timelineChart,
+        #pieChart,
+        #barChart,
+        #scatterChart,
+        #trendChart,
+        #statsChart,
+        #heritageChart,
+        #periodChart,
+        #typeChart {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100% !important;
+            height: calc(100% - 30px) !important;
+        }
+
+        .left-top {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .right-top {
+            grid-column: 4;
+            grid-row: 2;
+        }
+
+        .left-bottom {
+            grid-column: 1;
+            grid-row: 3;
+        }
+
+        .bottom-left {
+            grid-column: 2;
+            grid-row: 3;
+        }
+
+        .bottom-right {
+            grid-column: 3;
+            grid-row: 3;
+        }
+
+        .right-bottom {
+            grid-column: 4;
+            grid-row: 3;
+        }
+
+        #rankingList,
+        #dataTable,
+        #trendChart {
+            position: absolute;
+            top: 50px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            overflow: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #333333;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(215, 171, 130, 0.3);
+        }
+
+        .data-table th {
+            background: rgba(215, 171, 130, 0.2);
+            position: sticky;
+            top: 0;
+            color: #724e58;
+        }
+
+        .chart-container {
+            position: absolute;
+            top: 50px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">
+            <a href="../index.html" class="home-button">返回首页</a>
+            湖北省古代自然科学文化数据大屏
+        </div>
+
+        <!-- 左上角面板：时间轴 -->
+        <div class="panel left-top">
+            <div class="chart-title">历史科技成就时间轴</div>
+            <div class="chart-container">
+                <div id="timelineChart"></div>
+            </div>
+        </div>
+
+        <!-- 中间地图 -->
+        <div class="panel map-container">
+            <div class="chart-title">湖北省地图</div>
+            <div class="chart-container">
+                <div id="map"></div>
+            </div>
+        </div>
+
+        <!-- 右上角面板：柱状图 -->
+        <div class="panel right-top">
+            <div class="chart-title">各地区科技发展指数</div>
+            <div class="chart-container">
+                <div id="barChart"></div>
+            </div>
+        </div>
+
+        <!-- 左下角面板：饼图 -->
+        <div class="panel left-bottom">
+            <div class="chart-title">科技文化分布</div>
+            <div class="chart-container">
+                <div id="pieChart"></div>
+            </div>
+        </div>
+
+        <!-- 中间下方左侧面板：散点图 -->
+        <div class="panel bottom-left">
+            <div class="chart-title">科技成就分布</div>
+            <div class="chart-container">
+                <div id="scatterChart"></div>
+            </div>
+        </div>
+
+        <!-- 中间下方右侧面板：趋势图 -->
+        <div class="panel bottom-right">
+            <div class="chart-title">发展趋势分析</div>
+            <div class="chart-container">
+                <div id="trendChart"></div>
+            </div>
+        </div>
+
+        <!-- 右下角面板：排名列表 -->
+        <div class="panel right-bottom">
+            <div class="chart-title">科技成就排名</div>
+            <div id="rankingList">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>成就名称</th>
+                            <th>影响力</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>李时珍《本草纲目》</td>
+                            <td>95</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>神农尝百草</td>
+                            <td>90</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>张衡地动仪</td>
+                            <td>85</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>郭守敬水利工程</td>
+                            <td>82</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>华佗医学成就</td>
+                            <td>80</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>张仲景《伤寒杂病论》</td>
+                            <td>78</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/hubei.js"></script>
+
+    <script>
+        // 定义vintage主题的调色板
+        const colorPalette = [
+            '#d87c7c',
+            '#919e8b',
+            '#d7ab82',
+            '#6e7074',
+            '#61a0a8',
+            '#efa18d',
+            '#787464',
+            '#cc7e63',
+            '#724e58',
+            '#4b565b'
+        ];
+
+        // 初始化所有图表
+        const mapChart = echarts.init(document.getElementById('map'));
+        const timelineChart = echarts.init(document.getElementById('timelineChart'));
+        const pieChart = echarts.init(document.getElementById('pieChart'));
+        const barChart = echarts.init(document.getElementById('barChart'));
+        const scatterChart = echarts.init(document.getElementById('scatterChart'));
+        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+
+        // 修改时间轴配置
+        const timelineOption = {
+            tooltip: {
+                trigger: 'axis',
+                formatter: '{b}: {c}'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['战国', '东汉', '元代', '明代', '近代'],
+                axisLabel: { color: '#724e58' },  // 改为灰色
+                axisLine: {
+                    lineStyle: { color: '#724e58' }  // x轴线条颜色
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: { color: '#724e58' },  // 改为灰色
+                axisLine: {
+                    lineStyle: { color: '#724e58' }  // y轴线条颜色
+                }
+            },
+            series: [{
+                data: [90, 85, 75, 95, 80],
+                type: 'line',
+                smooth: true,
+                lineStyle: {
+                    color: '#724e58'  // 改为灰色
+                },
+                itemStyle: {
+                    color: '#724e58'  // 数据点的颜色
+                },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: 'rgba(114, 78, 88, 0.3)'  // 渐变起始色，带透明度
+                    }, {
+                        offset: 1,
+                        color: 'rgba(114, 78, 88, 0.1)'  // 渐变结束色，带透明度
+                    }])
+                }
+            }]
+        };
+
+        // 修改饼图配置
+        const pieOption = {
+            tooltip: {
+                trigger: 'item'
+            },
+            series: [{
+                type: 'pie',
+                radius: '70%',
+                data: [
+                    { value: 35, name: '医药科技' },
+                    { value: 25, name: '天文科技' },
+                    { value: 20, name: '农业科技' },
+                    { value: 20, name: '工程技术' }
+                ],
+                label: {
+                    color: '#724e58'
+                },
+                color: colorPalette
+            }]
+        };
+
+        // 修改柱状图配置
+        const barOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                position: 'top',
+                extraCssText: 'z-index: 100;'  // 提高tooltip的层级
+            },
+            legend: {
+                data: ['天文学', '农学', '医学', '地理学', '工程技术'],
+                textStyle: {
+                    color: '#724e58'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} 分',
+                    color: '#724e58'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: ['武汉市', '宜昌市', '襄阳市', '黄石市', '十堰市', '荆州市', '黄冈市'],
+                axisLabel: {
+                    color: '#724e58'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: '天文学',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [120, 90, 80, 70, 60, 50, 40],
+                    itemStyle: {
+                        color: colorPalette[0]
+                    }
+                },
+                {
+                    name: '农学',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [200, 180, 170, 160, 150, 140, 130],
+                    itemStyle: {
+                        color: colorPalette[1]
+                    }
+                },
+                {
+                    name: '医学',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [150, 140, 130, 120, 110, 100, 90],
+                    itemStyle: {
+                        color: colorPalette[2]
+                    }
+                },
+                {
+                    name: '地理学',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [100, 90, 80, 70, 60, 50, 40],
+                    itemStyle: {
+                        color: colorPalette[3]
+                    }
+                },
+                {
+                    name: '工程技术',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [180, 170, 160, 150, 140, 130, 120],
+                    itemStyle: {
+                        color: colorPalette[4]
+                    }
+                }
+            ]
+        };
+
+        // 修改地图配置
+        const mapOption = {
+            title: {
+                left: 'center',
+                textStyle: {
+                    color: '#2c5530',
+                    fontSize: 24
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    const scientificInfo = {
+                        '武汉市': '近代科技教育中心',
+                        '宜昌市': '三峡工程科技成就',
+                        '襄阳市': '张衡故里，发明地动仪',
+                        '黄冈市': '李时珍家乡，本草研究基地',
+                        '神农架林区': '中医药发源地之一'
+                    };
+                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
+                }
+            },
+            visualMap: {
+                min: 0,
+                max: 1000,
+                left: 'left',
+                top: 'bottom',
+                text: ['高', '低'],
+                calculable: true,
+                inRange: {
+                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
+                },
+                textStyle: {
+                    color: '#724e58'
+                }
+            },
+            series: [
+                {
+                    name: '湖北省',
+                    type: 'map3D', // 使用 3D 地图
+                    map: '湖北', // 使用湖北省地图
+                    roam: true, // 允许缩放和拖动
+                    itemStyle: {
+                        areaColor: '#fef8ef',
+                        borderColor: '#d7ab82',
+                        borderWidth: 1
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 14,
+                            color: '#724e58'
+                        },
+                        itemStyle: {
+                            areaColor: '#efa18d'
+                        }
+                    },
+                    data: [
+                        { name: '武汉市', value: 1000 },
+                        { name: '宜昌市', value: 800 },
+                        { name: '襄阳市', value: 750 },
+                        { name: '黄冈市', value: 600 },
+                        { name: '孝感市', value: 580 },
+                        { name: '荆州市', value: 550 },
+                        { name: '十堰市', value: 500 },
+                        { name: '黄石市', value: 450 },
+                        { name: '咸宁市', value: 400 },
+                        { name: '荆门市', value: 380 },
+                        { name: '随州市', value: 350 },
+                        { name: '恩施土家族苗族自治州', value: 300 },
+                        { name: '鄂州市', value: 280 },
+                        { name: '天门市', value: 250 },
+                        { name: '仙桃市', value: 230 },
+                        { name: '潜江市', value: 200 },
+                        { name: '神农架林区', value: 150 }
+                    ],
+                    shading: 'color', // 着色方式
+                    light: {
+                        main: {
+                            intensity: 1.2, // 光照强度
+                            shadow: true, // 是否显示阴影
+                            shadowQuality: 'high' // 阴影质量
+                        },
+                        ambient: {
+                            intensity: 0.3 // 环境光强度
+                        }
+                    }
+                }
+            ]
+        };
+
+        // 修改散点图配置
+        const scatterOption = {
+            xAxis: {
+                type: 'value',
+                name: '历史年代',
+                axisLabel: { color: '#e8f5e9' }
+            },
+            yAxis: {
+                type: 'value',
+                name: '影响力',
+                axisLabel: { color: '#e8f5e9' }
+            },
+            series: [{
+                type: 'scatter',
+                data: [
+                    [1, 85, '神农尝百草'],
+                    [2, 90, '张衡地动仪'],
+                    [3, 75, '郭守敬水利'],
+                    [4, 95, '李时珍本草']
+                ],
+                symbolSize: 20,
+                itemStyle: {
+                    color: colorPalette[2]
+                }
+            }]
+        };
+
+        // 修改趋势图配置
+        const trendOption = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['春秋', '战国', '秦汉', '魏晋', '隋唐', '宋元', '明清'],
+                axisLabel: {
+                    color: '#724e58',  // 使用vintage主题色
+                    fontSize: 12
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '科技发展指数',
+                axisLabel: {
+                    color: '#724e58',
+                    fontSize: 12
+                }
+            },
+            series: [{
+                name: '科技发展指数',
+                type: 'line',
+                smooth: true,
+                data: [50, 65, 85, 70, 90, 75, 95],
+                lineStyle: {
+                    color: colorPalette[2],  // 使用vintage主题色
+                    width: 3
+                },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: 'rgba(215, 171, 130, 0.5)'  // vintage主题色带透明度
+                    }, {
+                        offset: 1,
+                        color: 'rgba(215, 171, 130, 0.1)'
+                    }])
+                },
+                itemStyle: {
+                    color: colorPalette[2]
+                }
+            }]
+        };
+
+        // 渲染所有图表
+        timelineChart.setOption(timelineOption);
+        pieChart.setOption(pieOption);
+        barChart.setOption(barOption);
+        scatterChart.setOption(scatterOption);
+        mapChart.setOption(mapOption);
+        trendChart.setOption(trendOption);
+
+        // 修改resize事件处理
+        function resizeAllCharts() {
+            const charts = [
+                timelineChart,
+                mapChart,
+                pieChart,
+                barChart,
+                scatterChart,
+                trendChart
+            ];
+
+            charts.forEach(chart => {
+                if (chart) {
+                    chart.resize();
+                }
+            });
+        }
+
+        // 添加防抖功能，避免频繁调用resize
+        function debounce(func, wait) {
+            let timeout;
+            return function () {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, arguments), wait);
+            };
+        }
+
+        // 监听窗口调整事件
+        window.addEventListener('resize', debounce(resizeAllCharts, 250));
+
+        // 初始化时调用一次
+        resizeAllCharts();
+    </script>
+</body>
+
+</html>

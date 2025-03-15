@@ -960,8 +960,8 @@ function echarts_10() {
     });
 }
 function echarts_15() {
-        var myChart = echarts.init(document.getElementById('map'));
-        		
+    var myChart = echarts.init(document.getElementById('map'));
+    
 var data = [
    
     {name: '衢州', value: 177},
@@ -1252,7 +1252,37 @@ option = {
                window.addEventListener("resize",function(){
                    myChart.resize();
                });
-    }
+
+    // 添加点击事件监听
+    myChart.on('click', function(params) {
+        // 检查是否点击了湖北省
+        if (params.name === '湖北') {
+            // 跳转到湖北省的页面
+            window.location.href = './shenfen/hubei.html';
+        }
+    });
+
+    // 添加鼠标悬停提示
+    myChart.on('mouseover', function(params) {
+        if (params.name === '湖北') {
+            // 可以通过 dispatchAction 来显示特殊效果
+            myChart.dispatchAction({
+                type: 'highlight',
+                name: '湖北'
+            });
+        }
+    });
+
+    // 鼠标移出时恢复正常显示
+    myChart.on('mouseout', function(params) {
+        if (params.name === '湖北') {
+            myChart.dispatchAction({
+                type: 'downplay',
+                name: '湖北'
+            });
+        }
+    });
+}
     
 function echarts_16() {
     var myChart = echarts.init(document.getElementById('echart16'));
