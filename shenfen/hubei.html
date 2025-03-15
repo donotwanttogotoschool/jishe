@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>湖北省古代科技文化数据大屏</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body,
         html {
@@ -37,11 +38,32 @@
             color: #724e58; // vintage主题的深色
             text-shadow: 2px 2px 4px rgba(215, 171, 130, 0.3);
             margin: 0;
-            padding: 10px 0;
+            padding: 20px 0;
             background: rgba(215, 171, 130, 0.1);
             border-radius: 10px;
             position: relative;
-            /* 添加相对定位 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title-icons {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .title-icon {
+            color: #724e58;
+            opacity: 0.8;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .title-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
         }
 
         .home-button {
@@ -206,7 +228,13 @@
     <div class="container">
         <div class="title">
             <a href="../index.html" class="home-button">返回首页</a>
-            湖北省古代自然科学文化数据大屏
+            <span>湖北省古代自然科学文化数据大屏</span>
+            <div class="title-icons">
+                <i class="title-icon fas fa-book-open"></i>
+                <i class="title-icon fas fa-microscope"></i>
+                <i class="title-icon fas fa-flask"></i>
+                <i class="title-icon fas fa-compass"></i>
+            </div>
         </div>
 
         <!-- 左上角面板：时间轴 -->
@@ -620,30 +648,134 @@
         };
 
         // 修改散点图配置
+        const data = [
+            // 汉朝数据
+            [
+                [25, 70, 5000000, '武汉', '汉朝'],
+                [30, 72, 4000000, '襄阳', '汉朝'],
+                [20, 68, 3000000, '荆州', '汉朝'],
+                [15, 65, 2000000, '宜昌', '汉朝'],
+                [22, 69, 2500000, '黄冈', '汉朝'],
+                [18, 67, 1800000, '十堰', '汉朝'],
+                [28, 71, 3500000, '孝感', '汉朝']
+            ],
+            // 唐朝数据
+            [
+                [28, 77, 17096869, '武汉', '唐朝'],
+                [31, 77.4, 27662440, '襄阳', '唐朝'],
+                [25, 75, 15460573, '荆州', '唐朝'],
+                [23, 74.7, 10582082, '宜昌', '唐朝'],
+                [27, 76, 12500000, '黄冈', '唐朝'],
+                [24, 73, 9800000, '十堰', '唐朝'],
+                [29, 76.5, 13500000, '孝感', '唐朝']
+            ],
+            // ... 其他朝代数据类似添加 ...
+        ];
+
+        const dynasties = ['汉朝', '唐朝', '宋朝', '元朝', '明朝', '清朝'];
+
         const scatterOption = {
+            backgroundColor: 'transparent', // 移除渐变背景以配合整体风格
+            legend: {
+                right: '10%',
+                top: '3%',
+                data: dynasties,
+                textStyle: {
+                    fontSize: 14,
+                    color: '#724e58'  // vintage风格文字颜色
+                }
+            },
+            grid: {
+                left: '12%',    // 增加左边距
+                right: '8%',
+                top: '15%',
+                bottom: '12%'   // 增加底部边距
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    return `${params.data[3]}<br/>
+                            朝代：${params.seriesName}<br/>
+                            科技成就：${params.data[0]}<br/>
+                            发展程度：${params.data[1]}<br/>
+                            人口：${params.data[2]}`;
+                }
+            },
             xAxis: {
-                type: 'value',
-                name: '历史年代',
-                axisLabel: { color: '#e8f5e9' }
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        color: 'rgba(114, 78, 88, 0.2)'
+                    }
+                },
+                name: '科技成就',
+                nameGap: 25,    // 增加坐标轴名称与轴线的距离
+                nameTextStyle: {
+                    fontSize: 14,
+                    color: '#724e58',
+                    padding: [10, 0, 0, 0]  // 增加文字与轴的距离
+                },
+                axisLabel: {
+                    color: '#724e58',
+                    margin: 12  // 增加标签与轴线的距离
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
             },
             yAxis: {
-                type: 'value',
-                name: '影响力',
-                axisLabel: { color: '#e8f5e9' }
-            },
-            series: [{
-                type: 'scatter',
-                data: [
-                    [1, 85, '神农尝百草'],
-                    [2, 90, '张衡地动仪'],
-                    [3, 75, '郭守敬水利'],
-                    [4, 95, '李时珍本草']
-                ],
-                symbolSize: 20,
-                itemStyle: {
-                    color: colorPalette[2]
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        color: 'rgba(114, 78, 88, 0.2)'
+                    }
+                },
+                scale: true,
+                name: '发展程度',
+                nameGap: 30,    // 增加坐标轴名称与轴线的距离
+                nameTextStyle: {
+                    fontSize: 14,
+                    color: '#724e58',
+                    padding: [0, 0, 10, 0]  // 增加文字与轴的距离
+                },
+                axisLabel: {
+                    color: '#724e58',
+                    margin: 12  // 增加标签与轴线的距离
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
                 }
-            }]
+            },
+            series: dynasties.map((dynasty, index) => ({
+                name: dynasty,
+                data: data[index],
+                type: 'scatter',
+                symbolSize: function (data) {
+                    return Math.sqrt(data[2]) / 2e2;  // 调整除数使点变大
+                },
+                emphasis: {
+                    focus: 'series',
+                    label: {
+                        show: true,
+                        formatter: function (param) {
+                            return param.data[3];
+                        },
+                        position: 'top',
+                        color: '#724e58',
+                        fontSize: 14
+                    }
+                },
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowColor: 'rgba(215, 171, 130, 0.3)',
+                    shadowOffsetY: 5,
+                    color: colorPalette[index % colorPalette.length]
+                }
+            }))
         };
 
         // 修改趋势图配置
