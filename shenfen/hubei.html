@@ -279,7 +279,7 @@
 
         <!-- 中间下方右侧面板：趋势图 -->
         <div class="panel bottom-right">
-            <div class="chart-title">发展趋势分析</div>
+            <div class="chart-title">科学文化区域分布图</div>
             <div class="chart-container">
                 <div id="trendChart"></div>
             </div>
@@ -364,45 +364,148 @@
 
         // 修改时间轴配置
         const timelineOption = {
+            //title: {
+            //   text: '历史科技成就时间轴',
+            //   textStyle: {
+            //        color: '#724e58',
+            //       fontSize: 16
+            //    }
+            // },
             tooltip: {
                 trigger: 'axis',
-                formatter: '{b}: {c}'
-            },
-            xAxis: {
-                type: 'category',
-                data: ['战国', '东汉', '元代', '明代', '近代'],
-                axisLabel: { color: '#724e58' },  // 改为灰色
-                axisLine: {
-                    lineStyle: { color: '#724e58' }  // x轴线条颜色
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#724e58'
+                    }
                 }
             },
-            yAxis: {
-                type: 'value',
-                axisLabel: { color: '#724e58' },  // 改为灰色
-                axisLine: {
-                    lineStyle: { color: '#724e58' }  // y轴线条颜色
-                }
-            },
-            series: [{
-                data: [90, 85, 75, 95, 80],
-                type: 'line',
-                smooth: true,
-                lineStyle: {
-                    color: '#724e58'  // 改为灰色
-                },
+            legend: {
+                data: ['农学', '医学', '数学', '工程技术'],
+                top: '-2%',
+                right: '10%',
+                itemWidth: 10,        // 减小宽度使其成为圆点
+                itemHeight: 10,       // 保持相同的高度使其成为圆形
                 itemStyle: {
-                    color: '#724e58'  // 数据点的颜色
+                    borderRadius: 5   // 设置为宽度/高度的一半，使其成为完美的圆
                 },
-                areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                        offset: 0,
-                        color: 'rgba(114, 78, 88, 0.3)'  // 渐变起始色，带透明度
-                    }, {
-                        offset: 1,
-                        color: 'rgba(114, 78, 88, 0.1)'  // 渐变结束色，带透明度
-                    }])
+                itemGap: 16,
+                textStyle: {
+                    color: '#724e58',
+                    fontSize: 14,
+                    padding: [3, 0, 0, 0]
                 }
-            }]
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '15%',
+                containLabel: true
+            },
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: ['夏', '商', '周', '秦', '汉', '唐', '宋'],
+                axisLabel: {
+                    color: '#724e58'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
+            }],
+            yAxis: [{
+                type: 'value',
+                name: '',  // 移除y轴名称
+                interval: 100,  // 设置刻度间隔为100
+                max: 200,      // 设置最大值为200
+                axisLabel: {
+                    color: '#724e58',
+                    formatter: function (value) {
+                        // 只显示100和200的刻度值
+                        return value === 100 || value === 200 ? value : '';
+                    }
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(114, 78, 88, 0.1)',
+                        type: 'dashed'
+                    }
+                }
+            }],
+            series: [
+                {
+                    name: '农学',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    showSymbol: false,  // 隐藏数据点
+                    areaStyle: {
+                        color: colorPalette[1],
+                        opacity: 1
+                    },
+                    data: [22, 18.2, 19.1, 23.4, 29, 33, 31],
+                    itemStyle: {
+                        color: colorPalette[1],
+                        borderRadius: 10
+                    }
+                },
+                {
+                    name: '医学',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    showSymbol: false,  // 隐藏数据点
+                    areaStyle: {
+                        color: colorPalette[2],
+                        opacity: 1
+                    },
+                    data: [15, 23.2, 20.1, 15.4, 19, 33, 41],
+                    itemStyle: {
+                        color: colorPalette[2],
+                        borderRadius: 10
+                    }
+                },
+                {
+                    name: '数学',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    showSymbol: false,  // 隐藏数据点
+                    areaStyle: {
+                        color: colorPalette[3],
+                        opacity: 1
+                    },
+                    data: [32, 33.2, 30.1, 33.4, 39, 33, 32],
+                    itemStyle: {
+                        color: colorPalette[3],
+                        borderRadius: 10
+                    }
+                },
+                {
+                    name: '工程技术',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    showSymbol: false,  // 隐藏数据点
+                    areaStyle: {
+                        color: colorPalette[4],
+                        opacity: 1
+                    },
+                    data: [62, 73.2, 70.1, 73.4, 99, 92, 62],
+                    itemStyle: {
+                        color: colorPalette[4],
+                        borderRadius: 10
+                    }
+                }
+            ]
         };
 
         // 修改饼图配置
@@ -786,18 +889,18 @@
                     type: 'shadow'
                 }
             },
-            title: {
-                text: '各地区科技文化分布',
-                left: 'center',
-                top: 5,
-                textStyle: {
-                    color: '#724e58',
-                    fontSize: 14
-                }
-            },
+            // title: {
+            //   text: '各地区科技文化分布',
+            //    left: 'center',
+            //     top: 5,
+            //      textStyle: {
+            //          color: '#724e58',
+            //          fontSize: 14
+            //     }
+            //  },
             legend: {
                 data: ['成就', '人物', '著作'],
-                top: 25,
+                top: 0,
                 textStyle: {
                     color: '#724e58',
                     fontSize: 12
