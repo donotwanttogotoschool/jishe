@@ -186,7 +186,7 @@
         #dataTable,
         #trendChart {
             position: absolute;
-            top: 50px;
+            top: 40px;
             left: 15px;
             right: 15px;
             bottom: 15px;
@@ -781,46 +781,117 @@
         // 修改趋势图配置
         const trendOption = {
             tooltip: {
-                trigger: 'axis'
-            },
-            xAxis: {
-                type: 'category',
-                data: ['春秋', '战国', '秦汉', '魏晋', '隋唐', '宋元', '明清'],
-                axisLabel: {
-                    color: '#724e58',  // 使用vintage主题色
-                    fontSize: 12
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
                 }
             },
-            yAxis: {
-                type: 'value',
-                name: '科技发展指数',
-                axisLabel: {
+            title: {
+                text: '各地区科技文化分布',
+                left: 'center',
+                top: 5,
+                textStyle: {
+                    color: '#724e58',
+                    fontSize: 14
+                }
+            },
+            legend: {
+                data: ['成就', '人物', '著作'],
+                top: 25,
+                textStyle: {
                     color: '#724e58',
                     fontSize: 12
                 }
             },
-            series: [{
-                name: '科技发展指数',
-                type: 'line',
-                smooth: true,
-                data: [50, 65, 85, 70, 90, 75, 95],
-                lineStyle: {
-                    color: colorPalette[2],  // 使用vintage主题色
-                    width: 3
-                },
-                areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                        offset: 0,
-                        color: 'rgba(215, 171, 130, 0.5)'  // vintage主题色带透明度
-                    }, {
-                        offset: 1,
-                        color: 'rgba(215, 171, 130, 0.1)'
-                    }])
-                },
-                itemStyle: {
-                    color: colorPalette[2]
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '20%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['武汉', '黄石', '十堰', '宜昌', '襄阳', '鄂州', '荆州'],
+                    axisLabel: {
+                        color: '#724e58',
+                        fontSize: 12,
+                        rotate: 30  // 稍微旋转标签避免重叠
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#724e58'
+                        }
+                    }
                 }
-            }]
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '数量',
+                    nameTextStyle: {
+                        color: '#724e58',
+                        fontSize: 12
+                    },
+                    axisLabel: {
+                        color: '#724e58',
+                        fontSize: 12
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#724e58'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(114, 78, 88, 0.1)',
+                            type: 'dashed'
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '成就',
+                    type: 'bar',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [320, 280, 150, 200, 250, 180, 220],
+                    itemStyle: {
+                        color: '#d87c7c',  // vintage主题的红色
+                        borderRadius: [3, 3, 0, 0]  // 给柱子添加圆角
+                    }
+                },
+                {
+                    name: '人物',
+                    type: 'bar',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [120, 90, 80, 110, 100, 70, 90],
+                    itemStyle: {
+                        color: '#919e8b',  // vintage主题的绿色
+                        borderRadius: [3, 3, 0, 0]
+                    }
+                },
+                {
+                    name: '著作',
+                    type: 'bar',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [50, 40, 30, 60, 55, 35, 45],
+                    itemStyle: {
+                        color: '#d7ab82',  // vintage主题的棕色
+                        borderRadius: [3, 3, 0, 0]
+                    }
+                }
+            ]
         };
 
         // 渲染所有图表
