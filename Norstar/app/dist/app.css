@@ -622,24 +622,30 @@
 .button-style.style2 {
   height: 52px;
 }
+
 .button-style.style2 .btn-main {
   border-radius: 0;
-  background-color: #BBADFF;
+  background-color: #d7ab82;
+  /* vintage暖棕色 替换原来的 #BBADFF */
   height: 52px;
   padding: 14px 26px;
 }
+
 .button-style.style2 .btn-absolute {
   height: 52px;
-  background-color: #000000;
+  background-color: #724e58;
+  /* vintage深红褐色 替换原来的 #000000 */
   border-right: 4px solid #fff;
   border-bottom: 4px solid #fff;
   border-radius: 0;
   right: -8px;
   bottom: -8px;
 }
+
 .button-style.style2:hover .btn-absolute {
   border-radius: 0;
 }
+
 .button-style.style2:hover .btn-main {
   transform: translate3d(8px, 8px, 8px);
 }
@@ -906,7 +912,7 @@
   height: 100%;
   left: 0;
   top: 0;
-  background: url("./../../assets/images/backgroup/bg_page_title_2.png") center center no-repeat;
+  background: url("./../../assets/images/backgroup/bg_page_title_2.jpg") center center no-repeat;
   background-size: cover;
   background-attachment: fixed;
   opacity: 0.7;
