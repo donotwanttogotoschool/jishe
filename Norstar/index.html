@@ -125,6 +125,63 @@
             font-size: 16px;
             font-family: "华文楷体", "STKaiti", KaiTi, serif;
         }
+
+        /* 添加垂直导航栏样式 */
+        .vertical-nav {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 15px;
+            border-radius: 0 15px 15px 0;
+            box-shadow: 2px 0 15px rgba(114, 78, 88, 0.1);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            border-left: 3px solid #724e58;
+        }
+
+        .vertical-nav .nav-item {
+            display: block;
+            padding: 12px 15px;
+            margin: 8px 0;
+            color: #724e58;
+            text-decoration: none;
+            font-family: "华文楷体", "STKaiti", KaiTi, serif;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+        }
+
+        .vertical-nav .nav-item:hover {
+            background: rgba(114, 78, 88, 0.1);
+            transform: translateX(5px);
+        }
+
+        .vertical-nav .nav-item.active {
+            background: #724e58;
+            color: #fff;
+        }
+
+        /* 添加指示器 */
+        .vertical-nav .nav-item::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: #d87c7c;
+            transition: height 0.3s ease;
+        }
+
+        .vertical-nav .nav-item:hover::after {
+            height: 70%;
+        }
     </style>
 </head>
 
@@ -337,8 +394,7 @@
                             <h4 class="title wow fadeIn chinese-text" data-wow-duration="1s" data-wow-delay=".3s">
                                 <div id="scienceChart" style="width: 100%; height: 400px;"></div>
                             </h4>
-                            <a href="Home-Corperate.html" class="wow fadeIn" data-wow-duration="1s"
-                                data-wow-delay=".3s">了解更多</a>
+                            <a href="Home-Corperate.html" class="wow fadeIn" data-wow-delay=".3s">了解更多</a>
                         </div>
                     </div>
                 </div>
@@ -1204,8 +1260,18 @@
             var chartDom = document.getElementById('medicalChart');
             var myChart = echarts.init(chartDom);
 
+            // vintage主题配色
+            const vintageColors = {
+                primary: '#724e58',     // 主色调
+                secondary: '#919e8b',   // 次要色调
+                accent: '#d87c7c',      // 强调色
+                light: '#d7ab82',       // 浅色
+                neutral: '#6e7074',     // 中性色
+                background: '#ffffff'    // 背景色
+            };
+
             var option = {
-                backgroundColor: '#FFFFFF',
+                backgroundColor: vintageColors.background,
                 polar: {
                     radius: [30, '80%']
                 },
@@ -1214,7 +1280,12 @@
                     startAngle: 75,
                     axisLine: {
                         lineStyle: {
-                            color: '#9370DB'
+                            color: vintageColors.primary
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(114, 78, 88, 0.1)'
                         }
                     }
                 },
@@ -1223,15 +1294,20 @@
                     data: ['针灸', '脉诊', '药方', '养生'],
                     axisLine: {
                         lineStyle: {
-                            color: '#9370DB'
+                            color: vintageColors.primary
                         }
+                    },
+                    axisLabel: {
+                        color: vintageColors.primary
                     }
                 },
                 tooltip: {
                     trigger: 'item',
-                    backgroundColor: '#E6E6FA',
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderColor: vintageColors.light,
+                    borderWidth: 1,
                     textStyle: {
-                        color: '#4B0082'
+                        color: vintageColors.primary
                     }
                 },
                 series: [{
@@ -1239,13 +1315,20 @@
                     data: [15, 8, 20, 12],
                     coordinateSystem: 'polar',
                     itemStyle: {
-                        color: '#D8BFD8'
+                        color: vintageColors.accent,
+                        opacity: 0.8
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: vintageColors.accent,
+                            opacity: 1
+                        }
                     },
                     label: {
                         show: true,
                         position: 'middle',
                         formatter: '{b}: {c} 本',
-                        color: '#4B0082'
+                        color: vintageColors.primary
                     }
                 }]
             };
@@ -1255,6 +1338,32 @@
             // 响应窗口大小变化
             window.addEventListener('resize', function () {
                 myChart.resize();
+            });
+        });
+    </script>
+
+    <script>
+        // 添加滚动监听以更新活动状态
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.vertical-nav .nav-item');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - sectionHeight / 3)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href').slice(1) === current) {
+                        item.classList.add('active');
+                    }
+                });
             });
         });
     </script>

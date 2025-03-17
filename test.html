@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超长界面导航书签示例</title>
+    <style>
+        /* 添加平滑滚动效果 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* 内容部分样式 */
+        .section {
+            padding: 100px 20px;
+            margin-top: 60px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <a href="#section1">第一章</a>
+        <a href="#section2">第二章</a>
+        <a href="#section3">第三章</a>
+        <a href="#section4">第四章</a>
+        <a href="#section5">第五章</a>
+    </div>
+
+    <!-- 内容部分 -->
+    <div id="section1" class="section">
+        <h2>第一章：简介</h2>
+        <p>这是第一章的内容，介绍页面的主题和背景。</p>
+    </div>
+
+    <div id="section2" class="section">
+        <h2>第二章：历史</h2>
+        <p>这是第二章的内容，详细描述相关历史背景。</p>
+    </div>
+
+    <div id="section3" class="section">
+        <h2>第三章：技术</h2>
+        <p>这是第三章的内容，深入探讨技术细节。</p>
+    </div>
+
+    <div id="section4" class="section">
+        <h2>第四章：应用</h2>
+        <p>这是第四章的内容，展示技术的实际应用场景。</p>
+    </div>
+
+    <div id="section5" class="section">
+        <h2>第五章：总结</h2>
+        <p>这是第五章的内容，总结全文并展望未来。</p>
+    </div>
+</body>
+
+</html>
