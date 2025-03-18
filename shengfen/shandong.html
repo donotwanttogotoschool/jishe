@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>山东省古代科技文化数据大屏</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: "楷体", KaiTi, Arial, sans-serif;
+            background: #fef8ef; // 使用vintage主题的背景色
+            color: #333333;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 80px 1fr 1fr;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            background: rgba(254, 248, 239, 0.9); // 略微透明的vintage背景色
+        }
+
+        .title {
+            grid-column: 1 / 5;
+            grid-row: 1;
+            text-align: center;
+            font-size: 36px;
+            color: #724e58; // vintage主题的深色
+            text-shadow: 2px 2px 4px rgba(215, 171, 130, 0.3);
+            margin: 0;
+            padding: 20px 0;
+            background: rgba(215, 171, 130, 0.1);
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title-icons {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .title-icon {
+            color: #724e58;
+            opacity: 0.8;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .title-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .home-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 20px;
+            background: rgba(215, 171, 130, 0.3);
+            border: 1px solid #d7ab82;
+            border-radius: 5px;
+            color: #724e58;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: "楷体", KaiTi, Arial, sans-serif;
+        }
+
+        .home-button:hover {
+            background: rgba(215, 171, 130, 0.4);
+            box-shadow: 0 2px 4px rgba(215, 171, 130, 0.3);
+        }
+
+        .panel {
+            position: relative;
+            background: rgba(255, 252, 248, 0.8); // 更浅的vintage色调
+            border: 1px solid #d7ab82; // 使用vintage主题的边框色
+            border-radius: 10px;
+            padding: 15px;
+            box-sizing: border-box;
+            min-height: 0;
+            min-width: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(215, 171, 130, 0.2); // vintage风格阴影
+        }
+
+        .map-container {
+            grid-column: 2 / 4;
+            grid-row: 2;
+        }
+
+        #map {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100% !important;
+            height: calc(100% - 30px) !important;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            color: #724e58;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #d7ab82;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 15px;
+            background: rgba(215, 171, 130, 0.1);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        #timelineChart,
+        #pieChart,
+        #barChart,
+        #scatterChart,
+        #trendChart,
+        #statsChart,
+        #heritageChart,
+        #periodChart,
+        #typeChart {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100% !important;
+            height: calc(100% - 30px) !important;
+        }
+
+        .left-top {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .right-top {
+            grid-column: 4;
+            grid-row: 2;
+        }
+
+        .left-bottom {
+            grid-column: 1;
+            grid-row: 3;
+        }
+
+        .bottom-left {
+            grid-column: 2;
+            grid-row: 3;
+        }
+
+        .bottom-right {
+            grid-column: 3;
+            grid-row: 3;
+        }
+
+        .right-bottom {
+            grid-column: 4;
+            grid-row: 3;
+        }
+
+        #rankingList,
+        #dataTable,
+        #trendChart {
+            position: absolute;
+            top: 40px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            overflow: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #333333;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(215, 171, 130, 0.3);
+        }
+
+        .data-table th {
+            background: rgba(215, 171, 130, 0.2);
+            position: sticky;
+            top: 0;
+            color: #724e58;
+        }
+
+        .data-table thead {
+            background: #f8f8f8;
+            position: sticky;
+            top: 0;
+            z-index: 2; /* 确保表头在最上层 */
+        }
+
+        .chart-container {
+            position: absolute;
+            top: 50px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">
+            <a href="../index.html" class="home-button">返回首页</a>
+            <span>山东省古代自然科学文化数据大屏</span>
+            <div class="title-icons">
+                <i class="title-icon fas fa-book-open"></i>
+                <i class="title-icon fas fa-microscope"></i>
+                <i class="title-icon fas fa-flask"></i>
+                <i class="title-icon fas fa-compass"></i>
+            </div>
+        </div>
+
+        <!-- 左上角面板：时间轴 -->
+        <div class="panel left-top">
+            <div class="chart-title">历史科技成就时间轴</div>
+            <div class="chart-container">
+                <div id="timelineChart"></div>
+            </div>
+        </div>
+
+        <!-- 中间地图 -->
+        <div class="panel map-container">
+            <div class="chart-title">山东省地图</div>
+            <div class="chart-container">
+                <div id="map"></div>
+            </div>
+        </div>
+
+        <!-- 右上角面板：柱状图 -->
+        <div class="panel right-top">
+            <div class="chart-title">各地区科技发展指数</div>
+            <div class="chart-container">
+                <div id="barChart"></div>
+            </div>
+        </div>
+
+        <!-- 左下角面板：饼图 -->
+        <div class="panel left-bottom">
+            <div class="chart-title">科技文化分布</div>
+            <div class="chart-container">
+                <div id="pieChart"></div>
+            </div>
+        </div>
+
+        <!-- 中间下方左侧面板：散点图 -->
+        <div class="panel bottom-left">
+            <div class="chart-title">科技成就分布</div>
+            <div class="chart-container">
+                <div id="scatterChart"></div>
+            </div>
+        </div>
+
+        <!-- 中间下方右侧面板：趋势图 -->
+        <div class="panel bottom-right">
+            <div class="chart-title">科学文化区域分布图</div>
+            <div class="chart-container">
+                <div id="trendChart"></div>
+            </div>
+        </div>
+
+        <!-- 右下角面板：排名列表 -->
+        <div class="panel right-bottom">
+            <div class="chart-title">科技成就排名</div>
+            <div id="rankingList">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>成就名称</th>
+                            <th>影响力</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>赵州桥</td>
+                            <td>9.0</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>《授时历》</td>
+                            <td>8.5</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>大运河河北段</td>
+                            <td>8.0</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>隆兴寺转轮藏</td>
+                            <td>7.5</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>扁鹊的医学成就</td>
+                            <td>7.0</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>赵信城的建筑技术</td>
+                            <td>6.5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/shandong.js"></script>
+
+    <script>
+        // 定义vintage主题的调色板
+        const colorPalette = [
+            '#d87c7c',
+            '#919e8b',
+            '#d7ab82',
+            '#6e7074',
+            '#61a0a8',
+            '#efa18d',
+            '#787464',
+            '#cc7e63',
+            '#724e58',
+            '#4b565b'
+        ];
+
+        // 初始化所有图表
+        const mapChart = echarts.init(document.getElementById('map'));
+        const timelineChart = echarts.init(document.getElementById('timelineChart'));
+        const pieChart = echarts.init(document.getElementById('pieChart'));
+        const barChart = echarts.init(document.getElementById('barChart'));
+        const scatterChart = echarts.init(document.getElementById('scatterChart'));
+        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+
+        // 修改时间轴配置
+        const timelineOption = {
+            //title: {
+            //   text: '历史科技成就时间轴',
+            //   textStyle: {
+            //        color: '#724e58',
+            //       fontSize: 16
+            //    }
+            // },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#724e58'
+                    }
+                }
+            },
+            legend: {
+                data: ['农学', '医学', '数学', '工程技术'],
+                top: '-2%',
+                right: '10%',
+                itemWidth: 10,        // 减小宽度使其成为圆点
+                itemHeight: 10,       // 保持相同的高度使其成为圆形
+                itemStyle: {
+                    borderRadius: 5   // 设置为宽度/高度的一半，使其成为完美的圆
+                },
+                itemGap: 16,
+                textStyle: {
+                    color: '#724e58',
+                    fontSize: 14,
+                    padding: [3, 0, 0, 0]
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '15%',
+                containLabel: true
+            },
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: ['夏', '商', '周', '秦', '汉', '唐', '宋'],
+                axisLabel: {
+                    color: '#724e58'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
+            }],
+            yAxis: [{
+                type: 'value',
+                name: '',  // 移除y轴名称
+                interval: 100,  // 设置刻度间隔为100
+                max: 200,      // 设置最大值为200
+                axisLabel: {
+                    color: '#724e58',
+                    formatter: function (value) {
+                        // 只显示100和200的刻度值
+                        return value === 100 || value === 200 ? value : '';
+                    }
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(114, 78, 88, 0.1)',
+                        type: 'dashed'
+                    }
+                }
+            }],
+            series: [
+                {
+                    name: '农学',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    showSymbol: false,  // 隐藏数据点
+                    areaStyle: {
+                        color: colorPalette[1],
+                        opacity: 1
+                    },
+                    data: [15, 23, 21, 29, 31, 34, 33],
+                    itemStyle: {
+                        color: colorPalette[1],
+                        borderRadius: 10
+                    }
+                },
+                {
+                    name: '医学',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    showSymbol: false,  // 隐藏数据点
+                    areaStyle: {
+                        color: colorPalette[2],
+                        opacity: 1
+                    },
+                    data: [16, 24, 22, 30, 34, 36, 35],
+                    itemStyle: {
+                        color: colorPalette[2],
+                        borderRadius: 10
+                    }
+                },
+                {
+                    name: '数学',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    showSymbol: false,  // 隐藏数据点
+                    areaStyle: {
+                        color: colorPalette[3],
+                        opacity: 1
+                    },
+                    data: [42, 38, 33, 35, 39, 30, 32],
+                    itemStyle: {
+                        color: colorPalette[3],
+                        borderRadius: 10
+                    }
+                },
+                {
+                    name: '工程技术',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    showSymbol: false,  // 隐藏数据点
+                    areaStyle: {
+                        color: colorPalette[4],
+                        opacity: 1
+                    },
+                    data: [62, 67, 75, 70, 78, 72, 65],
+                    itemStyle: {
+                        color: colorPalette[4],
+                        borderRadius: 10
+                    }
+                }
+            ]
+        };
+
+        // 修改饼图配置
+        const pieOption = {
+            tooltip: {
+                trigger: 'item'
+            },
+            series: [{
+                type: 'pie',
+                radius: '70%',
+                data: [
+                { value: 60, name: '工业科技' },  // 山东省是工业大省，工业科技发展迅速
+                { value: 55, name: '农业科技' },  // 山东省是农业大省，农业科技发展迅速
+                { value: 50, name: '海洋科技' },  // 山东省海洋资源丰富，海洋科技发展迅速
+                { value: 45, name: '能源科技' },  // 山东省能源资源丰富，能源科技发展较快
+                { value: 40, name: '交通科技' },  // 山东省是交通枢纽，交通科技发展迅速
+                { value: 35, name: '食品科技' },  // 食品加工业是山东省的重要产业
+                { value: 30, name: '信息技术' }   // 信息技术产业正在快速发展
+                ],
+                label: {
+                    color: '#724e58'
+                },
+                color: colorPalette
+            }]
+        };
+
+        // 修改柱状图配置
+        const barOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                position: function (point, params, dom, rect, size) {
+                    // 限制tooltip显示在图表的右上角区域
+                    return ['50%', '10%'];  // 固定在右上角区域
+                },
+                extraCssText: 'z-index: 100000 !important; pointer-events: all !important;'
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '15%',  // 增加顶部间距，给tooltip留出更多空间
+                containLabel: true
+            },
+            legend: {
+                data: ['天文学', '农学', '医学', '地理学', '工程技术'],
+                textStyle: {
+                    color: '#724e58'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} 分',
+                    color: '#724e58'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: ['济南市', '青岛市', '烟台市', '淄博市', '枣庄市', '东营市', '潍坊市','济宁市'],
+                axisLabel: {
+                    color: '#724e58'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: '天文学',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [210, 200, 190, 180, 170, 160, 150, 140],
+                    itemStyle: {
+                        color: colorPalette[0]
+                    }
+                },
+                {
+                    name: '农学',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [300, 290, 280, 270, 260, 250, 240, 230],
+                    itemStyle: {
+                        color: colorPalette[1]
+                    }
+                },
+                {
+                    name: '医学',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [270, 260, 250, 240, 230, 220, 210, 200],
+                    itemStyle: {
+                        color: colorPalette[2]
+                    }
+                },
+                {
+                    name: '地理学',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [190, 185, 180, 175, 170, 165, 160, 155],
+                    itemStyle: {
+                        color: colorPalette[3]
+                    }
+                },
+                {
+                    name: '工程技术',
+                    type: 'bar',
+                    stack: 'total',
+                    barWidth: '60%',
+                    label: {
+                        show: false  // 移除数字标签
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [280, 270, 260, 250, 240, 230, 220, 210],
+                    itemStyle: {
+                        color: colorPalette[4]
+                    }
+                }
+            ]
+        };
+
+        // 修改地图配置
+        const mapOption = {
+            title: {
+                left: 'center',
+                textStyle: {
+                    color: '#2c5530',
+                    fontSize: 24
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    const scientificInfo = {
+                        '济南市': '省会城市，经济、科技、教育中心，交通枢纽',
+                        '青岛市': '沿海开放城市，港口经济和制造业发达，国际化程度高',
+                        '烟台市': '港口城市，海洋经济和食品加工业发达',
+                        '淄博市': '陶瓷和化工产业重镇，制造业发达',
+                        '枣庄市': '煤炭、钢铁和机械制造业发达，历史文化名城',
+                        '东营市': '石油化工产业重镇，资源型城市',
+                        '潍坊市': '机械制造、纺织业和农业大市，风筝之都',
+                        '济宁市': '文化历史名城，农业和机械制造业发达',
+                        '泰安市': '历史文化名城，旅游业和农业发达',
+                        '威海市': '沿海城市，海洋经济和旅游业发达',
+                        '日照市': '港口城市，海洋经济和旅游业发达',
+                        '莱芜市': '钢铁产业基地，矿产资源丰富',
+                        '临沂市': '商贸物流中心，现代农业发达',
+                        '德州市': '农业、机械制造和化工产业发达，交通枢纽',
+                        '聊城市': '农业和机械制造业发达，历史文化名城',
+                        '滨州市': '石油化工、机械制造和农业发达',
+                        '菏泽市': '农业、化肥和机械制造业发达',
+                        '雄安新区': '国家级新区，科技创新和现代服务业发展迅速'
+                    };
+                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
+                }
+            },
+            visualMap: {
+                min: 0,
+                max: 1000,
+                left: 'left',
+                top: 'bottom',
+                text: ['高', '低'],
+                calculable: true,
+                inRange: {
+                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
+                },
+                textStyle: {
+                    color: '#724e58'
+                }
+            },
+            series: [
+                {
+                    name: '山东省',
+                    type: 'map3D', // 使用 3D 地图
+                    map: '山东', // 使用山东省地图
+                    roam: true, // 允许缩放和拖动
+                    itemStyle: {
+                        areaColor: '#fef8ef',
+                        borderColor: '#d7ab82',
+                        borderWidth: 1
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 14,
+                            color: '#724e58'
+                        },
+                        itemStyle: {
+                            areaColor: '#efa18d'
+                        }
+                    },
+                    data: [
+                    { name: '济南市', value: 1050 },  // 省会城市，经济、科技、教育中心，交通枢纽
+                    { name: '青岛市', value: 1000 },  // 沿海开放城市，港口经济和制造业发达，国际化程度高
+                    { name: '烟台市', value: 950 },   // 港口城市，海洋经济和食品加工业发达
+                    { name: '淄博市', value: 910 },   // 陶瓷和化工产业重镇，制造业发达
+                    { name: '枣庄市', value: 870 },   // 煤炭、钢铁和机械制造业发达，历史文化名城
+                    { name: '东营市', value: 880 },   // 石油化工产业重镇，资源型城市
+                    { name: '潍坊市', value: 840 },   // 机械制造、纺织业和农业大市，风筝之都
+                    { name: '济宁市', value: 850 },   // 文化历史名城，农业和机械制造业发达
+                    { name: '泰安市', value: 810 },   // 历史文化名城，旅游业和农业发达
+                    { name: '威海市', value: 770 },   // 沿海城市，海洋经济和旅游业发达
+                    { name: '日照市', value: 780 },   // 港口城市，海洋经济和旅游业发达
+                    { name: '莱芜市', value: 700 },   // 钢铁产业基地，矿产资源丰富
+                    { name: '临沂市', value: 730 },   // 商贸物流中心，现代农业发达
+                    { name: '德州市', value: 710 },   // 农业、机械制造和化工产业发达，交通枢纽
+                    { name: '菏泽市', value: 700 },
+                    { name: '滨州市', value: 670 },
+                    { name: '聊城市', value: 650 }
+                    ],
+                    shading: 'color', // 着色方式
+                    light: {
+                        main: {
+                            intensity: 1.2, // 光照强度
+                            shadow: true, // 是否显示阴影
+                            shadowQuality: 'high' // 阴影质量
+                        },
+                        ambient: {
+                            intensity: 0.3 // 环境光强度
+                        }
+                    }
+                }
+            ]
+        };
+
+        // 修改散点图配置
+        const data = [
+            // 汉朝数据
+            [
+                [22, 66, 2450000, '济南', '汉朝'],  // 济南在汉朝时期是重要城市，经济、科技、教育中心
+                [20, 64, 2150000, '青岛', '汉朝'],  // 青岛在汉朝时期逐渐发展
+                [18, 62, 1750000, '烟台', '汉朝'],  // 烟台在汉朝时期是重要港口
+                [16, 60, 1350000, '淄博', '汉朝'],  // 淄博在汉朝时期已有一定规模
+                [19, 63, 1550000, '潍坊', '汉朝'],  // 潍坊在汉朝时期是重要的农业基地
+                [17, 61, 1250000, '临沂', '汉朝'],  // 临沂在汉朝时期逐渐发展
+                [21, 65, 1950000, '日照', '汉朝']   // 日照在汉朝时期是沿海重要城市
+            ],
+            // 唐朝数据
+            [
+                [26, 70, 3550000, '济南', '唐朝'],  // 济南在唐朝时期是重要城市，经济、科技、教育中心
+                [24, 68, 3050000, '青岛', '唐朝'],  // 青岛在唐朝时期逐渐发展
+                [22, 66, 2650000, '烟台', '唐朝'],  // 烟台在唐朝时期是重要港口
+                [20, 64, 2250000, '淄博', '唐朝'],  // 淄博在唐朝时期是工业重镇
+                [23, 67, 2450000, '潍坊', '唐朝'],  // 潍坊在唐朝时期是重要的农业基地
+                [21, 65, 1850000, '临沂', '唐朝'],  // 临沂在唐朝时期逐渐发展
+                [25, 69, 2750000, '日照', '唐朝']   // 日照在唐朝时期是沿海重要城市
+            ],
+            // 宋朝数据
+            [
+                [32, 76, 4450000, '济南', '宋朝'],  // 济南在宋朝时期是重要城市，文化、科技、经济中心
+                [30, 74, 3950000, '青岛', '宋朝'],  // 青岛在宋朝时期逐渐发展
+                [28, 72, 3350000, '烟台', '宋朝'],  // 烟台在宋朝时期是重要港口
+                [26, 70, 2850000, '淄博', '宋朝'],  // 淄博在宋朝时期是工业重镇
+                [29, 73, 3150000, '潍坊', '宋朝'],  // 潍坊在宋朝时期是重要的农业基地
+                [27, 71, 2550000, '临沂', '宋朝'],  // 临沂在宋朝时期逐渐发展
+                [31, 75, 3750000, '日照', '宋朝']   // 日照在宋朝时期是沿海重要城市
+            ],
+            // 元朝数据
+            [
+                [36, 80, 5250000, '济南', '元朝'],  // 济南在元朝时期是重要城市，文化、科技、经济中心
+                [34, 78, 4650000, '青岛', '元朝'],  // 青岛在元朝时期逐渐发展
+                [32, 76, 4050000, '烟台', '元朝'],  // 烟台在元朝时期是重要港口
+                [30, 74, 3550000, '淄博', '元朝'],  // 淄博在元朝时期是工业重镇
+                [33, 77, 3950000, '潍坊', '元朝'],  // 潍坊在元朝时期是重要的农业基地
+                [31, 75, 3350000, '临沂', '元朝'],  // 临沂在元朝时期逐渐发展
+                [35, 79, 4550000, '日照', '元朝']   // 日照在元朝时期是沿海重要城市
+            ],
+            // 明朝数据
+            [
+                [40, 84, 6150000, '济南', '明朝'],  // 济南在明朝时期是重要城市，文化、科技、经济中心
+                [38, 82, 5450000, '青岛', '明朝'],  // 青岛在明朝时期逐渐发展
+                [36, 80, 4950000, '烟台', '明朝'],  // 烟台在明朝时期是重要港口
+                [34, 78, 4350000, '淄博', '明朝'],  // 淄博在明朝时期是工业重镇
+                [37, 81, 4750000, '潍坊', '明朝'],  // 潍坊在明朝时期是重要的农业基地
+                [35, 79, 4150000, '临沂', '明朝'],  // 临沂在明朝时期逐渐发展
+                [39, 83, 5350000, '日照', '明朝']   // 日照在明朝时期是沿海重要城市
+            ],
+            // 清朝数据
+            [
+                [44, 88, 7050000, '济南', '清朝'],  // 济南在清朝时期是重要城市，文化、科技、经济中心
+                [42, 86, 6350000, '青岛', '清朝'],  // 青岛在清朝时期逐渐发展
+                [40, 84, 5750000, '烟台', '清朝'],  // 烟台在清朝时期是重要港口
+                [38, 82, 5150000, '淄博', '清朝'],  // 淄博在清朝时期是工业重镇
+                [41, 85, 5550000, '潍坊', '清朝'],  // 潍坊在清朝时期是重要的农业基地
+                [39, 83, 4950000, '临沂', '清朝'],  // 临沂在清朝时期逐渐发展
+                [43, 87, 6250000, '日照', '清朝']   // 日照在清朝时期是沿海重要城市
+            ]
+        ];
+
+        const dynasties = ['汉朝', '唐朝', '宋朝', '元朝', '明朝', '清朝'];
+
+        const scatterOption = {
+            backgroundColor: 'transparent', // 移除渐变背景以配合整体风格
+            legend: {
+                right: '10%',
+                top: '3%',
+                data: dynasties,
+                textStyle: {
+                    fontSize: 14,
+                    color: '#724e58'  // vintage风格文字颜色
+                }
+            },
+            grid: {
+                left: '12%',    // 增加左边距
+                right: '8%',
+                top: '15%',
+                bottom: '12%'   // 增加底部边距
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    return `${params.data[3]}<br/>
+                            朝代：${params.seriesName}<br/>
+                            科技成就：${params.data[0]}<br/>
+                            发展程度：${params.data[1]}<br/>
+                            人口：${params.data[2]}`;
+                }
+            },
+            xAxis: {
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        color: 'rgba(114, 78, 88, 0.2)'
+                    }
+                },
+                name: '科技成就',
+                nameGap: 25,    // 增加坐标轴名称与轴线的距离
+                nameTextStyle: {
+                    fontSize: 14,
+                    color: '#724e58',
+                    padding: [10, 0, 0, 0]  // 增加文字与轴的距离
+                },
+                axisLabel: {
+                    color: '#724e58',
+                    margin: 12  // 增加标签与轴线的距离
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
+            },
+            yAxis: {
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        color: 'rgba(114, 78, 88, 0.2)'
+                    }
+                },
+                scale: true,
+                name: '发展程度',
+                nameGap: 30,    // 增加坐标轴名称与轴线的距离
+                nameTextStyle: {
+                    fontSize: 14,
+                    color: '#724e58',
+                    padding: [0, 0, 10, 0]  // 增加文字与轴的距离
+                },
+                axisLabel: {
+                    color: '#724e58',
+                    margin: 12  // 增加标签与轴线的距离
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#724e58'
+                    }
+                }
+            },
+            series: dynasties.map((dynasty, index) => ({
+                name: dynasty,
+                data: data[index],
+                type: 'scatter',
+                symbolSize: function (data) {
+                    return Math.sqrt(data[2]) / 2e2;  // 调整除数使点变大
+                },
+                emphasis: {
+                    focus: 'series',
+                    label: {
+                        show: true,
+                        formatter: function (param) {
+                            return param.data[3];
+                        },
+                        position: 'top',
+                        color: '#724e58',
+                        fontSize: 14
+                    }
+                },
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowColor: 'rgba(215, 171, 130, 0.3)',
+                    shadowOffsetY: 5,
+                    color: colorPalette[index % colorPalette.length]
+                }
+            }))
+        };
+
+        // 修改趋势图配置
+        const trendOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            // title: {
+            //   text: '各地区科技文化分布',
+            //    left: 'center',
+            //     top: 5,
+            //      textStyle: {
+            //          color: '#724e58',
+            //          fontSize: 14
+            //     }
+            //  },
+            legend: {
+                data: ['成就', '人物', '著作'],
+                top: 0,
+                textStyle: {
+                    color: '#724e58',
+                    fontSize: 12
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '20%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['济南', '青岛', '烟台', '淄博', '枣庄', '东营', '潍坊'],
+                    axisLabel: {
+                        color: '#724e58',
+                        fontSize: 12,
+                        rotate: 30  // 稍微旋转标签避免重叠
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#724e58'
+                        }
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '数量',
+                    nameTextStyle: {
+                        color: '#724e58',
+                        fontSize: 12
+                    },
+                    axisLabel: {
+                        color: '#724e58',
+                        fontSize: 12
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#724e58'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(114, 78, 88, 0.1)',
+                            type: 'dashed'
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '成就',
+                    type: 'bar',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [360, 350, 330, 340, 320, 360, 355],
+                    itemStyle: {
+                        color: '#d87c7c',  // vintage主题的红色
+                        borderRadius: [3, 3, 0, 0]  // 给柱子添加圆角
+                    }
+                },
+                {
+                    name: '人物',
+                    type: 'bar',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [140, 130, 140, 125, 150, 120, 135],
+                    itemStyle: {
+                        color: '#919e8b',  // vintage主题的绿色
+                        borderRadius: [3, 3, 0, 0]
+                    }
+                },
+                {
+                    name: '著作',
+                    type: 'bar',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [65, 60, 75, 70, 85, 70, 80],
+                    itemStyle: {
+                        color: '#d7ab82',  // vintage主题的棕色
+                        borderRadius: [3, 3, 0, 0]
+                    }
+                }
+            ]
+        };
+
+        // 渲染所有图表
+        timelineChart.setOption(timelineOption);
+        pieChart.setOption(pieOption);
+        barChart.setOption(barOption);
+        scatterChart.setOption(scatterOption);
+        mapChart.setOption(mapOption);
+        trendChart.setOption(trendOption);
+
+        // 修改resize事件处理
+        function resizeAllCharts() {
+            const charts = [
+                timelineChart,
+                mapChart,
+                pieChart,
+                barChart,
+                scatterChart,
+                trendChart
+            ];
+
+            charts.forEach(chart => {
+                if (chart) {
+                    chart.resize();
+                }
+            });
+        }
+
+        // 添加防抖功能，避免频繁调用resize
+        function debounce(func, wait) {
+            let timeout;
+            return function () {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, arguments), wait);
+            };
+        }
+
+        // 监听窗口调整事件
+        window.addEventListener('resize', debounce(resizeAllCharts, 250));
+
+        // 初始化时调用一次
+        resizeAllCharts();
+    </script>
+</body>
+
+</html>
