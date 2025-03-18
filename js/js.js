@@ -1258,7 +1258,7 @@ option = {
         // 检查是否点击了湖北省
         if (params.name === '湖北') {
             // 跳转到湖北省的页面
-            window.location.href = './shenfen/hubei.html';
+            window.location.href = './shengfen/hubei.html';
         }
     });
 
