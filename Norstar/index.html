@@ -254,6 +254,22 @@
                 margin-left: 0;
             }
         }
+
+        .highcharts-figure {
+            min-width: 500px;
+            width: 120%;
+            height: 500px;
+            margin: 20px -10%;
+            /* 使用负边距使其居中 */
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .highcharts-figure {
+                width: 100%;
+                margin: 20px 0;
+            }
+        }
     </style>
 </head>
 
@@ -692,12 +708,9 @@
                     <div class="col-md-6 flex align-items-center">
                         <div class="tf-title-style2 pl-65 wow fadeIn" data-wow-delay=".5s">
                             <p class="sub-title color-style rotate-text">自然科学交融</p>
-                            <!-- 增加容器宽度 -->
-                            <div class="venn-container wow fadeIn" style="max-width: 800px;">
-                                <figure class="highcharts-figure">
-                                    <div id="science-venn"></div>
-                                </figure>
-                            </div>
+                            <figure class="highcharts-figure wow fadeIn">
+                                <div id="science-venn"></div>
+                            </figure>
                             <a href="#" onclick="showModal('influence'); return false;"
                                 class="tf-button style-2">探索详情</a>
                         </div>
@@ -1408,12 +1421,12 @@
 
                 Highcharts.chart('science-venn', {
                     chart: {
-                        backgroundColor: '#F5F1EA',
+                        backgroundColor: 'transparent', // 设置透明背景
                         style: {
                             fontFamily: '"华文楷体", "STKaiti", KaiTi, serif'
                         },
                         height: 500,
-                        width: null, // 让图表宽度自适应容器
+                        width: null,
                         spacingLeft: 20,
                         spacingRight: 20
                     },
@@ -1436,7 +1449,7 @@
                         enabled: false
                     },
                     tooltip: {
-                        backgroundColor: '#F5F1EA',
+                        backgroundColor: 'rgba(245, 241, 234, 0.9)',
                         style: {
                             color: '#724e58',
                             fontFamily: '"华文楷体", "STKaiti", KaiTi, serif'
@@ -1502,8 +1515,7 @@
                                     brightness: 0.1
                                 }
                             },
-                            // 增加图表尺寸
-                            size: '85%'  // 使用更大的空间比例
+                            size: '85%'
                         }
                     }
                 });
