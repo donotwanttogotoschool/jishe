@@ -182,6 +182,78 @@
         .vertical-nav .nav-item:hover::after {
             height: 70%;
         }
+
+        .venn-container {
+            background: #F5F1EA;
+            padding: 30px;
+            border: 1px solid rgba(114, 78, 88, 0.3);
+            border-radius: 8px;
+            margin: 20px 0;
+            width: 120%;
+            /* 使容器比父元素更宽 */
+            margin-left: -10%;
+            /* 向左偏移以保持居中 */
+        }
+
+        .highcharts-figure {
+            min-width: 500px;
+            width: 100%;
+            height: 500px;
+            margin: 0 auto;
+        }
+
+        /* 隐藏 Highcharts.com 水印 */
+        .highcharts-credits {
+            display: none !important;
+        }
+
+        .vintage-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: #F5F1EA;
+            color: #724e58;
+            border: 1px solid #724e58;
+            border-radius: 4px;
+            font-family: "华文楷体", "STKaiti", KaiTi, serif;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .vintage-btn:hover {
+            background: #724e58;
+            color: #F5F1EA;
+        }
+
+        .vintage-venn {
+            min-height: 300px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .venn-container {
+                padding: 15px;
+                min-height: 250px;
+            }
+
+            .vintage-venn {
+                min-height: 250px;
+            }
+        }
+
+        /* 确保图表文字样式正确 */
+        .highcharts-data-label text {
+            font-family: "华文楷体", "STKaiti", KaiTi, serif !important;
+            fill: #724e58 !important;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .venn-container {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 
@@ -618,12 +690,16 @@
                         </div>
                     </div>
                     <div class="col-md-6 flex align-items-center">
-                        <div class="tf-title-style2 pl-65  wow fadeIn" data-wow-delay=".5s">
-                            <p class="sub-title color-style rotate-text">科技文明影响</p>
-                            <h4 class="title style2 wow fadeIn chinese-text">
-                                中国古代科技成就如璀璨星河，跨越山海，照亮了古代世界文明发展的道路。四大发明引领时代变革：造纸术让知识传播插上翅膀，指南针开启航海新纪元，火药改变了世界力量格局，活字印刷推动了人类文明进步。天文历法的精准智慧远播东瀛，对日本、朝鲜等国产生深远影响；中医药学的独特理论与实践沿着丝绸之路传遍欧亚，《本草纲目》等医典被译成多国文字，至今仍在造福世界各地病患；数学著作《九章算术》跨越语言藩篱，其中的算法原理启发了东西方数学家。农业技术更是如甘霖般滋润四方，水稻种植法、植桑养蚕术等传入东南亚，推动了亚洲农耕文明的进步。中国古代的冶铁技术、瓷器制作、纺织工艺等，通过商贸往来和文化交流，丰富了世界物质文明的画卷。这些科技成就，是中华文明对人类进步的重要贡献，在历史长河中写下了浓墨重彩的一笔。
-                            </h4>
-                            <a href="#" onclick="showModal('influence'); return false;">探索详情</a>
+                        <div class="tf-title-style2 pl-65 wow fadeIn" data-wow-delay=".5s">
+                            <p class="sub-title color-style rotate-text">自然科学交融</p>
+                            <!-- 增加容器宽度 -->
+                            <div class="venn-container wow fadeIn" style="max-width: 800px;">
+                                <figure class="highcharts-figure">
+                                    <div id="science-venn"></div>
+                                </figure>
+                            </div>
+                            <a href="#" onclick="showModal('influence'); return false;"
+                                class="tf-button style-2">探索详情</a>
                         </div>
                     </div>
                 </div>
@@ -1248,7 +1324,7 @@
                     trigger: 'item',
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
                     borderColor: vintageColors.light,
-                    borderWidth: 1,
+                    borderRadius: 8,
                     textStyle: {
                         color: vintageColors.primary
                     }
@@ -1310,6 +1386,136 @@
             });
         });
     </script>
+
+    <script>
+        // 动态加载所需的脚本
+        function loadScript(url) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = url;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // 按顺序加载所需的脚本
+        async function loadCharts() {
+            try {
+                await loadScript('https://code.highcharts.com/highcharts.js');
+                await loadScript('https://code.highcharts.com/modules/venn.js');
+                await loadScript('https://code.highcharts.com/modules/accessibility.js');
+
+                Highcharts.chart('science-venn', {
+                    chart: {
+                        backgroundColor: '#F5F1EA',
+                        style: {
+                            fontFamily: '"华文楷体", "STKaiti", KaiTi, serif'
+                        },
+                        height: 500,
+                        width: null, // 让图表宽度自适应容器
+                        spacingLeft: 20,
+                        spacingRight: 20
+                    },
+                    title: {
+                        text: '中国古代自然科学领域交融',
+                        style: {
+                            color: '#724e58',
+                            fontSize: '20px',
+                            fontFamily: '"华文楷体", "STKaiti", KaiTi, serif'
+                        }
+                    },
+                    subtitle: {
+                        text: '农学、化学、医学生物、天文地理、工程建筑、数学、物理',
+                        style: {
+                            color: '#724e58',
+                            fontFamily: '"华文楷体", "STKaiti", KaiTi, serif'
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#F5F1EA',
+                        style: {
+                            color: '#724e58',
+                            fontFamily: '"华文楷体", "STKaiti", KaiTi, serif'
+                        },
+                        borderColor: '#724e58',
+                        borderRadius: 8,
+                        headerFormat: '',
+                        pointFormat: '{#if (eq 1 point.sets.length)}领域: <b>{point.sets.0}</b>{else}领域: {#each point.sets}<b>{this}</b>{#unless @last} 和 {/unless}{/each}<br><br>交融内容: <b>{point.name}</b>{/if}'
+                    },
+                    series: [{
+                        type: 'venn',
+                        data: [
+                            {
+                                sets: ['农学'], value: 10, name: '农业、农时、农具、农田水利',
+                                color: 'rgba(114, 78, 88, 0.15)'
+                            },
+                            {
+                                sets: ['化学'], value: 8, name: '炼丹术、冶金术、火药、药物炮制',
+                                color: 'rgba(114, 78, 88, 0.2)'
+                            },
+                            {
+                                sets: ['医学生物'], value: 9, name: '中医、本草、针灸、养生',
+                                color: 'rgba(114, 78, 88, 0.25)'
+                            },
+                            {
+                                sets: ['天文地理'], value: 7, name: '天文历法、地理志、风水、地图',
+                                color: 'rgba(114, 78, 88, 0.3)'
+                            },
+                            {
+                                sets: ['工程建筑'], value: 8, name: '水利工程、桥梁、宫殿、城墙',
+                                color: 'rgba(114, 78, 88, 0.35)'
+                            },
+                            {
+                                sets: ['数学'], value: 6, name: '算术、九章算术、测量、历法计算',
+                                color: 'rgba(114, 78, 88, 0.4)'
+                            },
+                            {
+                                sets: ['物理'], value: 5, name: '力学、声学、光学、器械制造',
+                                color: 'rgba(114, 78, 88, 0.45)'
+                            },
+                            { sets: ['农学', '化学'], value: 2, name: '肥料与农药（如石灰、硫磺）' },
+                            { sets: ['农学', '医学生物'], value: 3, name: '药用植物（如人参、黄芪）' },
+                            { sets: ['化学', '医学生物'], value: 2, name: '炼丹术与药物（如丹药、药石）' },
+                            { sets: ['天文地理', '农学'], value: 3, name: '农时与历法（如二十四节气）' },
+                            { sets: ['天文地理', '工程建筑'], value: 2, name: '风水与建筑布局（如紫禁城）' },
+                            { sets: ['数学', '工程建筑'], value: 2, name: '测量与设计（如《周髀算经》）' },
+                            { sets: ['物理', '工程建筑'], value: 2, name: '力学与桥梁设计（如赵州桥）' }
+                        ],
+                        dataLabels: {
+                            style: {
+                                color: '#724e58',
+                                fontSize: '14px',
+                                fontFamily: '"华文楷体", "STKaiti", KaiTi, serif',
+                                textOutline: 'none'
+                            }
+                        }
+                    }],
+                    plotOptions: {
+                        venn: {
+                            states: {
+                                hover: {
+                                    borderColor: '#724e58',
+                                    brightness: 0.1
+                                }
+                            },
+                            // 增加图表尺寸
+                            size: '85%'  // 使用更大的空间比例
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('加载脚本出错:', error);
+            }
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', loadCharts);
+    </script>
+
 </body>
 
 </html>
