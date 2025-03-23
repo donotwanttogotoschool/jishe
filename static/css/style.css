@@ -1,0 +1,387 @@
+/* 复古风格配色 */
+:root {
+    --primary-color: #bea593;
+    --secondary-color: #f7f3eb;
+    --accent-color: #d4b8a0;
+    --text-color: #4a4a4a;
+    --link-color: #c1a98d;
+    --main-font: "Microsoft YaHei", "微软雅黑", sans-serif;
+}
+
+/* 整体布局样式 */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--secondary-color);
+    font-family: var(--main-font);
+}
+
+.wrapper {
+    min-height: 100vh;
+    background-color: var(--secondary-color);
+}
+
+/* 导航栏样式 */
+.main-header {
+    background-color: var(--secondary-color);
+    border: none;
+    margin-left: 250px;
+    padding: 0;
+    height: 57px;
+    z-index: 1030;
+}
+
+.navbar {
+    background-color: var(--secondary-color) !important;
+    padding: 0.5rem 1rem;
+}
+
+/* 侧边栏样式 */
+.main-sidebar {
+    background-color: var(--primary-color) !important;
+    width: 250px !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+/* 内容区域样式 */
+.content-wrapper {
+    margin-left: 250px;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+/* 确保内容区域填满 */
+.container-fluid {
+    background-color: var(--secondary-color);
+    padding: 1rem;
+    min-height: 100%;
+}
+
+/* 导航菜单样式 */
+.nav-sidebar .nav-link {
+    color: #fff !important;
+    padding: 0.5rem 1rem;
+}
+
+.nav-sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 卡片样式 */
+.card {
+    background-color: #fff;
+    border: none;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+/* 按钮样式 */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* 页面标题样式 */
+.content-header {
+    background-color: var(--secondary-color);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Footer样式 */
+.main-footer {
+    background-color: var(--secondary-color);
+    margin-left: 250px;
+    padding: 1rem;
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+/* 品牌容器样式 */
+.brand-container {
+    padding: 1rem;
+    background-color: var(--primary-color);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.brand-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+
+.brand-link:hover {
+    color: rgba(255,255,255,0.8);
+}
+
+/* 侧边栏切换动画 */
+.main-sidebar,
+.content-wrapper,
+.main-header {
+    transition: margin-left 0.3s ease-in-out;
+}
+
+body.sidebar-collapse .main-sidebar {
+    margin-left: -250px;
+}
+
+body.sidebar-collapse .content-wrapper,
+body.sidebar-collapse .main-header {
+    margin-left: 0;
+}
+
+/* 汉堡包按钮样式 */
+.navbar-toggler {
+    padding: 0.25rem 0.75rem;
+    font-size: 1.25rem;
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.navbar-toggler:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 确保侧边栏在移动设备上正确显示 */
+@media (max-width: 768px) {
+    .main-sidebar {
+        margin-left: -250px;
+    }
+    
+    .sidebar-open .main-sidebar {
+        margin-left: 0;
+    }
+    
+    .sidebar-open .content-wrapper {
+        margin-left: 250px;
+    }
+}
+
+/* 子菜单样式 */
+.nav-treeview {
+    display: none;
+    padding-left: 1rem;
+}
+
+.nav-item.menu-open > .nav-treeview {
+    display: block;
+}
+
+/* 移除之前的箭头样式 */
+.nav-link p {
+    position: relative;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* 新的箭头样式 */
+.has-treeview > .nav-link p i.right {
+    position: absolute;
+    right: 0;
+    margin-right: 0.5rem;
+    transition: transform .3s ease-in-out;
+}
+
+/* 子菜单展开时箭头旋转 */
+.has-treeview.menu-open > .nav-link p i.right {
+    transform: rotate(-90deg);
+}
+
+/* 移除其他位置可能出现的箭头 */
+.nav-treeview .nav-link p i.right {
+    display: none;
+}
+
+/* 确保子菜单项没有箭头 */
+.nav-treeview .nav-item .nav-link p {
+    margin-right: 0;
+}
+
+/* 侧边栏滚动样式 */
+.sidebar {
+    height: calc(100vh - 4rem); /* 减去顶部品牌区域的高度 */
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
+/* 自定义滚动条样式 */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 确保侧边栏内容可以完整显示 */
+.nav-sidebar {
+    padding-bottom: 20px;
+}
+
+/* 侧边栏字体样式 */
+.nav-sidebar .nav-link p {
+    font-size: 0.9rem;
+    font-weight: normal;
+    color: #fff;
+    margin: 0;
+}
+
+/* 子菜单字体样式 */
+.nav-treeview .nav-link p {
+    font-size: 0.85rem;
+}
+
+/* 品牌标题字体 */
+.brand-text {
+    font-family: var(--main-font);
+    font-size: 1.1rem;
+    font-weight: normal;
+}
+
+/* 页面标题字体 */
+.content-header h1 {
+    font-family: var(--main-font);
+    font-size: 1.3rem;
+    font-weight: normal;
+}
+
+/* 内容区域字体 */
+.content {
+    font-size: 0.9rem;
+}
+
+/* 搜索框容器 */
+.search-box {
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 0 15px;
+}
+
+/* 搜索输入框包装器 */
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 搜索输入框 */
+.search-input {
+    flex: 1;
+    height: 40px;
+    padding: 8px 15px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: var(--primary-color);
+}
+
+/* 搜索按钮 */
+.search-button {
+    height: 40px;
+    padding: 0 20px;
+    font-size: 14px;
+    color: #fff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.btn-search:hover {
+    background-color: #a88b76;
+}
+
+/* 搜索结果样式保持不变 */
+.search-results {
+    padding: 20px;
+}
+
+/* 搜索结果卡片样式 */
+.scientist-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin: 15px 20px;
+    padding: 20px;
+    position: relative;
+    border-left: 4px solid var(--primary-color);
+}
+
+/* 人物名称样式 */
+.scientist-name {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0 0 10px 0;
+    padding-left: 25px;
+    position: relative;
+}
+
+.scientist-name:before {
+    content: "\f2bd";  /* FontAwesome 用户图标 */
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+}
+
+/* 描述文本样式 */
+.description {
+    color: #666;
+    margin: 10px 0;
+    padding-left: 25px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.description:before {
+    content: "\f05a";  /* FontAwesome 信息图标 */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    color: #999;
+}
+
+/* 类别和朝代标签 */
+.category-dynasty {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.category-dynasty:before {
+    content: "\f017";  /* FontAwesome 时钟图标 */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    color: #999;
+} 
