@@ -1,0 +1,155 @@
+<aside class="main-sidebar sidebar-bg-light">
+    <style>
+        /* 添加自定义样式 */
+        .nav-treeview {
+            display: none;
+            /* 默认隐藏子菜单 */
+        }
+
+        /* 箭头旋转动画 */
+        .nav-sidebar .nav-link>.right {
+            transition: transform .3s ease-in-out;
+        }
+
+        /* 当箭头旋转时显示子菜单 */
+        .nav-item.menu-is-opening>.nav-link>.right,
+        .nav-item.menu-open>.nav-link>.right {
+            transform: rotate(-90deg);
+        }
+
+        /* 仅在箭头旋转时显示子菜单 */
+        .nav-item.menu-is-opening>.nav-treeview,
+        .nav-item.menu-open>.nav-treeview {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .nav-treeview .nav-item {
+            width: 100%;
+        }
+
+        .nav-sidebar .nav-treeview .nav-link {
+            padding-left: 2rem;
+        }
+
+        /* 添加过渡效果 */
+        .nav-treeview {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+
+    <div class="brand-container">
+        <a href="/" class="brand-link">
+            <span class="brand-text">中国古代科学家知识库</span>
+        </a>
+    </div>
+
+    <div class="sidebar">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                <!-- 搜索查询 -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="search">
+                        <i class="nav-icon fas fa-search"></i>
+                        <p>搜索查询</p>
+                    </a>
+                </li>
+
+                <!-- 统计分析 -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <p>
+                            统计分析
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/overview" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>总体概览</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/field-analysis" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>领域分析</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/time-analysis" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>时间分析</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- 分类浏览 -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            分类浏览
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="agriculture">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>农业</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="chemistry">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>化学</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="medicine">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>医学生物</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="astronomy">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>天文地理</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="engineering">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>工程建筑</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="mathematics">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>数学计量</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="physics">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>物理</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- 时间轴 -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="timeline">
+                        <i class="nav-icon fas fa-clock"></i>
+                        <p>时间轴</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

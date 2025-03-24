@@ -54,7 +54,35 @@ const contentManager = {
         charts.initAgricultureCharts();
     },
 
-    // 其他页面加载函数...
+    // 搜索API调用
+    handleSearch: async (searchInput) => {
+        try {
+            const response = await fetch(`/api/search?query=${encodeURIComponent(searchInput)}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('搜索出错:', error);
+            return [];
+        }
+    },
+
+    // 获取统计数据
+    loadStatistics: async () => {
+        try {
+            const response = await fetch('/api/statistics');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('获取统计数据出错:', error);
+            return null;
+        }
+    },
+
+    // 加载页面内容
+    loadPage: async (pageName) => {
+        // 直接进行页面跳转
+        window.location.href = `/${pageName}`;
+    }
 };
 
 // 页面事件处理
@@ -75,130 +103,171 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 arrow.style.transform = 'rotate(0)';
             }
-            
-            // 显示/隐藏子菜单
-            const submenu = menuItem.querySelector('.nav-treeview');
-            if (menuItem.classList.contains('menu-open')) {
-                submenu.style.display = 'block';
-            } else {
-                submenu.style.display = 'none';
-            }
         });
     });
 
-    // 处理页面切换
-    document.querySelectorAll('.nav-link[data-page]').forEach(link => {
-        link.addEventListener('click', (e) => {
+    // 处理子菜单项的点击事件
+    document.querySelectorAll('.nav-treeview .nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
             e.preventDefault();
-            const page = e.target.closest('.nav-link').dataset.page;
-            
-            // 移除所有活动状态
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            // 设置当前项为活动状态
-            e.target.closest('.nav-link').classList.add('active');
+            const page = this.getAttribute('href').replace('/', '');
+            contentManager.loadPage(page);
+        });
+    });
 
-            // 加载相应页面
-            switch(page) {
-                case 'search':
-                    contentManager.loadSearch();
-                    break;
-                case 'agriculture-overview':
-                    contentManager.loadAgricultureOverview();
-                    break;
-                case 'statistics':
-                    contentManager.loadStatistics();
-                    break;
-                // ... 其他页面处理 ...
-            }
+    // 处理其他导航链接
+    document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.dataset.page;
+            contentManager.loadPage(page);
         });
     });
 
     // 搜索表单提交处理
     const searchForm = document.getElementById('searchForm');
     if (searchForm) {
-        searchForm.addEventListener('submit', function(e) {
+        searchForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const searchInput = document.getElementById('searchInput').value;
             
-            // 检查搜索词是否为空
             if (!searchInput.trim()) {
                 displaySearchResults([]);
                 return;
             }
 
-            // 使用 Go 后端的搜索 API
-            fetch(`/api/search?query=${encodeURIComponent(searchInput)}`, {
-                method: 'GET',  // Go 后端使用 GET 请求
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(results => {
-                console.log('搜索结果:', results); // 调试用
-                displaySearchResults(results);
-            })
-            .catch(error => {
-                console.error('搜索出错:', error);
-                displaySearchResults([]);
-            });
+            const results = await contentManager.handleSearch(searchInput);
+            displaySearchResults(results);
         });
     }
 });
 
+// 添加防抖函数
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// 修改搜索结果显示函数
 function displaySearchResults(data) {
     const container = document.getElementById('searchResults');
-    container.innerHTML = '';
+    
+    // 添加淡入效果的CSS类
+    container.style.opacity = '0';
+    container.style.transition = 'opacity 0.3s ease-in-out';
 
-    if (!data || data.length === 0) {
-        container.innerHTML = `
-            <div class="search-message">
-                未找到相关结果，请尝试其他关键词
-            </div>
-        `;
+    // 清空之前的结果
+    setTimeout(() => {
+        container.innerHTML = '';
+
+        if (!data || data.length === 0) {
+            container.innerHTML = `
+                <div class="search-message">
+                    未找到相关结果，请尝试其他关键词
+                </div>
+            `;
+        } else {
+            // 显示搜索结果
+            data.forEach(person => {
+                const card = document.createElement('div');
+                card.className = 'scientist-card';
+                
+                // 构建成就列表 HTML
+                const achievementsHtml = person.achievements && person.achievements.length > 0
+                    ? `<div class="achievements">${person.achievements.join('、')}</div>`
+                    : '';
+                
+                card.innerHTML = `
+                    <h3 class="scientist-name">${person.name || ''}</h3>
+                    <div class="description">${person.description || ''}</div>
+                    ${achievementsHtml}
+                    <div class="category-dynasty">
+                        ${person.category || ''} · ${person.dynasty || ''}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // 淡入显示结果
+        requestAnimationFrame(() => {
+            container.style.opacity = '1';
+        });
+    }, 150); // 短暂延迟以确保过渡效果平滑
+}
+
+// 修改搜索处理函数
+const handleSearch = debounce(async (event) => {
+    if (event) {
+        event.preventDefault();
+    }
+    
+    const searchInput = document.querySelector('#searchInput').value.trim();
+    
+    if (!searchInput) {
+        displaySearchResults([]);
         return;
     }
 
-    // 显示搜索结果
-    data.forEach(person => {
-        const card = document.createElement('div');
-        card.className = 'scientist-card';
-        
-        // 构建成就列表 HTML
-        const achievementsHtml = person.achievements && person.achievements.length > 0
-            ? `<div class="achievements">${person.achievements.join('、')}</div>`
-            : '';
-        
-        card.innerHTML = `
-            <h3 class="scientist-name">${person.name || ''}</h3>
-            <div class="description">${person.description || ''}</div>
-            ${achievementsHtml}
-            <div class="category-dynasty">
-                ${person.category || ''} · ${person.dynasty || ''}
-            </div>
-        `;
-        
-        container.appendChild(card);
-    });
-}
+    try {
+        const response = await fetch(`/api/search?query=${encodeURIComponent(searchInput)}`);
+        if (!response.ok) {
+            throw new Error('搜索请求失败');
+        }
+        const data = await response.json();
+        displaySearchResults(data);
+    } catch (error) {
+        console.error('搜索出错:', error);
+        displaySearchResults([]);
+    }
+}, 300); // 300ms 的防抖延迟
 
-// 搜索处理函数
-function handleSearch(event) {
-    event.preventDefault();
-    const searchInput = document.querySelector('#searchInput').value;
-    
-    // 这里应该是调用后端API的地方
-    // 示例：
-    fetch(`/api/search?q=${encodeURIComponent(searchInput)}`)
-        .then(response => response.json())
-        .then(data => displaySearchResults(data))
-        .catch(error => console.error('搜索出错:', error));
-}
-
-// 绑定搜索表单提交事件
+// 绑定搜索事件
 document.addEventListener('DOMContentLoaded', () => {
     const searchForm = document.querySelector('#searchForm');
+    const searchInput = document.querySelector('#searchInput');
+
     if (searchForm) {
         searchForm.addEventListener('submit', handleSearch);
     }
-}); 
+
+    if (searchInput) {
+        // 添加输入事件监听
+        searchInput.addEventListener('input', handleSearch);
+    }
+});
+
+// 添加相关的 CSS
+const style = document.createElement('style');
+style.textContent = `
+    .scientist-card {
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+
+    .search-message {
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+        padding: 1rem;
+        text-align: center;
+        color: #666;
+    }
+
+    #searchResults {
+        transition: opacity 0.3s ease-in-out;
+    }
+`;
+document.head.appendChild(style); 

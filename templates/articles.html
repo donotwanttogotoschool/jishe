@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>科学文萃 - 中国古代科学知识库</title>
+
+    <!-- 使用与其他页面相同的样式引用 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
+    <style>
+        .list-group-item-action:hover {
+            transform: translateX(10px);
+            background-color: #f0ebe3 !important;
+            border-color: #8b7355 !important;
+        }
+    </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg">
+    <div class="wrapper">
+        <!-- 复用 navbar 和 sidebar -->
+        {% include 'navbar.html' %}
+        {% include 'sidebar.html' %}
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- 内容头部 -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">科学文萃</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主要内容 -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card" style="background-color: #f9f7f2; border: 2px solid #d4c9b9;">
+                                <div class="card-header bg-transparent" style="border-bottom: 2px solid #d4c9b9;">
+                                    <h3 class="card-title" style="color: #6b5b45; font-family: 'STKaiti', serif;">
+                                        <i class="fas fa-scroll me-2"></i>近期文章精选
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group">
+                                        <a href="https://news.sciencenet.cn/sbhtmlnews/2008/8/209466.html"
+                                            target="_blank" class="list-group-item list-group-item-action"
+                                            style="background-color: transparent; border: 1px solid #d4c9b9; margin-bottom: 10px; transition: all 0.3s ease;">
+                                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="badge bg-info me-2"
+                                                        style="background-color: #8b7355 !important;">
+                                                        <i class="fas fa-star"></i> 精选
+                                                    </span>
+                                                    <h5 class="mb-1" style="color: #5c4033; display: inline-block;">
+                                                        中国古代科学技术发展的特点</h5>
+                                                </div>
+                                                <small class="text-muted" style="color: #8b7355 !important;">
+                                                    <i class="fas fa-newspaper me-1"></i>科学网
+                                                </small>
+                                            </div>
+                                            <p class="mb-1 mt-2" style="color: #6b5b45;">探讨中国古代科学技术发展的独特之处和历史贡献。</p>
+                                            <small class="text-muted" style="color: #8b7355 !important;">
+                                                <i class="fas fa-clock me-1"></i>阅读时间：约15分钟
+                                            </small>
+                                        </a>
+
+                                        <a href="https://zhuanlan.zhihu.com/p/352434156" target="_blank"
+                                            class="list-group-item list-group-item-action"
+                                            style="background-color: transparent; border: 1px solid #d4c9b9; margin-bottom: 10px; transition: all 0.3s ease;">
+                                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="badge bg-success me-2"
+                                                        style="background-color: #6b8e23 !important;">
+                                                        <i class="fas fa-book"></i> 综述
+                                                    </span>
+                                                    <h5 class="mb-1" style="color: #5c4033; display: inline-block;">
+                                                        中国古代科技发展史概述</h5>
+                                                </div>
+                                                <small class="text-muted" style="color: #8b7355 !important;">
+                                                    <i class="fas fa-pen-fancy me-1"></i>知乎专栏
+                                                </small>
+                                            </div>
+                                            <p class="mb-1 mt-2" style="color: #6b5b45;">全面回顾中国古代科技发展的重要历程。</p>
+                                            <small class="text-muted" style="color: #8b7355 !important;">
+                                                <i class="fas fa-clock me-1"></i>阅读时间：约20分钟
+                                            </small>
+                                        </a>
+
+                                        <a href="https://www.ciae.com.cn/detail/zh/4485.html" target="_blank"
+                                            class="list-group-item list-group-item-action"
+                                            style="background-color: transparent; border: 1px solid #d4c9b9; margin-bottom: 10px; transition: all 0.3s ease;">
+                                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="badge bg-warning me-2"
+                                                        style="background-color: #daa520 !important;">
+                                                        <i class="fas fa-lightbulb"></i> 观点
+                                                    </span>
+                                                    <h5 class="mb-1" style="color: #5c4033; display: inline-block;">
+                                                        中国古代科技创新与现代启示</h5>
+                                                </div>
+                                                <small class="text-muted" style="color: #8b7355 !important;">
+                                                    <i class="fas fa-university me-1"></i>中国工程院
+                                                </small>
+                                            </div>
+                                            <p class="mb-1 mt-2" style="color: #6b5b45;">探讨中国古代科技创新对现代科技发展的启示。</p>
+                                            <small class="text-muted" style="color: #8b7355 !important;">
+                                                <i class="fas fa-clock me-1"></i>阅读时间：约25分钟
+                                            </small>
+                                        </a>
+
+                                        <a href="http://agri-history.ihns.ac.cn/scholars/zxs/bray.htm" target="_blank"
+                                            class="list-group-item list-group-item-action"
+                                            style="background-color: transparent; border: 1px solid #d4c9b9; margin-bottom: 10px; transition: all 0.3s ease;">
+                                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="badge bg-success me-2"
+                                                        style="background-color: #8b7355 !important;">
+                                                        <i class="fas fa-seedling"></i> 农学
+                                                    </span>
+                                                    <h5 class="mb-1" style="color: #5c4033; display: inline-block;">
+                                                        《齐民要术》研究</h5>
+                                                </div>
+                                                <small class="text-muted" style="color: #8b7355 !important;">
+                                                    <i class="fas fa-university me-1"></i>中国科学院
+                                                </small>
+                                            </div>
+                                            <p class="mb-1 mt-2" style="color: #6b5b45;">深入解析中国古代农业科技巨著《齐民要术》的历史价值与科学意义。
+                                            </p>
+                                            <small class="text-muted" style="color: #8b7355 !important;">
+                                                <i class="fas fa-clock me-1"></i>阅读时间：约30分钟
+                                            </small>
+                                        </a>
+
+                                        <a href="https://www.chinawriter.com.cn/n1/2022/0926/c442005-32533694.html"
+                                            target="_blank" class="list-group-item list-group-item-action"
+                                            style="background-color: transparent; border: 1px solid #d4c9b9; margin-bottom: 10px; transition: all 0.3s ease;">
+                                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="badge bg-info me-2"
+                                                        style="background-color: #daa520 !important;">
+                                                        <i class="fas fa-feather-alt"></i> 典籍
+                                                    </span>
+                                                    <h5 class="mb-1" style="color: #5c4033; display: inline-block;">
+                                                        《梦溪笔谈》的科技贡献</h5>
+                                                </div>
+                                                <small class="text-muted" style="color: #8b7355 !important;">
+                                                    <i class="fas fa-pen-nib me-1"></i>中国作家网
+                                                </small>
+                                            </div>
+                                            <p class="mb-1 mt-2" style="color: #6b5b45;">探讨沈括《梦溪笔谈》对中国古代科学技术发展的重要贡献。</p>
+                                            <small class="text-muted" style="color: #8b7355 !important;">
+                                                <i class="fas fa-clock me-1"></i>阅读时间：约18分钟
+                                            </small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        {% include 'footer.html' %}
+    </div>
+
+    <!-- 脚本引用 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

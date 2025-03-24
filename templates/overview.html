@@ -4,18 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>中国古代自然科学知识库</title>
+    <title>总体概览 - 中国古代科学家知识库</title>
 
-    <!-- 修改静态文件引用路径 -->
+    <!-- 使用与 index.html 相同的样式引用 -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Google Font -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- AdminLTE -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
-    <!-- Highcharts -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
 </head>
 
@@ -116,42 +112,7 @@
                                         <p>农业</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link" data-page="chemistry">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>化学</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link" data-page="medicine">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>医学生物</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link" data-page="astronomy">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>天文地理</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link" data-page="engineering">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>工程建筑</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link" data-page="mathematics">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>数学计量</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link" data-page="physics">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>物理</p>
-                                    </a>
-                                </li>
+                                <!-- ... 其他分类选项 ... -->
                             </ul>
                         </li>
 
@@ -177,39 +138,104 @@
 
         <!-- Content Wrapper -->
         <div class="content-wrapper">
-            <!-- 搜索查询标题 -->
+            <!-- 内容头部 -->
             <div class="content-header">
-                <h1>搜索查询</h1>
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">总体概览</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- 搜索区域 -->
+            <!-- 主要内容 -->
             <div class="content">
-                <!-- 搜索框 -->
-                <div class="search-box">
-                    <form id="searchForm" class="search-form">
-                        <div class="search-input-wrapper">
-                            <input type="text" id="searchInput" class="search-input" placeholder="请输入关键词...">
-                            <button type="submit" class="search-button">搜索</button>
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- 左侧图表 -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">各朝代科学家分布</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="dynastyChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                        <!-- 右侧图表 -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">领域分布</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="categoryChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- 搜索结果容器 -->
-                <div class="search-results" id="searchResults"></div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2024</strong> All rights reserved.
-        </footer>
+        <!-- 页脚 -->
+        {% include 'footer.html' %}
     </div>
 
-    <!-- 修改静态文件引用路径 -->
+    <!-- 使用与 index.html 相同的脚本引用 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+
+    <!-- 初始化图表的脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 获取数据并初始化图表
+            fetch('/api/statistics')
+                .then(response => response.json())
+                .then(data => {
+                    // 朝代分布图表
+                    Highcharts.chart('dynastyChart', {
+                        chart: { type: 'column' },
+                        title: { text: '各朝代科学家分布' },
+                        xAxis: {
+                            categories: data.dynasties.map(d => d.name),
+                            title: { text: '朝代' }
+                        },
+                        yAxis: {
+                            title: { text: '人数' }
+                        },
+                        series: [{
+                            name: '科学家数量',
+                            data: data.dynasties.map(d => d.count)
+                        }],
+                        credits: {
+                            enabled: false  // 禁用水印
+                        }
+                    });
+
+                    // 领域分布图表
+                    Highcharts.chart('categoryChart', {
+                        chart: { type: 'pie' },
+                        title: { text: '领域分布' },
+                        series: [{
+                            name: '科学家数量',
+                            data: data.categories.map(c => ({
+                                name: c.name,
+                                y: c.y
+                            }))
+                        }],
+                        credits: {
+                            enabled: false  // 禁用水印
+                        }
+                    });
+                })
+                .catch(error => console.error('加载数据失败:', error));
+        });
+    </script>
 </body>
 
 </html>

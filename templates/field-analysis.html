@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>领域分析 - 中国古代自然科学知识库</title>
+
+    <!-- 修改静态文件引用路径 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Font -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AdminLTE -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/treemap.js"></script>
+    <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-light">
+            <div class="container-fluid">
+                <!-- Left navbar links -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/index.html" class="nav-link">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">关于</a>
+                    </li>
+                </ul>
+
+                <!-- Right navbar links -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-bg-light">
+            <div class="brand-container">
+                <a href="#" class="brand-link">
+                    <span class="brand-text">中国古代科学家知识库</span>
+                </a>
+            </div>
+
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <!-- 搜索查询 -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-search"></i>
+                                <p>搜索查询</p>
+                            </a>
+                        </li>
+
+                        <!-- 统计分析 -->
+                        <li class="nav-item has-treeview menu-open">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>
+                                    统计分析
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/overview" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>总体概览</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/field-analysis" class="nav-link active">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>领域分析</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/time-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>时间分析</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 分类浏览 -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    分类浏览
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="agriculture">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>农业</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="chemistry">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>化学</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="medicine">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>医学生物</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="astronomy">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>天文地理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="engineering">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>工程建筑</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="mathematics">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>数学计量</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="physics">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>物理</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 时间轴 -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="timeline">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>时间轴</p>
+                            </a>
+                        </li>
+
+                        <!-- 科学文萃 -->
+                        <li class="nav-item">
+                            <a href="/articles" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>科学文萃</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Content Header -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">领域分析</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <!-- 目标说明 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">目标</h3>
+                        </div>
+                        <div class="card-body">
+                            展示中国古代自然科学的不同学科领域及其成就，帮助用户理解各领域的关联性和独特性。
+                        </div>
+                    </div>
+
+                    <!-- 可视化图表区域 -->
+                    <div class="row">
+                        <!-- 学科分类树 -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">学科分类树</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="subjectTreeChart" style="min-height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 领域关联网络 -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">领域关联网络</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="relationNetworkChart" style="min-height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 代表人物与著作展示 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">代表人物与著作</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="scholarCards" class="row"></div>
+                        </div>
+                    </div>
+
+                    <!-- 水平排列的图表容器 -->
+                    <div class="row">
+                        <!-- 领域高亮环形图 -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">领域分布</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="sunburstChart" style="min-height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 形状化词云 -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">领域关键词</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="wordCloudChart" style="min-height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2024</strong> All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="https://code.highcharts.com/modules/sunburst.js"></script>
+    <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+    <script>
+        // 学科分类树图配置
+        Highcharts.chart('subjectTreeChart', {
+            accessibility: {
+                enabled: false
+            },
+            series: [{
+                type: 'treemap',
+                name: '自然科学',
+                layoutAlgorithm: 'squarified',
+                allowTraversingTree: true,
+                alternateStartingDirection: true,
+                levels: [{
+                    level: 1,
+                    layoutAlgorithm: 'sliceAndDice',
+                    dataLabels: {
+                        enabled: true,
+                        align: 'left',
+                        verticalAlign: 'top',
+                        style: {
+                            fontSize: '15px',
+                            fontWeight: 'bold',
+                            color: '#54433a',
+                            textOutline: 'none'
+                        }
+                    }
+                }],
+                data: [{
+                    id: '0.0',
+                    parent: '',
+                    name: '自然科学'
+                }, {
+                    id: '1.1',
+                    parent: '0.0',
+                    name: '农业',
+                    value: 8,
+                    color: '#e6d5ac'
+                }, {
+                    id: '1.2',
+                    parent: '0.0',
+                    name: '化学',
+                    value: 7,
+                    color: '#ddb892'
+                }, {
+                    id: '1.3',
+                    parent: '0.0',
+                    name: '医学生物',
+                    value: 9,
+                    color: '#e6ccb2'
+                }, {
+                    id: '1.4',
+                    parent: '0.0',
+                    name: '天文地理',
+                    value: 8,
+                    color: '#b7b7a4'
+                }, {
+                    id: '1.5',
+                    parent: '0.0',
+                    name: '工程建筑',
+                    value: 7,
+                    color: '#9c6644'
+                }, {
+                    id: '1.6',
+                    parent: '0.0',
+                    name: '数学计量',
+                    value: 6,
+                    color: '#7f5539'
+                }, {
+                    id: '1.7',
+                    parent: '0.0',
+                    name: '物理',
+                    value: 5,
+                    color: '#a98467'
+                },
+                // 农业子类
+                {
+                    id: '2.1',
+                    parent: '1.1',
+                    name: '农作物栽培',
+                    value: 3,
+                    color: '#e6d5ac'
+                }, {
+                    id: '2.2',
+                    parent: '1.1',
+                    name: '水利灌溉',
+                    value: 3,
+                    color: '#e6d5ac'
+                }, {
+                    id: '2.3',
+                    parent: '1.1',
+                    name: '农具改良',
+                    value: 2,
+                    color: '#e6d5ac'
+                },
+                // 化学子类
+                {
+                    id: '2.4',
+                    parent: '1.2',
+                    name: '冶金技术',
+                    value: 3,
+                    color: '#ddb892'
+                }, {
+                    id: '2.5',
+                    parent: '1.2',
+                    name: '制陶工艺',
+                    value: 2,
+                    color: '#ddb892'
+                }, {
+                    id: '2.6',
+                    parent: '1.2',
+                    name: '染料制作',
+                    value: 2,
+                    color: '#ddb892'
+                },
+                // 医学生物子类
+                {
+                    id: '2.7',
+                    parent: '1.3',
+                    name: '中医理论',
+                    value: 3,
+                    color: '#e6ccb2'
+                }, {
+                    id: '2.8',
+                    parent: '1.3',
+                    name: '本草学',
+                    value: 3,
+                    color: '#e6ccb2'
+                }, {
+                    id: '2.9',
+                    parent: '1.3',
+                    name: '针灸学',
+                    value: 3,
+                    color: '#e6ccb2'
+                },
+                // 天文地理子类
+                {
+                    id: '2.10',
+                    parent: '1.4',
+                    name: '历法',
+                    value: 3,
+                    color: '#b7b7a4'
+                }, {
+                    id: '2.11',
+                    parent: '1.4',
+                    name: '天文仪器',
+                    value: 3,
+                    color: '#b7b7a4'
+                }, {
+                    id: '2.12',
+                    parent: '1.4',
+                    name: '地图测绘',
+                    value: 2,
+                    color: '#b7b7a4'
+                },
+                // 工程建筑子类
+                {
+                    id: '2.13',
+                    parent: '1.5',
+                    name: '建筑技术',
+                    value: 3,
+                    color: '#9c6644'
+                }, {
+                    id: '2.14',
+                    parent: '1.5',
+                    name: '桥梁工程',
+                    value: 2,
+                    color: '#9c6644'
+                }, {
+                    id: '2.15',
+                    parent: '1.5',
+                    name: '水利工程',
+                    value: 2,
+                    color: '#9c6644'
+                },
+                // 数学计量子类
+                {
+                    id: '2.16',
+                    parent: '1.6',
+                    name: '算术',
+                    value: 2,
+                    color: '#7f5539'
+                }, {
+                    id: '2.17',
+                    parent: '1.6',
+                    name: '几何',
+                    value: 2,
+                    color: '#7f5539'
+                }, {
+                    id: '2.18',
+                    parent: '1.6',
+                    name: '度量衡',
+                    value: 2,
+                    color: '#7f5539'
+                },
+                // 物理子类
+                {
+                    id: '2.19',
+                    parent: '1.7',
+                    name: '力学',
+                    value: 2,
+                    color: '#a98467'
+                }, {
+                    id: '2.20',
+                    parent: '1.7',
+                    name: '声学',
+                    value: 2,
+                    color: '#a98467'
+                }, {
+                    id: '2.21',
+                    parent: '1.7',
+                    name: '光学',
+                    value: 1,
+                    color: '#a98467'
+                }]
+            }],
+            title: {
+                text: '中国古代自然科学分类',
+                style: {
+                    color: '#6b4423',
+                    fontSize: '18px'
+                }
+            },
+            tooltip: {
+                useHTML: true,
+                headerFormat: '',
+                //pointFormat: '<b>{point.name}</b><br/>{point.isLeaf ? "" : "点击可展开子类"}',
+                backgroundColor: 'rgba(250, 246, 241, 0.95)',
+                style: {
+                    color: '#6b4423'
+                }
+            },
+            chart: {
+                backgroundColor: '#faf6f1',
+                style: {
+                    fontFamily: 'serif'
+                }
+            },
+            plotOptions: {
+                treemap: {
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            fontSize: '12px',
+                            color: '#54433a',
+                            textOutline: 'none'
+                        }
+                    },
+                    borderWidth: 2,
+                    borderColor: '#8b7355'
+                }
+            }
+        });
+
+        // 领域关联网络图配置
+        Highcharts.chart('relationNetworkChart', {
+            chart: {
+                type: 'networkgraph'
+            },
+            title: {
+                text: '学科领域关联网络'
+            },
+            plotOptions: {
+                networkgraph: {
+                    keys: ['from', 'to'],
+                    layoutAlgorithm: {
+                        enableSimulation: true
+                    }
+                }
+            },
+            series: [{
+                data: [
+                    ['数学', '天文学'],
+                    ['天文学', '历法'],
+                    ['农学', '气象学'],
+                    ['医学', '本草学'],
+                    // ... 其他关联关系
+                ]
+            }]
+        });
+
+        // 代表人物卡片展示
+        const scholarData = [
+            {
+                name: '张衡',
+                field: '天文学',
+                work: '浑天仪、地动仪',
+                image: '/static/images/scholars/zhang_heng.jpg'
+            },
+            {
+                name: '李时珍',
+                field: '医学',
+                work: '本草纲目',
+                image: '/static/images/scholars/li_shizhen.jpg'
+            }
+            // ... 其他学者数据
+        ];
+
+        const scholarCardsContainer = document.getElementById('scholarCards');
+        scholarData.forEach(scholar => {
+            const card = `
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="${scholar.image}" class="card-img-top" alt="${scholar.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${scholar.name}</h5>
+                            <p class="card-text">领域：${scholar.field}</p>
+                            <p class="card-text">代表作：${scholar.work}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            scholarCardsContainer.innerHTML += card;
+        });
+
+        // 领域高亮环形图配置
+        Highcharts.chart('sunburstChart', {
+            chart: {
+                height: '100%'
+            },
+            title: {
+                text: '中国古代自然科学领域分布'
+            },
+            series: [{
+                type: 'sunburst',
+                data: [{
+                    id: '0.0',
+                    parent: '',
+                    name: '自然科学'
+                }, {
+                    id: '1.1',
+                    parent: '0.0',
+                    name: '天文学',
+                    value: 6
+                }, {
+                    id: '1.2',
+                    parent: '0.0',
+                    name: '农学',
+                    value: 4
+                }, {
+                    id: '1.3',
+                    parent: '0.0',
+                    name: '医学',
+                    value: 5
+                }, {
+                    id: '2.1',
+                    parent: '1.1',
+                    name: '历法',
+                    value: 2
+                }, {
+                    id: '2.2',
+                    parent: '1.1',
+                    name: '仪器',
+                    value: 2
+                }, {
+                    id: '2.3',
+                    parent: '1.1',
+                    name: '星图',
+                    value: 2
+                }],
+                allowDrillToNode: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    format: '{point.name}',
+                    filter: {
+                        property: 'innerArcLength',
+                        operator: '>',
+                        value: 16
+                    },
+                    style: {
+                        textOutline: false
+                    }
+                },
+                levels: [{
+                    level: 1,
+                    levelIsConstant: false,
+                    dataLabels: {
+                        filter: {
+                            property: 'outerArcLength',
+                            operator: '>',
+                            value: 64
+                        }
+                    }
+                }, {
+                    level: 2,
+                    colorByPoint: true
+                }]
+            }],
+            tooltip: {
+                headerFormat: '',
+                pointFormat: '领域: <b>{point.name}</b><br/>占比: <b>{point.value}</b>'
+            }
+        });
+
+        // 形状化词云配置
+        Highcharts.chart('wordCloudChart', {
+            chart: {
+                height: '400px'
+            },
+            title: {
+                text: '领域关键词云'
+            },
+            series: [{
+                type: 'wordcloud',
+                data: [
+                    { name: '浑天仪', weight: 12 },
+                    { name: '地动仪', weight: 10 },
+                    { name: '简仪', weight: 8 },
+                    { name: '圭表', weight: 8 },
+                    { name: '司南', weight: 7 },
+                    { name: '日晷', weight: 7 },
+                    { name: '浑象', weight: 6 },
+                    { name: '古剑', weight: 5 },
+                    { name: '铜镜', weight: 5 },
+                    { name: '指南针', weight: 9 }
+                ],
+                style: {
+                    fontFamily: 'serif'
+                },
+                rotation: {
+                    from: -60,
+                    to: 60,
+                    orientations: 5
+                }
+            }]
+        });
+    </script>
+</body>
+
+</html>
