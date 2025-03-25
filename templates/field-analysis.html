@@ -651,64 +651,138 @@
                 name: '张衡',
                 field: '天文地理',
                 work: '浑天仪、地动仪',
-                image: '/static/images/scholars/zhang_heng.jpg',
+                image: "{{ url_for('static', filename='images/scholars/zhang_heng.jpg') }}",
                 description: '东汉著名天文学家、数学家、发明家，发明浑天仪和地动仪，著有《灵宪》等'
             },
             {
                 name: '贾思勰',
                 field: '农业',
                 work: '齐民要术',
-                image: '/static/images/scholars/jia_sixie.jpg',
+                image: "{{ url_for('static', filename='images/scholars/jia_sixie.jpg') }}",
                 description: '北魏农学家，系统总结了中国古代农业技术，被誉为"世界农学史上的伟大著作"'
             },
             {
                 name: '李时珍',
                 field: '医学生物',
                 work: '本草纲目',
-                image: '/static/images/scholars/li_shizhen.jpg',
+                image: "{{ url_for('static', filename='images/scholars/li_shizhen.jpg') }}",
                 description: '明代医学家、药物学家，历时27年编撰《本草纲目》，收录药物1892种'
             },
             {
                 name: '孙思邈',
                 field: '化学',
                 work: '千金要方',
-                image: '/static/images/scholars/sun_simiao.jpg',
+                image: "{{ url_for('static', filename='images/scholars/sun_simiao.jpg') }}",
                 description: '唐代著名医药学家，精通药物炮制技术，被后人尊称为"药王"'
             },
             {
                 name: '李冰',
                 field: '工程建筑',
                 work: '都江堰水利工程',
-                image: '/static/images/scholars/li_bing.jpg',
+                image: "{{ url_for('static', filename='images/scholars/li_bing.jpg') }}",
                 description: '战国时期蜀郡太守，主持修建都江堰水利工程，两千多年造福至今'
             },
             {
                 name: '祖冲之',
                 field: '数学计量',
                 work: '缀术、大明历',
-                image: '/static/images/scholars/zu_chongzhi.jpg',
+                image: "{{ url_for('static', filename='images/scholars/zu_chongzhi.jpg') }}",
                 description: '南北朝数学家、天文学家，将圆周率推算到小数点后7位，创制大明历'
             },
             {
                 name: '墨子',
                 field: '物理',
                 work: '墨经',
-                image: '/static/images/scholars/mo_zi.jpg',
+                image: "{{ url_for('static', filename='images/scholars/mo_zi.jpg') }}",
                 description: '战国时期思想家、科学家，在光学、力学等方面有重要贡献，著有《墨经》'
+            },
+            {
+                name: '沈括',
+                field: '综合',
+                work: '梦溪笔谈',
+                image: "{{ url_for('static', filename='images/scholars/shen_kuo.jpg') }}",
+                description: '北宋科学家，在天文、地质、数学等多个领域都有重要发现，著有《梦溪笔谈》'
+            },
+            {
+                name: '华佗',
+                field: '医学生物',
+                work: '麻沸散',
+                image: "{{ url_for('static', filename='images/scholars/hua_tuo.jpg') }}",
+                description: '东汉医学家，发明"麻沸散"全身麻醉术，创制"五禽戏"，精通外科手术'
             }
         ];
 
+        // 添加卡片样式
+        const cardStyle = `
+            <style>
+                .scholar-card {
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    margin-bottom: 20px;
+                    border: none;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    background: #faf6f1;
+                }
+                
+                .scholar-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 20px rgba(107, 68, 35, 0.1);
+                }
+                
+                .scholar-card .card-img-top {
+                    height: 200px;
+                    object-fit: cover;
+                    border-bottom: 2px solid #f5e6d3;
+                }
+                
+                .scholar-card .card-body {
+                    padding: 1.5rem;
+                }
+                
+                .scholar-card .card-title {
+                    color: #6b4423;
+                    font-size: 1.25rem;
+                    font-weight: bold;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .scholar-card .field-badge {
+                    background-color: #e6ccb2;
+                    color: #6b4423;
+                    padding: 0.25rem 0.75rem;
+                    border-radius: 15px;
+                    font-size: 0.875rem;
+                    margin-bottom: 0.75rem;
+                    display: inline-block;
+                }
+                
+                .scholar-card .card-text {
+                    color: #54433a;
+                    font-size: 0.9rem;
+                    line-height: 1.5;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .scholar-card .work-text {
+                    color: #8b7355;
+                    font-style: italic;
+                }
+            </style>
+        `;
+
+        // 修改卡片生成代码
         const scholarCardsContainer = document.getElementById('scholarCards');
+        scholarCardsContainer.innerHTML = cardStyle;
         scholarData.forEach(scholar => {
             const card = `
                 <div class="col-md-4">
-                    <div class="card">
+                    <div class="card scholar-card">
                         <img src="${scholar.image}" class="card-img-top" alt="${scholar.name}">
                         <div class="card-body">
                             <h5 class="card-title">${scholar.name}</h5>
-                            <p class="card-text">领域：${scholar.field}</p>
-                            <p class="card-text">代表作：${scholar.work}</p>
-                            <p class="card-text">描述：${scholar.description}</p>
+                            <span class="field-badge">${scholar.field}</span>
+                            <p class="card-text work-text">代表作：${scholar.work}</p>
+                            <p class="card-text">${scholar.description}</p>
                         </div>
                     </div>
                 </div>
