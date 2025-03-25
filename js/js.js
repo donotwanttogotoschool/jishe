@@ -1252,33 +1252,55 @@ option = {
                window.addEventListener("resize",function(){
                    myChart.resize();
                });
+    
+    const provinceLinks = {
+        '湖北': './shengfen/hubei.html',
+        '湖南': './shengfen/hunan.html',
+        '吉林': './shengfen/jilin.html',
+        '四川': './shengfen/sichuan.html',
+        '福建': './shengfen/fujian.html',
+        '山东': './shengfen/shandong.html',
+        '河北': './shengfen/hebei.html',
+        '广西': './shengfen/guangxi.html',
+        '河南': './shengfen/henan.html',
+        '江苏': './shengfen/jiangsu.html',
+        '广东': './shengfen/guangdong.html',
+        '贵州': './shengfen/guizhou.html',
+        '江西': './shengfen/jiangxi.html',
+        '浙江': './shengfen/zhejiang.html'
+    };
 
-    // 添加点击事件监听
+    // 点击跳转
     myChart.on('click', function(params) {
-        // 检查是否点击了湖北省
-        if (params.name === '湖北') {
-            // 跳转到湖北省的页面
-            window.location.href = './shengfen/hubei.html';
+        if (provinceLinks[params.name]) {
+            window.location.href = provinceLinks[params.name];
         }
     });
 
-    // 添加鼠标悬停提示
+    // 鼠标悬停：高亮 + 显示 Tooltip
     myChart.on('mouseover', function(params) {
-        if (params.name === '湖北') {
-            // 可以通过 dispatchAction 来显示特殊效果
+        if (provinceLinks[params.name]) {
             myChart.dispatchAction({
                 type: 'highlight',
-                name: '湖北'
+                name: params.name
+            });
+            myChart.dispatchAction({
+                type: 'showTip',
+                seriesIndex: 0,
+                dataIndex: params.dataIndex
             });
         }
     });
 
-    // 鼠标移出时恢复正常显示
+    // 鼠标移出：取消高亮 + 隐藏 Tooltip
     myChart.on('mouseout', function(params) {
-        if (params.name === '湖北') {
+        if (provinceLinks[params.name]) {
             myChart.dispatchAction({
                 type: 'downplay',
-                name: '湖北'
+                name: params.name
+            });
+            myChart.dispatchAction({
+                type: 'hideTip'
             });
         }
     });
