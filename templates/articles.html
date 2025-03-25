@@ -18,6 +18,14 @@
             background-color: #f0ebe3 !important;
             border-color: #8b7355 !important;
         }
+
+        .nav-treeview {
+            display: none;
+        }
+
+        .menu-open .nav-treeview {
+            display: block;
+        }
     </style>
 </head>
 
@@ -25,7 +33,130 @@
     <div class="wrapper">
         <!-- 复用 navbar 和 sidebar -->
         {% include 'navbar.html' %}
-        {% include 'sidebar.html' %}
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-bg-light">
+            <div class="brand-container">
+                <a href="#" class="brand-link">
+                    <span class="brand-text">中国古代科学家知识库</span>
+                </a>
+            </div>
+
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <!-- 搜索查询 (无子菜单) -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="search">
+                                <i class="nav-icon fas fa-search"></i>
+                                <p>搜索查询</p>
+                            </a>
+                        </li>
+
+                        <!-- 统计分析 (有子菜单) -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>
+                                    统计分析
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/overview" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>总体概览</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/field-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>领域分析</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/time-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>时间分析</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 分类浏览 (有子菜单) -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    分类浏览
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="agriculture">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>农业</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="chemistry">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>化学</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="medicine">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>医学生物</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="astronomy">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>天文地理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="engineering">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>工程建筑</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="mathematics">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>数学计量</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="physics">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>物理</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 时间轴 (无子菜单) -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="timeline">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>时间轴</p>
+                            </a>
+                        </li>
+
+                        <!-- 科学文萃 (无子菜单) -->
+                        <li class="nav-item">
+                            <a href="/articles" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>科学文萃</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
 
         <!-- Content Wrapper -->
         <div class="content-wrapper">
