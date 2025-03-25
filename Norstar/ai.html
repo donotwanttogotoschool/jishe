@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kimi 古籍助手</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f5e9d9;
+            --ink: #3a3226;
+            --accent: #8b5a2b;
+            --highlight: #d4a76a;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--parchment);
+            background-image: url("assets/images/backgroup/背景.png"); /* 修改为你的实际路径 */
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0;
+            padding: 200px;
+            padding-top: 50px;
+            padding-left: 275px; 
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(245, 233, 217, 0.6);
+            z-index: -1;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        /* 方正公文楷体设置 */
+        .greeting {
+            font-family: "FZKai-Z03S", "方正公文楷体", "楷体", KaiTi, "Noto Serif SC", serif;
+            text-align: center;
+            margin: 40px 0 30px;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--ink);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .greeting::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
+        }
+        
+        .input-container {
+            position: relative;
+            margin-bottom: 30px;
+            border: 1px solid var(--accent);
+            border-radius: 0;
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.1);
+            background-color: rgba(255,255,255,0.7);
+        }
+        
+        .input-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            font-size: 16px;
+            font-family: 'Noto Serif SC', serif;
+            background: transparent;
+            color: var(--ink);
+        }
+        
+        .input-box:focus {
+            outline: none;
+            background-color: rgba(255,255,255,0.9);
+        }
+        
+        .input-box::placeholder {
+            color: #8a7f72;
+            font-style: italic;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .category-btn {
+            padding: 12px 15px;
+            background-color: rgba(255,255,255,0.5);
+            border: 1px solid var(--accent);
+            border-radius: 0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-family: 'Noto Serif SC', serif;
+            color: var(--ink);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+        }
+        
+        .category-btn:hover {
+            background-color: rgba(255,255,255,0.8);
+            transform: translateY(-2px);
+            box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        }
+        
+        .category-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(210,180,140,0.1) 100%);
+            pointer-events: none;
+        }
+        
+        .chat-container {
+            background-color: rgba(255,255,255,0.7);
+            border: 1px solid var(--accent);
+            padding: 25px;
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            min-height: 200px;
+            position: relative;
+        }
+        
+        .chat-container::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px dashed var(--accent);
+            opacity: 0.2;
+            pointer-events: none;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(139,90,43,0.3);
+            position: relative;
+        }
+        
+        .message:last-child {
+            border-bottom: none;
+        }
+        
+        .user-message {
+            color: var(--ink);
+            font-weight: 700;
+        }
+        
+        .user-message::before {
+            content: "「";
+            color: var(--accent);
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+        
+        .user-message::after {
+            content: "」";
+            color: var(--accent);
+            font-size: 1.2em;
+            margin-left: 5px;
+        }
+        
+        .kimi-message {
+            color: var(--ink);
+        }
+        
+        .kimi-message::first-letter {
+            font-size: 1.5em;
+            color: var(--accent);
+            float: left;
+            margin-right: 5px;
+            line-height: 1;
+            margin-top: 3px;
+        }
+        
+        .send-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 18px;
+            cursor: pointer;
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .send-btn:hover {
+            color: var(--ink);
+        }
+        
+        .typing-indicator {
+            display: none;
+            color: var(--accent);
+            font-style: italic;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        /* Vintage corner decorations */
+        .vintage-corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path d="M40,40 L0,40 L0,0 C20,0 20,20 40,20 Z" fill="none" stroke="%238b5a2b" stroke-width="1" opacity="0.5"/></svg>');
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        .corner-tl {
+            top: 0;
+            left: 0;
+            transform: rotate(0deg);
+        }
+        
+        .corner-tr {
+            top: 0;
+            right: 0;
+            transform: rotate(90deg);
+        }
+        
+        .corner-bl {
+            bottom: 0;
+            left: 0;
+            transform: rotate(270deg);
+        }
+        
+        .corner-br {
+            bottom: 0;
+            right: 0;
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="vintage-corner corner-tl"></div>
+    <div class="vintage-corner corner-tr"></div>
+    <div class="vintage-corner corner-bl"></div>
+    <div class="vintage-corner corner-br"></div>
+    
+    <div class="container">
+        <div class="greeting" id="greeting"></div>
+        
+        <div class="input-container">
+            <input type="text" class="input-box" id="userInput" placeholder="请写下您的问题...">
+            <button class="send-btn" id="sendBtn">↵</button>
+        </div>
+        
+        <div class="categories">
+            <div class="category-btn">天文历法</div>
+            <div class="category-btn">医学成就</div>
+            <div class="category-btn">医学典籍</div>
+            <div class="category-btn">数学理论</div>
+            <div class="category-btn">农业技术</div>
+            <div class="category-btn">古代发明</div>
+            <div class="category-btn">哲学思想</div>
+            <div class="category-btn">军事策略</div>
+            <div class="category-btn">文学艺术</div>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <!-- 对话内容将在这里显示 -->
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">AI 正在思考中...</div>
+    </div>
+
+    <script>
+        // 更新问候语
+        function updateGreeting() {
+            const now = new Date();
+            const hour = now.getHours();
+            //const username = "学者"; // 使用更古典的称呼
+            
+            let greeting;
+            if (hour < 6) {
+                greeting = `夜安！欢迎来到灵枢AI助手！`;
+            } else if (hour < 12) {
+                greeting = `晨安！欢迎来到灵枢AI助手！`;
+            } else if (hour < 14) {
+                greeting = `午安！欢迎来到灵枢AI助手！`;
+            } else if (hour < 18) {
+                greeting = `日安！欢迎来到灵枢AI助手！`;
+            } else {
+                greeting = `晚安！欢迎来到灵枢AI助手！`;
+            }
+            
+            document.getElementById('greeting').textContent = greeting;
+        }
+        
+        // 初始化问候语
+        updateGreeting();
+        
+        // 每小时更新一次问候语
+        setInterval(updateGreeting, 3600000);
+        
+        // 与Kimi API交互
+        async function chatWithKimi(message) {
+            const apiKey = "sk-6gyOeKBn2QhjjqpwLncQbfdwSuqhfoFjitVmoGKIOrFOgxdq"; // 请替换为你的API key
+            const url = "https://api.moonshot.cn/v1/chat/completions";
+            
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        "model": "moonshot-v1-8k",
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": message
+                            }
+                        ],
+                        "temperature": 0.3
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`请求失败: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error("调用Kimi API出错:", error);
+                return "抱歉，获取回答时出错了。请稍后再试。";
+            }
+        }
+        
+        // 新增函数：将Markdown转换为纯文本
+        function markdownToPlainText(markdown) {
+            // 替换Markdown标记
+            return markdown
+                .replace(/\*\*(.*?)\*\*/g, '$1')      // 加粗
+                .replace(/\*(.*?)\*/g, '$1')          // 斜体
+                .replace(/_(.*?)_/g, '$1')            // 下划线
+                .replace(/~~(.*?)~~/g, '$1')          // 删除线
+                .replace(/`(.*?)`/g, '$1')            // 行内代码
+                .replace(/```[\s\S]*?```/g, '')       // 代码块
+                .replace(/\[(.*?)\]\(.*?\)/g, '$1')   // 链接
+                .replace(/^#+\s+(.*)/gm, '$1')       // 标题
+                .replace(/^\s*-\s+(.*)/gm, '• $1')    // 无序列表
+                .replace(/^\s*\d+\.\s+(.*)/gm, '$1')  // 有序列表
+                .replace(/\n{3,}/g, '\n\n');         // 多个空行合并
+        }
+
+        // 修改displayMessage函数
+        function displayMessage(role, content) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}-message`;
+            
+            // 如果是Kimi的回答，转换Markdown为纯文本
+            const displayContent = role === 'kimi' ? markdownToPlainText(content) : content;
+            messageDiv.textContent = displayContent;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // 处理用户输入
+        async function handleUserInput() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+            
+            if (!message) return;
+            
+            // 显示用户消息
+            displayMessage('user', message);
+            userInput.value = '';
+            
+            // 显示"正在输入"指示器
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'block';
+            
+            try {
+                // 获取Kimi的回复
+                const response = await chatWithKimi(message);
+                
+                // 隐藏"正在输入"指示器并显示回复
+                typingIndicator.style.display = 'none';
+                displayMessage('kimi', response);
+            } catch (error) {
+                typingIndicator.style.display = 'none';
+                displayMessage('kimi', "抱歉，获取回答时出错了。请稍后再试。");
+            }
+        }
+        
+        // 事件监听
+        document.getElementById('sendBtn').addEventListener('click', handleUserInput);
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleUserInput();
+            }
+        });
+        
+        // 类别按钮点击事件
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('userInput').value = btn.textContent + "相关的内容有哪些？";
+                document.getElementById('userInput').focus();
+            });
+        });
+    </script>
+</body>
+</html>
