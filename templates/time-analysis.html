@@ -189,6 +189,128 @@
                 <div class="container-fluid">
                     <!-- 动态时间轴 -->
                     <div id="timelineContainer" style="height: 400px; margin-bottom: 50px;"></div>
+
+                    <!-- 领域趋势分析卡片 -->
+                    <div class="row" id="fieldCards">
+                        <!-- 农业卡片 -->
+                        <div class="col-md-6">
+                            <div class="card" id="agriculture-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">农业发展趋势</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="agricultureChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 化学卡片 -->
+                        <div class="col-md-6">
+                            <div class="card" id="chemistry-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">化学发展趋势</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chemistryChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 医学生物卡片 -->
+                        <div class="col-md-6">
+                            <div class="card" id="medicine-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">医学生物发展趋势</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="medicineChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 天文地理卡片 -->
+                        <div class="col-md-6">
+                            <div class="card" id="astronomy-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">天文地理发展趋势</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="astronomyChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 工程建筑卡片 -->
+                        <div class="col-md-6">
+                            <div class="card" id="engineering-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">工程建筑发展趋势</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="engineeringChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 数学卡片 -->
+                        <div class="col-md-6">
+                            <div class="card" id="mathematics-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">数学发展趋势</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="mathematicsChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 物理卡片 -->
+                        <div class="col-md-6">
+                            <div class="card" id="physics-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">物理发展趋势</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="physicsChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -204,6 +326,44 @@
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // 设置复古主题，移除紫色，使用更多暖色调
+            Highcharts.theme = {
+                colors: [
+                    '#D2691E',  // 巧克力色
+                    '#8B4513',  // 马鞍棕色
+                    '#CD853F',  // 秘鲁色
+                    '#DEB887',  // 实木色
+                    '#B8860B',  // 暗金色
+                    '#DAA520',  // 金菊色
+                    '#A0522D'   // 赭色
+                ],
+                chart: {
+                    backgroundColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+                        stops: [
+                            [0, '#FFF8DC'],  // 玉米丝色
+                            [1, '#FAEBD7']   // 古董白
+                        ]
+                    },
+                    style: {
+                        fontFamily: '"Times New Roman", serif'
+                    }
+                },
+                title: {
+                    style: {
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        color: '#8B4513'  // 马鞍棕色
+                    }
+                },
+                subtitle: {
+                    style: {
+                        color: '#666666'
+                    }
+                }
+            };
+            Highcharts.setOptions(Highcharts.theme);
+
             const chart = Highcharts.chart('timelineContainer', {
                 chart: {
                     type: 'timeline',
@@ -258,6 +418,88 @@
             // 点击事件触发缩放
             $('#timelineContainer').on('click', function () {
                 chart.xAxis[0].setExtremes(Date.UTC(-500, 0, 1), Date.UTC(500, 0, 1));
+            });
+
+            // 领域趋势图配置
+            const createFieldChart = (containerId, title, data) => {
+                return Highcharts.chart(containerId, {
+                    chart: {
+                        type: 'area',
+                        options3d: {
+                            enabled: true,
+                            alpha: 15,
+                            beta: 15,
+                            depth: 50,
+                            viewDistance: 25
+                        }
+                    },
+                    title: {
+                        text: title
+                    },
+                    xAxis: {
+                        categories: ['夏商周', '春秋战国', '秦汉', '魏晋南北朝', '隋唐', '宋', '元', '明', '清'],
+                        tickmarkPlacement: 'on',
+                        labels: {
+                            style: {
+                                color: '#8B4513'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: '发展指数',
+                            style: {
+                                color: '#8B4513'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        shared: true,
+                        backgroundColor: 'rgba(255, 248, 220, 0.9)',
+                        style: {
+                            color: '#8B4513'
+                        }
+                    },
+                    plotOptions: {
+                        area: {
+                            depth: 100,
+                            fillOpacity: 0.7,
+                            marker: {
+                                enabled: true,
+                                radius: 4
+                            }
+                        }
+                    },
+                    series: [{
+                        name: title,
+                        data: data
+                    }]
+                });
+            };
+
+            // 初始化各个领域的图表
+            const fieldCharts = {
+                'agriculture': createFieldChart('agricultureChart', '农业发展趋势', [3, 4, 7, 5, 6, 8, 6, 9, 7]),
+                'chemistry': createFieldChart('chemistryChart', '化学发展趋势', [2, 5, 8, 6, 7, 9, 5, 8, 6]),
+                'medicine': createFieldChart('medicineChart', '医学生物发展趋势', [4, 6, 8, 7, 8, 9, 6, 7, 8]),
+                'astronomy': createFieldChart('astronomyChart', '天文地理发展趋势', [5, 7, 8, 6, 9, 8, 7, 6, 7]),
+                'engineering': createFieldChart('engineeringChart', '工程建筑发展趋势', [6, 8, 9, 7, 8, 7, 5, 8, 7]),
+                'mathematics': createFieldChart('mathematicsChart', '数学发展趋势', [3, 5, 7, 8, 6, 9, 7, 6, 5]),
+                'physics': createFieldChart('physicsChart', '物理发展趋势', [2, 4, 6, 5, 7, 8, 6, 7, 6])
+            };
+
+            // 监听卡片关闭事件
+            $('.card-tools .btn-tool').on('click', function () {
+                const card = $(this).closest('.card');
+                card.fadeOut(300, function () {
+                    const fieldId = card.attr('id').replace('-card', '');
+                    const reopenBtn = $(`<button class="btn btn-primary mb-3">重新打开${card.find('.card-title').text()}</button>`);
+                    reopenBtn.on('click', function () {
+                        card.fadeIn(300);
+                        $(this).remove();
+                    });
+                    $('#fieldCards').prepend(reopenBtn);
+                });
             });
         });
     </script>
