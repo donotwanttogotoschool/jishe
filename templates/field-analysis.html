@@ -19,6 +19,17 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/treemap.js"></script>
     <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+
+    <style>
+        .nav-treeview {
+            display: none;
+        }
+
+        .menu-open .nav-treeview {
+            display: block;
+        }
+    </style>
+
 </head>
 
 <body class="layout-fixed sidebar-expand-lg">
@@ -63,17 +74,17 @@
             <div class="sidebar">
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-                        <!-- 搜索查询 -->
+                        <!-- 搜索查询 (无子菜单) -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link" data-page="search">
                                 <i class="nav-icon fas fa-search"></i>
                                 <p>搜索查询</p>
                             </a>
                         </li>
 
-                        <!-- 统计分析 -->
-                        <li class="nav-item has-treeview menu-open">
-                            <a href="#" class="nav-link active">
+                        <!-- 统计分析 (有子菜单) -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
                                     统计分析
@@ -88,7 +99,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/field-analysis" class="nav-link active">
+                                    <a href="/field-analysis" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>领域分析</p>
                                     </a>
@@ -102,7 +113,7 @@
                             </ul>
                         </li>
 
-                        <!-- 分类浏览 -->
+                        <!-- 分类浏览 (有子菜单) -->
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
@@ -157,7 +168,7 @@
                             </ul>
                         </li>
 
-                        <!-- 时间轴 -->
+                        <!-- 时间轴 (无子菜单) -->
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-page="timeline">
                                 <i class="nav-icon fas fa-clock"></i>
@@ -165,7 +176,7 @@
                             </a>
                         </li>
 
-                        <!-- 科学文萃 -->
+                        <!-- 科学文萃 (无子菜单) -->
                         <li class="nav-item">
                             <a href="/articles" class="nav-link">
                                 <i class="nav-icon fas fa-book"></i>

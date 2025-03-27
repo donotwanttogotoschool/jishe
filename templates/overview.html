@@ -13,6 +13,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+
+    <style>
+        .nav-treeview {
+            display: none;
+        }
+
+        .menu-open .nav-treeview {
+            display: block;
+        }
+    </style>
+
 </head>
 
 <body class="layout-fixed sidebar-expand-lg">
@@ -112,7 +125,42 @@
                                         <p>农业</p>
                                     </a>
                                 </li>
-                                <!-- ... 其他分类选项 ... -->
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="chemistry">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>化学</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="medicine">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>医学生物</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="astronomy">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>天文地理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="engineering">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>工程建筑</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="mathematics">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>数学计量</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-page="physics">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>物理</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
@@ -152,30 +200,8 @@
             <!-- 主要内容 -->
             <div class="content">
                 <div class="container-fluid">
-                    <div class="row">
-                        <!-- 左侧图表 -->
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">各朝代科学家分布</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div id="dynastyChart" style="height: 300px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 右侧图表 -->
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">领域分布</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div id="categoryChart" style="height: 300px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="heatmapContainer" style="height: 400px; margin-bottom: 50px;"></div>
+                    <div id="stackedColumnContainer" style="height: 400px; margin-bottom: 50px;"></div>
                 </div>
             </div>
         </div>
@@ -188,52 +214,118 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
-
-    <!-- 初始化图表的脚本 -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 获取数据并初始化图表
-            fetch('/api/statistics')
-                .then(response => response.json())
-                .then(data => {
-                    // 朝代分布图表
-                    Highcharts.chart('dynastyChart', {
-                        chart: { type: 'column' },
-                        title: { text: '各朝代科学家分布' },
-                        xAxis: {
-                            categories: data.dynasties.map(d => d.name),
-                            title: { text: '朝代' }
-                        },
-                        yAxis: {
-                            title: { text: '人数' }
-                        },
-                        series: [{
-                            name: '科学家数量',
-                            data: data.dynasties.map(d => d.count)
-                        }],
-                        credits: {
-                            enabled: false  // 禁用水印
-                        }
-                    });
+            // 热力矩阵图表
+            Highcharts.chart('heatmapContainer', {
+                chart: {
+                    type: 'heatmap',
+                    plotBorderWidth: 1
+                },
+                title: {
+                    text: '分领域朝代热力矩阵'
+                },
+                xAxis: {
+                    categories: ['汉', '唐', '宋', '元', '明', '清']
+                },
+                yAxis: {
+                    categories: ['农业', '化学', '医学生物', '天文地理', '工程建筑', '数学计量', '物理'],
+                    title: null
+                },
+                colorAxis: {
+                    min: 0,
+                    minColor: '#FFFFFF',
+                    maxColor: Highcharts.getOptions().colors[0]
+                },
+                legend: {
+                    align: 'right',
+                    layout: 'vertical',
+                    margin: 0,
+                    verticalAlign: 'top',
+                    y: 25,
+                    symbolHeight: 280
+                },
+                tooltip: {
+                    formatter: function () {
+                        return `<b>${this.series.xAxis.categories[this.point.x]}</b> <br><b>${this.point.value}</b> 成就 <br><b>${this.series.yAxis.categories[this.point.y]}</b>`;
+                    }
+                },
+                series: [{
+                    name: '成就数量',
+                    borderWidth: 1,
+                    data: [
+                        [0, 0, 10], [0, 1, 19], [0, 2, 8], [0, 3, 15], [0, 4, 12], [0, 5, 5], [0, 6, 7],
+                        [1, 0, 24], [1, 1, 67], [1, 2, 16], [1, 3, 20], [1, 4, 14], [1, 5, 9], [1, 6, 10],
+                        [2, 0, 23], [2, 1, 6], [2, 2, 8], [2, 3, 13], [2, 4, 11], [2, 5, 4], [2, 6, 6],
+                        [3, 0, 5], [3, 1, 8], [3, 2, 12], [3, 3, 9], [3, 4, 7], [3, 5, 3], [3, 6, 5],
+                        [4, 0, 15], [4, 1, 23], [4, 2, 9], [4, 3, 17], [4, 4, 13], [4, 5, 8], [4, 6, 9],
+                        [5, 0, 10], [5, 1, 4], [5, 2, 6], [5, 3, 11], [5, 4, 9], [5, 5, 6], [5, 6, 8]
+                    ],
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000'
+                    }
+                }]
+            });
 
-                    // 领域分布图表
-                    Highcharts.chart('categoryChart', {
-                        chart: { type: 'pie' },
-                        title: { text: '领域分布' },
-                        series: [{
-                            name: '科学家数量',
-                            data: data.categories.map(c => ({
-                                name: c.name,
-                                y: c.y
-                            }))
-                        }],
-                        credits: {
-                            enabled: false  // 禁用水印
+            // 堆叠柱状图
+            Highcharts.chart('stackedColumnContainer', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: '成就类型堆叠图'
+                },
+                xAxis: {
+                    categories: ['农业', '化学', '医学生物', '天文地理', '工程建筑', '数学计量', '物理']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '成就数量'
+                    },
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            fontWeight: 'bold',
+                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
                         }
-                    });
-                })
-                .catch(error => console.error('加载数据失败:', error));
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    x: -30,
+                    verticalAlign: 'top',
+                    y: 25,
+                    floating: true,
+                    backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    borderColor: '#CCC',
+                    borderWidth: 1,
+                    shadow: false
+                },
+                tooltip: {
+                    headerFormat: '<b>{point.x}</b><br/>',
+                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                series: [{
+                    name: '理论',
+                    data: [5, 3, 4, 7, 2, 1, 6]
+                }, {
+                    name: '技术',
+                    data: [2, 2, 3, 2, 1, 1, 3]
+                }, {
+                    name: '仪器',
+                    data: [3, 4, 4, 2, 5, 2, 4]
+                }]
+            });
         });
     </script>
 </body>
