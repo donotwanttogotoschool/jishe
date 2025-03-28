@@ -14,11 +14,24 @@
             font-family: 'Times New Roman', serif;
             background-color: #f5f5f0;
             color: #333;
-            /*background-image: url('Norstar/assets/images/backgroup/bg_about.jpg');*/
+            background-image: url('images/千里江山1.png');
+            background-size: cover;
             background-attachment: fixed;
             margin: 0;
             padding: 0;
-        }  
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(245, 245, 240, 0.7); /* 半透明覆盖层，确保文字可读性 */
+            z-index: -1;
+        }
         
         .head {
             background-color: #8B4513;
@@ -172,7 +185,7 @@
         .mapnav {
             position: absolute;
             top: 20px;
-            left: 20px;
+            left: 120px;
             z-index: 10;
         }
         
@@ -249,6 +262,22 @@
             margin-bottom: 10px;
             font-weight: bold;
             letter-spacing: 1px;
+        }
+
+        /* 移除所有标题左侧的黑点 */
+        .tit::before, .tit01::before {
+            content: none !important;
+        }
+
+        /* 确保列表项不显示默认的项目符号 */
+        .nav1 li, .nav2 li {
+            list-style-type: none;
+        }
+
+        /* 为确保完全覆盖所有可能的情况 */
+        .tit, .tit01 {
+            list-style-type: none;
+            display: block;
         }
         
         .ftechart {
@@ -348,6 +377,75 @@
             margin-left: -25px; /* 可以根据需要调整这个负值大小 */
         }
 
+        /* 为表格容器添加滚动功能 */
+        .box .boxnav {
+            overflow-y: auto; /* 启用垂直滚动 */
+        }
+
+        /* 特别为表格容器设置样式 */
+        .box .boxnav:has(table.table1) {
+            overflow-y: auto; /* 启用垂直滚动 */
+            max-height: 200px; /* 保持原高度限制 */
+        }
+
+        /* 美化滚动条样式，保持复古风格 */
+        .boxnav::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .boxnav::-webkit-scrollbar-track {
+            background: #FFF8E7;
+            border-radius: 5px;
+        }
+
+        .boxnav::-webkit-scrollbar-thumb {
+            background: #8B4513;
+            border-radius: 5px;
+            border: 1px solid #5D2906;
+        }
+
+        .boxnav::-webkit-scrollbar-thumb:hover {
+            background: #5D2906;
+        }
+
+        /* 控制表格中的文本换行和高度 */
+        .table1 td {
+            max-height: 40px;       /* 控制单元格最大高度 */
+            line-height: 1.2;       /* 控制行间距 */
+            white-space: normal;    /* 允许文本换行 */
+            overflow: hidden;       /* 隐藏溢出内容 */
+            text-overflow: ellipsis; /* 显示省略号 */
+            max-width: 0;           /* 强制文本截断 */
+        }
+
+        /* 让表格标题居中显示 */
+        .table1 th, .table1 td {
+            text-align: center;     /* 水平居中 */
+            vertical-align: middle; /* 垂直居中 */
+        }
+
+        .leidanav ul.clearfix {
+            padding-left: 25px; /* 将整个列表向右移动 */
+            display: flex;
+            justify-content: space-around; /* 更均匀地分布这些元素 */
+        }
+
+        /* 设置著作统计图表中的文字颜色为棕色 */
+        .ybp li text,
+        .ybp canvas text,
+        .ybp .echart-text,
+        #echart5 text, #echart6 text, #echart7 text, #echart8 text {
+            fill: #8B4513 !important;  /* 使用棕色 */
+            color: #8B4513 !important;
+        }
+
+        /* 确保图表标题和说明文本也显示为棕色 */
+        .ybp .echarts-title,
+        .ybp .echarts-legend,
+        .ybp .echarts-label {
+            color: #8B4513 !important;
+        }
+
     </style>
 </head>
 
@@ -390,42 +488,42 @@
     <div class="mainbox">
 
         <ul class="clearfix nav1">
-            <li style="width: 22%">
+            <li style="width: 28%">  <!-- 从22%增加到28% -->
                 <div class="box">
                     <div class="tit">中国古代自然科学名著</div>
-                    <div class="boxnav" style="height: 200px;">
-                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <div class="boxnav" style="height: 200px; overflow-y: auto;">
+                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; word-break: break-word;">
                             <tbody>
                                 <tr>
-                                    <th>著作名称</th>
+                                    <th>著作<br>名称</th>
                                     <th>作者</th>
                                     <th>年代</th>
                                     <th>领域</th>
-                                    <th>历史地位</th>
+                                    <th>历史<br>地位</th>
                                 </tr>
                                 <tr>
-                                    <td>本草纲目</td>
+                                    <td>本草<br>纲目</td>
                                     <td>李时珍</td>
                                     <td>明代</td>
                                     <td>医药</td>
                                     <td>东方医药巨著</td>
                                 </tr>
                                 <tr>
-                                    <td>天工开物</td>
+                                    <td>天工<br>开物</td>
                                     <td>宋应星</td>
                                     <td>明代</td>
                                     <td>工艺</td>
                                     <td>中国科技史明珠</td>
                                 </tr>
                                 <tr>
-                                    <td>农政全书</td>
+                                    <td>农政<br>全书</td>
                                     <td>徐光启</td>
                                     <td>明代</td>
                                     <td>农学</td>
                                     <td>农学集大成者</td>
                                 </tr>
                                 <tr>
-                                    <td>九章算术</td>
+                                    <td>九章<br>算术</td>
                                     <td>多人</td>
                                     <td>汉代</td>
                                     <td>数学</td>
@@ -436,7 +534,7 @@
                                     <td>张仲景</td>
                                     <td>汉代</td>
                                     <td>医学</td>
-                                    <td>医家圣典</td>
+                                    <td>医家<br>圣典</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -454,7 +552,7 @@
                     </div>
                 </div>
             </li>
-            <li style="width: 56%">
+            <li style="width:44%">
 
                 <div class="box">
                     <div class="boxnav mapc" style="height: 550px; position: relative">
@@ -497,7 +595,7 @@
                     </div>
 
             </li>
-            <li style="width: 22%">
+            <li style="width: 28%">
 
                 <div class="box">
                     <div class="tit">中国古代自然科学与社会发展的互动关系</div>
@@ -506,45 +604,45 @@
                             <tbody>
                                 <tr>
                                     <th>时期</th>
-                                    <th>科技成就</th>
-                                    <th>经济影响</th>
-                                    <th>政治影响</th>
-                                    <th>社会影响</th>
+                                    <th>科技<br>成就</th>
+                                    <th>经济<br>影响</th>
+                                    <th>政治<br>影响</th>
+                                    <th>社会<br>影响</th>
                                 </tr>
                                 <tr>
                                     <td>先秦</td>
-                                    <td>青铜冶炼</td>
-                                    <td>手工业发展</td>
-                                    <td>军事装备</td>
-                                    <td>礼器文化</td>
+                                    <td>青铜<br>冶炼</td>
+                                    <td>手工业<br>发展</td>
+                                    <td>军事<br>装备</td>
+                                    <td>礼器<br>文化</td>
                                 </tr>
                                 <tr>
                                     <td>汉代</td>
                                     <td>造纸术</td>
-                                    <td>文化传播</td>
-                                    <td>政令推广</td>
-                                    <td>教育普及</td>
+                                    <td>文化<br>传播</td>
+                                    <td>政令<br>推广</td>
+                                    <td>教育<br>普及</td>
                                 </tr>
                                 <tr>
                                     <td>唐代</td>
-                                    <td>天文历法</td>
-                                    <td>农业生产</td>
-                                    <td>朝贡体系</td>
-                                    <td>文化交流</td>
+                                    <td>天文<br>历法</td>
+                                    <td>农业<br>生产</td>
+                                    <td>朝贡<br>体系</td>
+                                    <td>文化<br>交流</td>
                                 </tr>
                                 <tr>
                                     <td>宋代</td>
                                     <td>指南针</td>
-                                    <td>海上贸易</td>
-                                    <td>航海外交</td>
-                                    <td>商业繁荣</td>
+                                    <td>海上<br>贸易</td>
+                                    <td>航海<br>外交</td>
+                                    <td>商业<br>繁荣</td>
                                 </tr>
                                 <tr>
                                     <td>明代</td>
-                                    <td>火药技术</td>
-                                    <td>军工产业</td>
-                                    <td>国防建设</td>
-                                    <td>军事变革</td>
+                                    <td>火药<br>技术</td>
+                                    <td>军工<br>产业</td>
+                                    <td>国防<br>建设</td>
+                                    <td>军事<br>变革</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -581,11 +679,11 @@
 
         <div class="box" style="padding: 20px 0;">
             <ul class="clearfix nav2 ">
-                <li style="width:29%">
+                <li style="width:25%">
                     <div class="tit01">成就统计时间轴</div>
                     <div class="ftechart" id="echart2"></div>
                 </li>
-                <li style="width:28%">
+                <li style="width:31%">
                     <div class="tit01">成就统计柱状图</div>
                     <div class="ftechart" id="echart9"></div>
                 </li>
@@ -593,7 +691,7 @@
                     <div class="tit01">科学家或学者统计时间轴</div>
                     <div class="ftechart" id="echart3"></div>
                 </li>
-                <li style="width:18%">
+                <li style="width:19%">
                     <div class="tit01">科学家或学者统计柱状图</div>
                     <div class="ftechart" id="echart4"></div>
                 </li>

@@ -46,25 +46,25 @@ option = {
         radius: ["25%", "70%"],
         name: {
             textStyle: {
-                color: '#72ACD1'
+                color: '#8B4513'
             }
         },
         splitLine: {
             lineStyle: {
-                color: 'rgba(255,255,255,.0',
+                color: 'rgba(210, 180, 140, .6)',
                 width: 2
             }
         },
         axisLine: {
             lineStyle: {
-                color: 'rgba(255,255,255,0.2)',
+                color: 'rgba(210, 180, 140, .6)',
                 width: 1,
                 type: 'dotted'
             },
         },
         splitArea: {
             areaStyle: {
-                color: ['rgba(255,255,255,.1)', 'rgba(255,255,255,0)']
+                color: ['rgba(225, 204, 173, 0.3)', 'rgba(255,255,255,0)']
             }
         },
         indicator: data[2]
@@ -102,11 +102,12 @@ option = {
     legend: {
         data: ['中国科技成就', '西方科技成就'],
         top:'5%',
+        left: '18%', 
         textStyle: {
-            color: "#fff",
+            color: "rgba(210, 180, 140, .8)",
             fontSize: '12',
         },
-        itemGap: 35
+        itemGap: 20
     },
     grid: {
         left: '0%',
@@ -121,7 +122,7 @@ option = {
         axisLine: {
             show: true,
             lineStyle: {
-                color: "rgba(255,255,255,.1)",
+                color: "rgba(210, 180, 140, .6)",
                 width: 1,
                 type: "solid"
             },
@@ -130,11 +131,11 @@ option = {
             show: false,
         },
         axisLabel:  {
-            interval: 0,
+            interval: 1,
             show: true,
             splitNumber: 5,
             textStyle: {
-                color: "rgba(255,255,255,.6)",
+                color: "rgba(210, 180, 140, .8)",
                 fontSize: '12',
             },
             rotate: 15
@@ -144,13 +145,13 @@ option = {
         type: 'value',
         name: '重要成就',
         nameTextStyle: {
-            color: 'rgba(255,255,255,.6)',
+            color: 'rgba(210, 180, 140, .8)',
             fontSize: '12',
         },
         axisLabel: {
             show:true,
             textStyle: {
-                color: "rgba(255,255,255,.6)",
+                color: "rgba(210, 180, 140, .8)",
                 fontSize: '12',
             },
         },
@@ -160,14 +161,14 @@ option = {
         axisLine: {
             show: true,
             lineStyle: {
-                color: "rgba(255,255,255,.1)",
+                color: "rgba(225, 204, 173, .5)",
                 width: 1,
                 type: "solid"
             },
         },
         splitLine: {
             lineStyle: {
-                color: "rgba(255,255,255,.1)",
+                color: "rgba(225, 204, 173, .5)",
             }
         }
     }],
@@ -245,8 +246,9 @@ option = {
     legend: {
         data: ['重要科学家', '其他学者'],
         top:'5%',
+        left:'20%',
         textStyle: {
-            color: "#fff",
+            color: "rgba(210, 180, 140, .8)",
             fontSize: '12',
         },
         itemGap: 35
@@ -264,7 +266,7 @@ option = {
         axisLine: {
             show: true,
          lineStyle: {
-                color: "rgba(255,255,255,.1)",
+                color: "rgba(225, 204, 173, .5)",
                 width: 1,
                 type: "solid"
             },
@@ -276,7 +278,7 @@ option = {
             interval: 0,
             show: true,
             textStyle: {
-                color: "rgba(255,255,255,.6)",
+                color: "rgba(210, 180, 140, .8)",
                 fontSize: '12',
             },
         },
@@ -285,13 +287,13 @@ option = {
         type: 'value',
         name: '学者数量',
         nameTextStyle: {
-            color: 'rgba(255,255,255,.6)',
+            color: 'rgba(210, 180, 140, .8)',
             fontSize: '12',
         },
         axisLabel: {
             show:true,
             textStyle: {
-                color: "rgba(255,255,255,.6)",
+                color: "rgba(210, 180, 140, .8)",
                 fontSize: '12',
             },
         },
@@ -301,14 +303,14 @@ option = {
         axisLine: {
             show: true,
             lineStyle: {
-                color: "rgba(255,255,255,.1)",
+                color: "rgba(225, 204, 173, .5)",
                 width: 1,
                 type: "solid"
             },
         },
         splitLine: {
             lineStyle: {
-               color: "rgba(255,255,255,.1)",
+               color: "rgba(225, 204, 173, .5)",
             }
         }
     }],
@@ -376,7 +378,7 @@ option = {
         },
         axisLabel: {
             textStyle: {
-                color: "rgba(255,255,255,.6)",
+                color: "rgba(210, 180, 140, .8)",
                 fontSize: '12',
             },
             formatter: function(value, index) {
@@ -392,7 +394,7 @@ option = {
         data: valdata,
         axisLabel: {
             textStyle: {
-                color: 'rgba(255,255,255,.5)',
+                color: 'rgba(210, 180, 140, .8)',
                 fontSize: '12',
             }
         },
@@ -439,7 +441,7 @@ option = {
         itemStyle: {
             normal: {
                 color: 'none',
-                borderColor: 'rgba(255,255,255,.1)',
+                borderColor: 'rgba(210, 180, 140, .8)',
                 borderWidth: 1,
                 barBorderRadius: 15,
             }
@@ -461,7 +463,7 @@ function echarts_5() {
             left: 'center',
             bottom: 15,
             subtextStyle: {
-                color: 'rgba(255,255,255,.6)',
+                color: 'rgba(139, 69, 19, .6)',
                 fontSize: 12
             }
         },
@@ -527,7 +529,7 @@ function echarts_6() {
             left: 'center',
             bottom: 15,
             subtextStyle: {
-                color: 'rgba(255,255,255,.6)',
+                color: 'rgba(139, 69, 19, .6)',
                 fontSize: 12
             }
         },
@@ -593,7 +595,7 @@ function echarts_7() {
             left: 'center',
             bottom: 15,
             subtextStyle: {
-                color: 'rgba(255,255,255,.6)',
+                color: 'rgba(139, 69, 19, .6)',
                 fontSize: 12
             }
         },
@@ -659,7 +661,7 @@ function echarts_8() {
             left: 'center',
             bottom: 15,
             subtextStyle: {
-                color: 'rgba(255,255,255,.6)',
+                color: 'rgba(139, 69, 19, .6)',
                 fontSize: 12
             }
         },
@@ -729,7 +731,7 @@ function echarts_9() {
                 y: '10',
                 icon: 'circle',
                 itemGap: 8,
-                textStyle: {color: 'rgba(255,255,255,1)'},
+                textStyle: {color: 'rgba(210, 180, 140, .8)'},
                 itemWidth: 10,
                 itemHeight: 10,
                 data: ['科学发现与创新', '技术发明', '工程应用']
@@ -747,7 +749,7 @@ function echarts_9() {
                 axisLine: {show: false},
                 axisLabel: {
                     textStyle: {
-                        color: 'rgba(255,255,255,.5)',
+                        color: 'rgba(210, 180, 140, .8)',
                         fontSize: '12'
                     },
                     interval: 0,
@@ -758,7 +760,7 @@ function echarts_9() {
                 type: 'value',
                 name: '成就数量',
                 nameTextStyle: {
-                    color: 'rgba(255,255,255,.5)'
+                    color: 'rgba(210, 180, 140, .8)'
                 },
                 splitNumber: 4,
                 axisLine: {show: false},
@@ -766,12 +768,12 @@ function echarts_9() {
                 splitLine: {
                     show: true,
                     lineStyle: {
-                        color: 'rgba(255,255,255,0.05)'
+                        color: 'rgba(225, 204, 173, .5)'
                     }
                 },
                 axisLabel: {
                     textStyle: {
-                        color: "rgba(255,255,255,.5)",
+                        color: "rgba(210, 180, 140, .8)",
                     }
                 }
             },
@@ -783,10 +785,10 @@ function echarts_9() {
                     normal: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                             offset: 0,
-                            color: '#8bd46e'
+                            color: "rgba(210, 180, 140, .8)"
                         }, {
                             offset: 1,
-                            color: '#03b48e'
+                            color: "rgba(210, 180, 140, .8)"
                         }]),
                         barBorderRadius: 11,
                     }
