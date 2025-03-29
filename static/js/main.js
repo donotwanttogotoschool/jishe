@@ -13,7 +13,9 @@ const contentManager = {
                             </button>
                         </div>
                     </form>
-                    <div id="searchResults" class="mt-4"></div>
+                    <div class="search-results" id="searchResults">
+                        <!-- 搜索结果将被动态插入 -->
+                    </div>
                 </div>
             </div>
         `;
@@ -62,7 +64,7 @@ const contentManager = {
             return data;
         } catch (error) {
             console.error('搜索出错:', error);
-            return [];
+            return { type: "none", data: [] };
         }
     },
 
@@ -129,13 +131,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchForm) {
         searchForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const searchInput = document.getElementById('searchInput').value;
-            
-            if (!searchInput.trim()) {
+            const searchInput = document.getElementById('searchInput').value.trim();
+            if (!searchInput) {
                 displaySearchResults([]);
                 return;
             }
-
             const results = await contentManager.handleSearch(searchInput);
             displaySearchResults(results);
         });
@@ -155,95 +155,55 @@ function debounce(func, wait) {
     };
 }
 
-// 修改搜索结果显示函数
 function displaySearchResults(data) {
     const container = document.getElementById('searchResults');
-    
-    // 添加淡入效果的CSS类
-    container.style.opacity = '0';
-    container.style.transition = 'opacity 0.3s ease-in-out';
-
-    // 清空之前的结果
-    setTimeout(() => {
-        container.innerHTML = '';
-
-        if (!data || data.length === 0) {
-            container.innerHTML = `
-                <div class="search-message">
-                    未找到相关结果，请尝试其他关键词
-                </div>
-            `;
-        } else {
-            // 显示搜索结果
-            data.forEach(person => {
-                const card = document.createElement('div');
-                card.className = 'scientist-card';
-                
-                // 构建成就列表 HTML
-                const achievementsHtml = person.achievements && person.achievements.length > 0
-                    ? `<div class="achievements">${person.achievements.join('、')}</div>`
-                    : '';
-                
-                card.innerHTML = `
-                    <h3 class="scientist-name">${person.name || ''}</h3>
-                    <div class="description">${person.description || ''}</div>
-                    ${achievementsHtml}
-                    <div class="category-dynasty">
-                        ${person.category || ''} · ${person.dynasty || ''}
-                    </div>
-                `;
-                
-                container.appendChild(card);
-            });
-        }
-        
-        // 淡入显示结果
-        requestAnimationFrame(() => {
-            container.style.opacity = '1';
-        });
-    }, 150); // 短暂延迟以确保过渡效果平滑
-}
-
-// 修改搜索处理函数
-const handleSearch = debounce(async (event) => {
-    if (event) {
-        event.preventDefault();
-    }
-    
-    const searchInput = document.querySelector('#searchInput').value.trim();
-    
-    if (!searchInput) {
-        displaySearchResults([]);
+    container.innerHTML = '';
+    if (data.type === "none" || data.data.length === 0) {
+        container.innerHTML = '<p>未找到相关结果，请尝试其他关键词。</p>';
         return;
     }
-
-    try {
-        const response = await fetch(`/api/search?query=${encodeURIComponent(searchInput)}`);
-        if (!response.ok) {
-            throw new Error('搜索请求失败');
-        }
-        const data = await response.json();
-        displaySearchResults(data);
-    } catch (error) {
-        console.error('搜索出错:', error);
-        displaySearchResults([]);
+    const iconMap = {
+        '农业': '🌾',
+        '化学': '🧪',
+        '医学生物': '🌿',
+        '天文地理': '🔭',
+        '工程建筑': '🏗️',
+        '数学计量': '📐',
+        '物理': '⚙️'
+    };
+    if (data.type === "csv") {
+        data.data.forEach(categoryResult => {
+            const categoryDiv = document.createElement('div');
+            const icon = iconMap[categoryResult.category] || '📚';
+            categoryDiv.innerHTML = `<h3 data-icon="${icon}">${categoryResult.category}</h3>`;
+            const table = document.createElement('table');
+            table.className = 'table table-bordered';
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+            const columns = Object.keys(categoryResult.results[0]);
+            const headerRow = document.createElement('tr');
+            columns.forEach(col => {
+                const th = document.createElement('th');
+                th.textContent = col;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            categoryResult.results.forEach(row => {
+                const tr = document.createElement('tr');
+                columns.forEach(col => {
+                    const td = document.createElement('td');
+                    td.textContent = row[col];
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            categoryDiv.appendChild(table);
+            container.appendChild(categoryDiv);
+        });
     }
-}, 300); // 300ms 的防抖延迟
-
-// 绑定搜索事件
-document.addEventListener('DOMContentLoaded', () => {
-    const searchForm = document.querySelector('#searchForm');
-    const searchInput = document.querySelector('#searchInput');
-
-    if (searchForm) {
-        searchForm.addEventListener('submit', handleSearch);
-    }
-
-    if (searchInput) {
-        // 添加输入事件监听
-        searchInput.addEventListener('input', handleSearch);
-    }
-});
+}
 
 // 添加相关的 CSS
 const style = document.createElement('style');
@@ -268,6 +228,54 @@ style.textContent = `
 
     #searchResults {
         transition: opacity 0.3s ease-in-out;
+    }
+
+    body {
+        background-color: #f4f1ea;
+        font-family: 'Microsoft YaHei', sans-serif;
+        color: #333;
+    }
+
+    h3 {
+        font-family: 'Microsoft YaHei', sans-serif;
+        color: #5a4d41;
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+        background-color: #eae0d5;
+        color: #5a4d41;
+    }
+
+    .table tbody tr:nth-child(odd) {
+        background-color: #f9f6f2;
+    }
+
+    .table tbody tr:hover {
+        background-color: #e0d6c9;
+    }
+
+    .search-results {
+        padding: 20px;
+        background-color: #f4f1ea;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 `;
 document.head.appendChild(style); 

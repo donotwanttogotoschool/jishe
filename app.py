@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request, url_for, send_from_d
 import csv
 import os
 from pathlib import Path
+import pandas as pd
 
 app = Flask(__name__, static_url_path='')
 
@@ -34,7 +35,7 @@ def load_all_data():
     categories = ["农业", "化学", "医学生物", "天文地理", "工程建筑", "数学计量", "物理"]
 
     for category in categories:
-        base_path = Path("database") / category.replace("生物", "")
+        base_path = Path("database") / category
         
         # 读取人物数据
         person_path = base_path / f"{category}_人物_clean.csv"
@@ -86,6 +87,20 @@ def load_achievement_data(filepath):
         print(f"Warning: Could not read {filepath}: {e}")
     return achievements
 
+def search_in_csv_files(keyword):
+    results = []
+    categories = ["农业", "化学", "医学生物", "天文地理", "工程建筑", "数学计量", "物理"]
+    for category in categories:
+        base_path = Path("database") / category
+        person_path = base_path / f"{category}_人物_clean.csv"
+        if person_path.exists():
+            df = pd.read_csv(person_path, encoding='utf-8')
+            mask = df.apply(lambda row: row.astype(str).str.contains(keyword, case=False).any(), axis=1)
+            matched = df[mask]
+            if not matched.empty:
+                results.append((category, matched))
+    return results
+
 # 路由
 @app.route('/')
 def index():
@@ -120,15 +135,23 @@ def static_index():
 # API路由
 @app.route('/api/search')
 def search():
-    query = request.args.get('query', '').lower()
+    query = request.args.get('query', '').strip()
     if not query:
-        return jsonify([])
+        return jsonify({"type": "none", "data": []})
     
-    results = [
-        person.to_dict() for person in all_persons
-        if query in person.name.lower()
-    ]
-    return jsonify(results)
+    # 搜索 CSV 文件
+    csv_results = search_in_csv_files(query)
+    formatted_results = []
+    for category, df in csv_results:
+        formatted_results.append({
+            "category": category,
+            "results": df.to_dict(orient='records')
+        })
+    
+    return jsonify({
+        "type": "csv",
+        "data": formatted_results
+    })
 
 @app.route('/api/statistics')
 def get_statistics():
