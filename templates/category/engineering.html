@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>中国古代自然科学知识库</title>
+    <title>工程建筑 - 中国古代自然科学知识库</title>
 
-    <!-- 修改静态文件引用路径 -->
+    <!-- 引入样式文件 -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- Google Font -->
     <link rel="stylesheet"
@@ -17,13 +17,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
     <!-- Highcharts -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/timeline.js"></script>
 
     <style>
         .nav-treeview {
             display: none;
         }
 
-        .menu-open .nav-treeview {
+        .menu-open>.nav-treeview {
             display: block;
         }
     </style>
@@ -42,7 +44,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/index.html" class="nav-link">首页</a>
+                        <a href="/" class="nav-link">首页</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">关于</a>
@@ -70,17 +72,18 @@
 
             <div class="sidebar">
                 <nav class="mt-2">
+                    <!-- 这里复用 index.html 的侧边栏导航,但将工程建筑链接设为 active -->
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-                        <!-- 搜索查询 (无子菜单) -->
+                        <!-- 搜索查询 -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link" data-page="search">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-search"></i>
                                 <p>搜索查询</p>
                             </a>
                         </li>
 
-                        <!-- 统计分析 (有子菜单) -->
-                        <li class="nav-item has-treeview">
+                        <!-- 统计分析 -->
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
@@ -110,8 +113,8 @@
                             </ul>
                         </li>
 
-                        <!-- 分类浏览 (有子菜单) -->
-                        <li class="nav-item has-treeview">
+                        <!-- 分类浏览 -->
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -145,7 +148,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/category/engineering" class="nav-link">
+                                    <a href="/category/engineering" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>工程建筑</p>
                                     </a>
@@ -165,15 +168,15 @@
                             </ul>
                         </li>
 
-                        <!-- 时间轴 (无子菜单) -->
+                        <!-- 时间轴 -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link" data-page="timeline">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-clock"></i>
                                 <p>时间轴</p>
                             </a>
                         </li>
 
-                        <!-- 科学文萃 (无子菜单) -->
+                        <!-- 科学文萃 -->
                         <li class="nav-item">
                             <a href="/articles" class="nav-link">
                                 <i class="nav-icon fas fa-book"></i>
@@ -187,25 +190,50 @@
 
         <!-- Content Wrapper -->
         <div class="content-wrapper">
-            <!-- 搜索查询标题 -->
             <div class="content-header">
-                <h1>搜索查询</h1>
+                <h1>工程建筑发展史</h1>
             </div>
 
-            <!-- 搜索区域 -->
             <div class="content">
-                <!-- 搜索框 -->
-                <div class="search-box">
-                    <form id="searchForm" class="search-form">
-                        <div class="search-input-wrapper">
-                            <input type="text" id="searchInput" class="search-input" placeholder="请输入关键词...">
-                            <button type="submit" class="search-button">搜索</button>
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- 都江堰水利系统 -->
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">都江堰水利系统结构图</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="dujiangyanChart" style="height: 500px;"></div>
+                                </div>
+                            </div>
                         </div>
-                    </form>
-                </div>
 
-                <!-- 搜索结果容器 -->
-                <div class="search-results" id="searchResults"></div>
+                        <!-- 古代建筑类型统计 -->
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">古代建筑类型分布</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="buildingTypeChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 长城建造技术演进 -->
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">长城建造技术演进</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="greatWallChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -215,12 +243,111 @@
         </footer>
     </div>
 
-    <!-- 修改静态文件引用路径 -->
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
 
+    <!-- 保持原有的图表初始化脚本不变 -->
+    <script>
+        // 都江堰水利系统3D结构图
+        Highcharts.chart('dujiangyanChart', {
+            chart: {
+                type: 'scatter3d',
+                options3d: {
+                    enabled: true,
+                    alpha: 20,
+                    beta: 30,
+                    depth: 200,
+                    viewDistance: 5
+                }
+            },
+            title: {
+                text: '都江堰水利系统主要构件分布'
+            },
+            subtitle: {
+                text: '鱼嘴、飞沙堰、宝瓶口等核心工程'
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        radius: 5
+                    }
+                }
+            },
+            series: [{
+                name: '主要工程构件',
+                data: [
+                    [1, 1, 1], // 鱼嘴
+                    [2, 3, 2], // 飞沙堰
+                    [3, 2, 3], // 宝瓶口
+                    [4, 1, 2]  // 内外金沙堰
+                ]
+            }]
+        });
+
+        // 古代建筑类型统计
+        Highcharts.chart('buildingTypeChart', {
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45
+                }
+            },
+            title: {
+                text: '古代建筑类型分布'
+            },
+            plotOptions: {
+                pie: {
+                    innerSize: 100,
+                    depth: 45
+                }
+            },
+            series: [{
+                name: '建筑数量',
+                data: [
+                    ['宫殿建筑', 25],
+                    ['宗教建筑', 20],
+                    ['民居建筑', 30],
+                    ['园林建筑', 15],
+                    ['军事建筑', 10]
+                ]
+            }]
+        });
+
+        // 长城建造技术演进
+        Highcharts.chart('greatWallChart', {
+            chart: {
+                type: 'timeline'
+            },
+            title: {
+                text: '长城建造技术演进'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            series: [{
+                data: [{
+                    x: Date.UTC(-700, 0, 1),
+                    name: '春秋战国',
+                    label: '夯土墙',
+                    description: '以土为主要材料'
+                }, {
+                    x: Date.UTC(-200, 0, 1),
+                    name: '秦朝',
+                    label: '石块加固',
+                    description: '开始使用石材'
+                }, {
+                    x: Date.UTC(1400, 0, 1),
+                    name: '明朝',
+                    label: '砖石结构',
+                    description: '砖石混合建造'
+                }]
+            }]
+        });
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>医学生物 - 中国古代自然科学知识库</title>
+
+    <!-- 引入相同的样式文件 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Font -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AdminLTE -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+    <script src="https://code.highcharts.com/modules/sankey.js"></script>
+    <script src="https://code.highcharts.com/modules/variable-pie.js"></script>
+
+    <style>
+        .nav-treeview {
+            display: none;
+        }
+
+        .menu-open .nav-treeview {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-light">
+            <div class="container-fluid">
+                <!-- Left navbar links -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/index.html" class="nav-link">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">关于</a>
+                    </li>
+                </ul>
+
+                <!-- Right navbar links -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-bg-light">
+            <div class="brand-container">
+                <a href="#" class="brand-link">
+                    <span class="brand-text">中国古代科学家知识库</span>
+                </a>
+            </div>
+
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <!-- 复制 index.html 的侧边栏导航 -->
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <!-- 搜索查询 -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="search">
+                                <i class="nav-icon fas fa-search"></i>
+                                <p>搜索查询</p>
+                            </a>
+                        </li>
+
+                        <!-- 统计分析 -->
+                        <li class="nav-item has-treeview">
+                            <!-- 复制 index.html 的统计分析菜单 -->
+                            <!-- ... -->
+                        </li>
+
+                        <!-- 分类浏览 -->
+                        <li class="nav-item has-treeview menu-open">
+                            <!-- 复制 index.html 的分类浏览菜单 -->
+                            <!-- ... -->
+                        </li>
+
+                        <!-- 时间轴 -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="timeline">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>时间轴</p>
+                            </a>
+                        </li>
+
+                        <!-- 科学文萃 -->
+                        <li class="nav-item">
+                            <a href="/articles" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>科学文萃</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper" style="background-color: #F5F5F5;">
+            <div class="content-header">
+                <h1 class="text-center" style="font-family: 'Ma Shan Zheng', cursive;">医学生物发展史</h1>
+            </div>
+
+            <div class="content">
+                <div class="container-fluid">
+                    <!-- 第一行：十二经脉图和子午流注时钟 -->
+                    <div class="row">
+                        <!-- 十二经脉循行图 -->
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>十二经脉循行图</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="meridianChart" style="height: 500px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 子午流注时钟 -->
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>子午流注时钟</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="flowingPointClock" style="height: 300px;"></div>
+                                    <div class="current-meridian-info text-center mt-3">
+                                        <p>当前值班经络</p>
+                                        <p class="text-muted">根据《灵枢》记载的气血流注规律</p>
+                                        <h4 id="currentMeridian" class="text-primary"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二行：四气五味和归经分析 -->
+                    <div class="row mt-4">
+                        <!-- 四气五味分布 -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>四气五味分布</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="herbNatureChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 归经分析 -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>归经分析</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="meridianSankeyChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2024</strong> All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+
+    <!-- Highcharts 初始化脚本 -->
+    <script>
+        // 十二经脉环状网络图
+        Highcharts.chart('meridianChart', {
+            chart: {
+                type: 'networkgraph',
+                backgroundColor: '#FFFFFF'
+            },
+            title: {
+                text: '十二经脉气血循环系统'
+            },
+            plotOptions: {
+                networkgraph: {
+                    layoutAlgorithm: {
+                        enableSimulation: true,
+                        friction: -0.9,
+                        linkLength: 100
+                    }
+                }
+            },
+            series: [{
+                dataLabels: {
+                    enabled: true
+                },
+                data: [
+                    // 中心点连接所有经脉
+                    ['中心', '手太阴肺经'],
+                    ['中心', '手阳明大肠经'],
+                    ['中心', '足阳明胃经'],
+                    ['中心', '足太阴脾经'],
+                    ['中心', '手少阴心经'],
+                    ['中心', '手太阳小肠经'],
+                    ['中心', '足太阳膀胱经'],
+                    ['中心', '足少阴肾经'],
+                    ['中心', '手厥阴心包经'],
+                    ['中心', '手少阳三焦经'],
+                    ['中心', '足少阳胆经'],
+                    ['中心', '足厥阴肝经']
+                ],
+                nodes: [
+                    { id: '中心', color: '#FF0000', marker: { radius: 20 } },
+                    { id: '手太阴肺经', color: '#4169E1' },
+                    { id: '手阳明大肠经', color: '#800080' },
+                    { id: '足阳明胃经', color: '#FF69B4' },
+                    { id: '足太阴脾经', color: '#32CD32' },
+                    { id: '手少阴心经', color: '#006400' },
+                    { id: '手太阳小肠经', color: '#00CED1' },
+                    { id: '足太阳膀胱经', color: '#FF4500' },
+                    { id: '足少阴肾经', color: '#FFD700' },
+                    { id: '手厥阴心包经', color: '#FF69B4' },
+                    { id: '手少阳三焦经', color: '#FF8C00' },
+                    { id: '足少阳胆经', color: '#8B4513' },
+                    { id: '足厥阴肝经', color: '#4B0082' }
+                ]
+            }]
+        });
+
+        // 四气五味分布图（饼图）
+        Highcharts.chart('herbNatureChart', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: '本草四气五味分布'
+            },
+            series: [{
+                name: '药物数量',
+                data: [
+                    { name: '寒性', y: 20, color: '#4169E1' },
+                    { name: '凉性', y: 20, color: '#87CEEB' },
+                    { name: '平性', y: 20, color: '#FFD700' },
+                    { name: '温性', y: 20, color: '#FFA07A' },
+                    { name: '热性', y: 20, color: '#FF4500' }
+                ],
+                innerSize: '40%'
+            }]
+        });
+
+        // 归经分析（桑基图）
+        Highcharts.chart('meridianSankeyChart', {
+            chart: {
+                type: 'sankey'
+            },
+            title: {
+                text: '本草归经分析'
+            },
+            series: [{
+                data: [
+                    ['性味', '肝经', 50],
+                    ['性味', '心经', 45],
+                    ['性味', '脾经', 60],
+                    ['性味', '肺经', 55],
+                    ['性味', '肾经', 40],
+                    ['肝经', '清热', 20],
+                    ['心经', '安神', 25],
+                    ['脾经', '健脾', 30],
+                    ['肺经', '止咳', 25],
+                    ['肾经', '补肾', 20]
+                ]
+            }]
+        });
+
+        // 子午流注时钟
+        Highcharts.chart('flowingPointClock', {
+            chart: {
+                type: 'pie',
+                backgroundColor: '#FFFFFF'
+            },
+            title: {
+                text: ''
+            },
+            plotOptions: {
+                pie: {
+                    startAngle: -90,
+                    endAngle: 270,
+                    center: ['50%', '50%'],
+                    size: '100%',
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function () {
+                            return this.point.name;
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: '经络',
+                innerSize: '50%',
+                data: [
+                    { name: '子 (肾)', y: 8.33, color: '#FFD700' },
+                    { name: '丑 (膀胱)', y: 8.33, color: '#FF4500' },
+                    { name: '寅 (胆)', y: 8.33, color: '#8B4513' },
+                    { name: '卯 (肝)', y: 8.33, color: '#4B0082' },
+                    { name: '辰 (肺)', y: 8.33, color: '#4169E1' },
+                    { name: '巳 (大肠)', y: 8.33, color: '#800080' },
+                    { name: '午 (胃)', y: 8.33, color: '#FF69B4' },
+                    { name: '未 (脾)', y: 8.33, color: '#32CD32' },
+                    { name: '申 (心)', y: 8.33, color: '#006400' },
+                    { name: '酉 (小肠)', y: 8.33, color: '#00CED1' },
+                    { name: '戌 (心包)', y: 8.33, color: '#FF69B4' },
+                    { name: '亥 (三焦)', y: 8.33, color: '#FF8C00' }
+                ]
+            }]
+        });
+
+        // 更新当前经络显示
+        function updateCurrentMeridian() {
+            const hour = new Date().getHours();
+            const meridians = [
+                '子时 (23-1点) - 肾经当令',
+                '丑时 (1-3点) - 膀胱经当令',
+                '寅时 (3-5点) - 胆经当令',
+                '卯时 (5-7点) - 肝经当令',
+                '辰时 (7-9点) - 肺经当令',
+                '巳时 (9-11点) - 大肠经当令',
+                '午时 (11-13点) - 胃经当令',
+                '未时 (13-15点) - 脾经当令',
+                '申时 (15-17点) - 心经当令',
+                '酉时 (17-19点) - 小肠经当令',
+                '戌时 (19-21点) - 心包经当令',
+                '亥时 (21-23点) - 三焦经当令'
+            ];
+
+            const index = Math.floor(((hour + 1) % 24) / 2);
+            document.getElementById('currentMeridian').textContent = meridians[index];
+        }
+
+        updateCurrentMeridian();
+        setInterval(updateCurrentMeridian, 60000);
+    </script>
+</body>
+
+</html>

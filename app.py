@@ -199,6 +199,34 @@ def get_categories():
         return jsonify([p.to_dict() for p in category_data[category]])
     return jsonify([])
 
+@app.route('/category/agriculture')
+def agriculture():
+    return render_template('category/agriculture.html')
+
+@app.route('/category/chemistry')
+def chemistry():
+    return render_template('category/chemistry.html')
+
+@app.route('/category/medicine')
+def medicine():
+    return render_template('category/medicine.html')
+
+@app.route('/category/astronomy')
+def astronomy():
+    return render_template('category/astronomy.html')
+
+@app.route('/category/engineering')
+def engineering():
+    return render_template('category/engineering.html')
+
+@app.route('/category/mathematics')
+def mathematics():
+    return render_template('category/mathematics.html')
+
+@app.route('/category/physics')
+def physics():
+    return render_template('category/physics.html')
+
 if __name__ == '__main__':
     load_all_data()
     app.run(debug=True, port=8080) 

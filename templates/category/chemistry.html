@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>化学 - 中国古代自然科学知识库</title>
+
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
+
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/sankey.js"></script>
+    <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/dependency-wheel.js"></script>
+
+    <style>
+        .nav-treeview {
+            display: none;
+        }
+
+        .menu-open .nav-treeview {
+            display: block;
+        }
+
+        .chemistry-icon {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .timeline-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .content-wrapper {
+            background-color: #f4f1ea;
+        }
+
+        .card {
+            background-color: #FFF8E1;
+            /* 古籍纸张色 */
+            border: 1px solid #8D6E63;
+            /* 木框色 */
+            box-shadow: 0 4px 8px rgba(141, 110, 99, 0.2);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            /* 防止内容溢出 */
+        }
+
+        .material-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #8D6E63;
+        }
+
+        .card-body {
+            padding: 20px;
+            position: relative;
+            /* 为内部定位提供参考 */
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-header {
+            background-color: #D7CCC8;
+            /* 浅棕色 */
+            border-bottom: 2px solid #8D6E63;
+            padding: 15px 20px;
+        }
+
+        .card-title {
+            color: #3E2723;
+            /* 深棕色 */
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-light">
+            <div class="container-fluid">
+                <!-- Left navbar links -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Right navbar links -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">关于</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-bg-light">
+            <div class="brand-container">
+                <a href="/" class="brand-link">
+                    <span class="brand-text">中国古代科学家知识库</span>
+                </a>
+            </div>
+
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <!-- 搜索查询 -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="search">
+                                <i class="nav-icon fas fa-search"></i>
+                                <p>搜索查询</p>
+                            </a>
+                        </li>
+
+                        <!-- 统计分析 -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>
+                                    统计分析
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/overview" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>总体概览</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/field-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>领域分析</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/time-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>时间分析</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 分类浏览 -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    分类浏览
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/category/agriculture" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>农业</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/chemistry" class="nav-link active">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>化学</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/medicine" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>医学生物</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/astronomy" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>天文地理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/engineering" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>工程建筑</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/mathematics" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>数学计量</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/physics" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>物理</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 时间轴 -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="timeline">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>时间轴</p>
+                            </a>
+                        </li>
+
+                        <!-- 科学文萃 -->
+                        <li class="nav-item">
+                            <a href="/articles" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>科学文萃</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Content Header -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">中国古代化学技术</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+
+                    <!-- 炼丹术部分 -->
+                    <div class="row mt-4">
+                        <!-- 炼丹术关系网络 -->
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">炼丹术反应网络</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="alchemyNetwork" style="height: 500px;"></div>
+                                    <p class="mt-3">基于《抱朴子》记载的丹药配方关系网络，展示了主要原料间的反应关系。金丹作为核心，通过不同原料的配伍达到"金液还丹"的目标。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 炼丹术原料说明 -->
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">丹药原料</h3>
+                                </div>
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/chemistry/cinnabar.jpg') }}"
+                                        class="material-image mb-3" alt="朱砂">
+                                    <h5>主要原料解析</h5>
+                                    <ul>
+                                        <li><strong>朱砂（硫化汞）</strong>：性味甘、微寒，入心经。为炼丹之要药，古人认为能通神明，延年益寿。</li>
+                                        <li><strong>雄黄</strong>：性温，有毒。与雌黄配伍，为外丹术重要原料。</li>
+                                        <li><strong>硫磺</strong>：性温，具阳性之性，为火炼之要。</li>
+                                        <li><strong>硝石</strong>：性寒，可调节火候，为丹法必需。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 丹药炼制工艺流程 -->
+                    <div class="row mt-4">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">丹药炼制工艺流程</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="alchemyProcess" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 陶瓷釉色分析 -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">陶瓷釉色工艺</h3>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <img src="{{ url_for('static', filename='images/chemistry/陶瓷.jpg') }}"
+                                        class="timeline-image mb-3" alt="唐三彩">
+                                    <div>
+
+                                        <h5>工艺特点：</h5>
+                                        <ul>
+                                            <li>唐三彩采用铅釉为基础，添加各种金属氧化物呈现黄、绿、褐三色</li>
+                                            <li>宋代青瓷使用天然釉料，经高温还原焰烧制形成典雅青色</li>
+                                            <li>不同时期的釉色配方反映了古代化学技术的发展水平</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">唐代三彩与宋代青瓷釉色配比</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="glazeChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 冶金技术发展 -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">青铜器冶炼工艺</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="bronzeProcess" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">历代冶金成就</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="metallurgyChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2024</strong> All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- Highcharts 初始化脚本 -->
+    <script>
+        // 设置 Highcharts 全局配置
+        Highcharts.setOptions({
+            lang: {
+                viewFullscreen: '全屏查看',
+                printChart: '打印图表',
+                downloadPNG: '下载 PNG 图片',
+                downloadJPEG: '下载 JPEG 图片',
+                downloadSVG: '下载 SVG 矢量图',
+                downloadPDF: '下载 PDF 文档'
+            },
+            credits: {
+                enabled: false
+            }
+        });
+
+        // 炼丹术关系网络图
+        Highcharts.chart('alchemyNetwork', {
+            chart: {
+                type: 'dependencywheel',
+                backgroundColor: '#FFF8E1',
+                style: {
+                    fontFamily: "'Ma Shan Zheng', cursive"
+                }
+            },
+            title: {
+                text: '炼丹术原料关系网络',
+                style: {
+                    fontSize: '24px',
+                    color: '#5D4037',
+                    fontFamily: "'Ma Shan Zheng', cursive"
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.point.from + '</b> → <b>' +
+                        this.point.to + '</b><br/>' +
+                        '《抱朴子》记载的相互作用关系';
+                }
+            },
+            series: [{
+                keys: ['from', 'to', 'weight'],
+                data: [
+                    ['金丹', '雄黄', 1],
+                    ['金丹', '雌黄', 1],
+                    ['金丹', '朱砂', 1],
+                    ['金丹', '丹砂', 1],
+                    ['朱砂', '硝石', 1],
+                    ['朱砂', '硫磺', 1],
+                    ['丹砂', '硝石', 1],
+                    ['丹砂', '硫磺', 1]
+                ],
+                type: 'dependencywheel',
+                name: '炼丹术关系',
+                dataLabels: {
+                    color: '#5D4037',
+                    style: {
+                        fontSize: '16px',
+                        fontFamily: "'Ma Shan Zheng', cursive",
+                        textOutline: 'none'
+                    },
+                    distance: 10
+                },
+                size: '95%',
+                nodePadding: 15,
+                nodeWidth: 25,
+                colors: [
+                    '#B71C1C', // 金丹 - 深红色
+                    '#FF8F00', // 雄黄 - 橙黄色
+                    '#FFC107', // 雌黄 - 金黄色
+                    '#E91E63', // 朱砂 - 玫红色
+                    '#D32F2F', // 丹砂 - 红色
+                    '#F5F5F5', // 硝石 - 白色
+                    '#FFB300'  // 硫磺 - 黄色
+                ],
+                borderColor: '#8D6E63',
+                borderWidth: 1
+            }],
+            plotOptions: {
+                dependencywheel: {
+                    minLinkWidth: 2,
+                    curveFactor: 0.6,
+                    centerNode: '金丹'
+                }
+            }
+        });
+
+        // 釉色配比饼图
+        Highcharts.chart('glazeChart', {
+            chart: {
+                type: 'pie',
+                backgroundColor: '#FFF8E1'
+            },
+            title: {
+                text: '唐三彩与宋代青瓷釉色配比',
+                style: {
+                    fontSize: '20px',
+                    color: '#5D4037',
+                    fontFamily: "'Ma Shan Zheng', cursive"
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}'
+                    }
+                }
+            },
+            series: [{
+                name: '釉色占比',
+                data: [
+                    {
+                        name: '唐三彩-黄釉',
+                        y: 30,
+                        color: '#FFD700'
+                    },
+                    {
+                        name: '唐三彩-绿釉',
+                        y: 30,
+                        color: '#90EE90'
+                    },
+                    {
+                        name: '唐三彩-褐釉',
+                        y: 30,
+                        color: '#8B4513'
+                    },
+                    {
+                        name: '宋代青瓷',
+                        y: 10,
+                        color: '#88BDBC'
+                    }
+                ]
+            }]
+        });
+
+        // 青铜器冶炼工艺流程图
+        Highcharts.chart('bronzeProcess', {
+            chart: {
+                type: 'sankey',
+                backgroundColor: '#FFF8E1',
+                height: '300px'  // 固定高度
+            },
+            title: {
+                text: '青铜器铸造工艺流程',
+                style: {
+                    fontSize: '20px',
+                    color: '#5D4037',
+                    fontFamily: "'Ma Shan Zheng', cursive"
+                }
+            },
+            plotOptions: {
+                sankey: {
+                    nodeWidth: 40,
+                    nodePadding: 20,
+                    curveFactor: 0.6
+                }
+            },
+            series: [{
+                keys: ['from', 'to', 'weight'],
+                data: [
+                    ['原矿', '冶炼', 2],
+                    ['冶炼', '铸造', 2],
+                    ['铸造', '成型', 1],
+                    ['铸造', '失蜡法', 1],
+                    ['成型', '青铜器', 1],
+                    ['失蜡法', '青铜器', 1]
+                ],
+                name: '工艺流程',
+                dataLabels: {
+                    style: {
+                        fontSize: '14px',
+                        fontFamily: "'Ma Shan Zheng', cursive",
+                        color: '#5D4037'
+                    }
+                },
+                // 设置节点颜色
+                nodes: [{
+                    id: '原矿',
+                    color: '#AED6F1'
+                }, {
+                    id: '冶炼',
+                    color: '#9B59B6'
+                }, {
+                    id: '铸造',
+                    color: '#2ECC71'
+                }, {
+                    id: '成型',
+                    color: '#F1948A'
+                }, {
+                    id: '失蜡法',
+                    color: '#95A5A6'
+                }, {
+                    id: '青铜器',
+                    color: '#D4AC0D'
+                }]
+            }]
+        });
+
+        // 历代冶金成就统计图
+        Highcharts.chart('metallurgyChart', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '历代冶金技术发展'
+            },
+            xAxis: {
+                categories: ['商周', '秦汉', '魏晋', '隋唐', '宋元', '明清']
+            },
+            yAxis: {
+                title: {
+                    text: '技术水平 (相对值)'
+                }
+            },
+            series: [{
+                name: '青铜器工艺',
+                data: [90, 85, 75, 60, 50, 40]
+            }, {
+                name: '铁器工艺',
+                data: [30, 60, 75, 85, 90, 95]
+            }]
+        });
+
+        // 丹药炼制工艺流程图
+        Highcharts.chart('alchemyProcess', {
+            chart: {
+                type: 'sankey',
+                backgroundColor: '#FFF8E1'
+            },
+            title: {
+                text: '丹药炼制工艺流程',
+                style: {
+                    fontSize: '20px',
+                    color: '#5D4037',
+                    fontFamily: "'Ma Shan Zheng', cursive"
+                }
+            },
+            plotOptions: {
+                sankey: {
+                    nodeWidth: 30,
+                    nodePadding: 20
+                }
+            },
+            series: [{
+                name: '炼制流程',
+                data: [
+                    ['原料准备', '水火炼制', 5],
+                    ['原料准备', '火候调节', 3],
+                    ['水火炼制', '凝结成丹', 4],
+                    ['火候调节', '凝结成丹', 3],
+                    ['凝结成丹', '金丹成形', 7],
+                    ['金丹成形', '服食修炼', 7]
+                ],
+                nodes: [{
+                    id: '原料准备',
+                    color: '#D7CCC8'
+                }, {
+                    id: '水火炼制',
+                    color: '#FFAB91'
+                }, {
+                    id: '火候调节',
+                    color: '#FF7043'
+                }, {
+                    id: '凝结成丹',
+                    color: '#E64A19'
+                }, {
+                    id: '金丹成形',
+                    color: '#BF360C'
+                }, {
+                    id: '服食修炼',
+                    color: '#8D6E63'
+                }]
+            }]
+        });
+    </script>
+</body>
+
+</html>

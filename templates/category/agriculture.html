@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>农业 - 中国古代自然科学知识库</title>
+
+    <!-- 引入相同的样式文件 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Font -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AdminLTE -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/polar.js"></script>
+    <script src="https://code.highcharts.com/modules/sankey.js"></script>
+    <script src="https://code.highcharts.com/modules/funnel.js"></script>
+    <script src="https://code.highcharts.com/modules/scatter.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <style>
+        .nav-treeview {
+            display: none;
+        }
+
+        .menu-open .nav-treeview {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-light">
+            <div class="container-fluid">
+                <!-- Left navbar links -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">关于</a>
+                    </li>
+                </ul>
+
+                <!-- Right navbar links -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-bg-light">
+            <div class="brand-container">
+                <a href="/" class="brand-link">
+                    <span class="brand-text">中国古代科学家知识库</span>
+                </a>
+            </div>
+
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <!-- 搜索查询 (无子菜单) -->
+                        <li class="nav-item">
+                            <a href="/search" class="nav-link">
+                                <i class="nav-icon fas fa-search"></i>
+                                <p>搜索查询</p>
+                            </a>
+                        </li>
+
+                        <!-- 统计分析 (有子菜单) -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>
+                                    统计分析
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/overview" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>总体概览</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/field-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>领域分析</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/time-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>时间分析</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 分类浏览 (有子菜单) -->
+                        <li class="nav-item has-treeview menu-open">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    分类浏览
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/category/agriculture" class="nav-link active">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>农业</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/chemistry" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>化学</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/medicine" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>医学生物</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/astronomy" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>天文地理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/engineering" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>工程建筑</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/mathematics" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>数学计量</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/physics" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>物理</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 时间轴 (无子菜单) -->
+                        <li class="nav-item">
+                            <a href="/timeline" class="nav-link">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>时间轴</p>
+                            </a>
+                        </li>
+
+                        <!-- 科学文萃 (无子菜单) -->
+                        <li class="nav-item">
+                            <a href="/articles" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>科学文萃</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- 内容标题 -->
+            <div class="content-header">
+                <h1>农业发展史</h1>
+            </div>
+
+            <!-- 主要内容区域 -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- 1. 农学科学理论体系 -->
+                        <div class="col-12 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">农学科学理论体系分析</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="scienceTheoryChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. 物候观测与天文历法 -->
+                        <div class="col-12 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">物候观测与天文历法关系</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="astronomyChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. 农业测量工具演进 -->
+                        <div class="col-12 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">农业测量工具科学原理演进</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="toolsChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. 蝗虫生物习性研究 -->
+                        <div class="col-12 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">蝗虫生物学研究数据分析</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="locustChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. 水利工程流体力学 -->
+                        <div class="col-12 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">水利工程流体力学原理</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="hydraulicsChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. 作物育种实验 -->
+                        <div class="col-12 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">作物育种实验体系</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="breedingChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2024</strong> All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+
+    <!-- Highcharts 初始化脚本 -->
+    <script>
+        // 设置 Highcharts 全局配置
+        Highcharts.setOptions({
+            // 语言设置
+            lang: {
+                viewFullscreen: '全屏查看',
+                printChart: '打印图表',
+                downloadPNG: '下载 PNG 图片',
+                downloadJPEG: '下载 JPEG 图片',
+                downloadSVG: '下载 SVG 矢量图',
+                downloadPDF: '下载 PDF 文档',
+                downloadCSV: '下载 CSV 文件',
+                downloadXLS: '下载 XLS 文件',
+                contextButtonTitle: '图表导出菜单'
+            },
+            // 移除 Highcharts.com 水印
+            credits: {
+                enabled: false
+            }
+        });
+
+        // 1. 农学科学理论体系
+        Highcharts.chart('scienceTheoryChart', {
+            chart: {
+                polar: true,
+                type: 'line'
+            },
+            title: {
+                text: '古代农学自然科学理论体系分析'
+            },
+            subtitle: {
+                text: '基于古代农书的自然科学分支研究程度'
+            },
+            pane: {
+                size: '80%'
+            },
+            xAxis: {
+                categories: ['土壤分类学', '物候观测', '生态轮作', '植物生理', '农具力学'],
+                tickmarkPlacement: 'on',
+                lineWidth: 0
+            },
+            yAxis: {
+                gridLineInterpolation: 'polygon',
+                lineWidth: 0,
+                min: 0,
+                max: 10
+            },
+            tooltip: {
+                shared: true,
+                pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}/10</b><br/>'
+            },
+            series: [{
+                name: '齐民要术',
+                data: [9, 8, 7, 6, 5],
+                pointPlacement: 'on'
+            }, {
+                name: '农政全书',
+                data: [7, 6, 8, 9, 7],
+                pointPlacement: 'on'
+            }, {
+                name: '王祯农书',
+                data: [6, 5, 7, 8, 10],
+                pointPlacement: 'on'
+            }]
+        });
+
+        // 2. 物候观测与天文历法
+        Highcharts.chart('astronomyChart', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '物候观测与天文历法关系'
+            },
+            subtitle: {
+                text: '基于古代天文-农业观测系统'
+            },
+            xAxis: {
+                categories: ['圭表测日影', '二十四节气', '授时历', '农时校正']
+            },
+            yAxis: {
+                title: {
+                    text: '观测精确度 (相对单位)'
+                }
+            },
+            series: [{
+                name: '观测准确度',
+                data: [8, 9, 7, 10]
+            }, {
+                name: '应用频率',
+                data: [6, 9, 8, 7]
+            }]
+        });
+
+        // 3. 农业测量工具演进
+        Highcharts.chart('toolsChart', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: '古代农业测量工具演进'
+            },
+            subtitle: {
+                text: '测量精度与科学原理发展'
+            },
+            xAxis: {
+                categories: ['汉代', '唐代', '宋代', '明代']
+            },
+            yAxis: {
+                title: {
+                    text: '测量精度 (相对单位)'
+                }
+            },
+            series: [{
+                name: '测量工具精度',
+                data: [3, 5, 7, 8],
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }]
+        });
+
+        // 4. 蝗虫生物习性研究
+        Highcharts.chart('locustChart', {
+            chart: {
+                type: 'scatter'
+            },
+            title: {
+                text: '古代蝗虫生物学研究数据'
+            },
+            subtitle: {
+                text: '基于历代农书记载的观测数据'
+            },
+            xAxis: {
+                title: {
+                    text: '产卵深度（寸）'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: '孵化温度（℃）'
+                }
+            },
+            series: [{
+                name: '观测记录',
+                data: [
+                    [2, 18], [3, 25], [4, 30], [5, 35],
+                    [2.5, 20], [3.5, 28], [4.5, 32]
+                ]
+            }]
+        });
+
+        // 5. 水利工程流体力学
+        Highcharts.chart('hydraulicsChart', {
+            chart: {
+                type: 'area'
+            },
+            title: {
+                text: '古代水利工程流体力学原理'
+            },
+            subtitle: {
+                text: '基于都江堰与龙首渠设计数据'
+            },
+            xAxis: {
+                categories: ['入口', '分流点', '主渠道', '支渠道', '出口'],
+                title: {
+                    text: '水流位置'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: '水流速度 (相对单位)'
+                }
+            },
+            series: [{
+                name: '都江堰水流速度',
+                data: [5, 8, 6, 4, 3]
+            }, {
+                name: '龙首渠水流速度',
+                data: [4, 7, 5, 3, 2]
+            }]
+        });
+
+        // 6. 作物育种实验
+        Highcharts.chart('breedingChart', {
+            chart: {
+                type: 'bubble'
+            },
+            title: {
+                text: '古代作物育种理论体系'
+            },
+            subtitle: {
+                text: '基于历代农书记载的育种实验'
+            },
+            xAxis: {
+                categories: ['汉代', '唐代', '宋代', '明代', '清代'],
+                title: {
+                    text: '时期'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: '技术复杂度'
+                }
+            },
+            series: [{
+                name: '育种技术',
+                data: [
+                    [0, 5, 10], // [x, y, bubble size]
+                    [1, 6, 15],
+                    [2, 8, 20],
+                    [3, 7, 12],
+                    [4, 9, 18]
+                ]
+            }]
+        });
+    </script>
+</body>
+
+</html>
