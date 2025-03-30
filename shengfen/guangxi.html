@@ -344,7 +344,11 @@
     <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/guangxi.js"></script>
+    <!-- 删除原来的广西省地图 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/guangxi.js"></script> -->
+
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
 
     <script>
         // 定义vintage主题的调色板
@@ -362,21 +366,142 @@
         ];
 
         // 初始化所有图表
-        const mapChart = echarts.init(document.getElementById('map'));
         const timelineChart = echarts.init(document.getElementById('timelineChart'));
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart'));
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7.5, // 缩放级别
+            center: [108.320004, 22.82402], // 广西省中心点（南宁）
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建广西省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let guangxiLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['450000'], // 广西省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            guangxiLayer.setMap(amap);
+            
+            // 添加地市标记
+            const cities = [
+                { name: '南宁市', location: [108.320004, 22.82402], value: 920 },
+                { name: '柳州市', location: [109.411703, 24.314617], value: 880 },
+                { name: '桂林市', location: [110.299121, 25.274215], value: 940 },
+                { name: '梧州市', location: [111.297604, 23.474803], value: 750 },
+                { name: '北海市', location: [109.119254, 21.473343], value: 820 },
+                { name: '防城港市', location: [108.345478, 21.614631], value: 700 },
+                { name: '钦州市', location: [108.624229, 21.967127], value: 710 },
+                { name: '贵港市', location: [109.602146, 23.0936], value: 730 },
+                { name: '玉林市', location: [110.154393, 22.63136], value: 760 },
+                { name: '百色市', location: [106.616285, 23.897742], value: 670 },
+                { name: '贺州市', location: [111.552056, 24.414141], value: 640 },
+                { name: '河池市', location: [108.062105, 24.695899], value: 620 },
+                { name: '来宾市', location: [109.229772, 23.733766], value: 600 },
+                { name: '崇左市', location: [107.353926, 22.404108], value: 580 }
+            ];
+            
+            // 城市科技信息
+            let scienceInfo = {
+                '南宁市': '省会城市，壮族医药传统技术保存完好，铜鼓铸造工艺代表',
+                '柳州市': '工业重镇，蒸汽机车制造业发达，传统冶炼技术先进',
+                '桂林市': '喀斯特地貌研究中心，古代水利工程发达，造纸术传承基地',
+                '梧州市': '岭南传统医药研究地，古代造船业中心',
+                '北海市': '海洋资源利用技术发达，古代珍珠养殖技术发源地',
+                '防城港市': '古代港口贸易中心，海盐晒制工艺代表区',
+                '钦州市': '陶瓷制作工艺保存区，坭兴陶技艺代表',
+                '贵港市': '古代水运枢纽，传统纺织技术发达',
+                '玉林市': '传统中医药发展中心，天然药材加工基地',
+                '百色市': '少数民族传统农耕技术保存区，梯田水利工程典范',
+                '贺州市': '古代采矿冶炼基地，传统建筑技术保存完好',
+                '河池市': '古代金银矿冶炼中心，壮族天文历法传承地',
+                '来宾市': '传统农业技术发达，少数民族手工技艺丰富',
+                '崇左市': '边境贸易中心，壮族医药和建筑技术代表区'
+            };
+            
+            // 为每个城市添加标记
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.location,
+                    title: city.name,
+                    label: {
+                        content: city.name,
+                        direction: 'top',
+                        offset: new AMap.Pixel(0, -5),
+                        style: {
+                            color: '#724e58',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            padding: '3px 6px',
+                            backgroundColor: 'rgba(254, 248, 239, 0.8)',
+                            borderRadius: '3px'
+                        }
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scienceInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为广西省
+            amap.setCity('广西壮族自治区');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
             //title: {
             //   text: '历史科技成就时间轴',
-            //   textStyle: {
-            //        color: '#724e58',
-            //       fontSize: 16
-            //    }
+            //    left: 'center',
+            //     top: 5,
+            //      textStyle: {
+            //          color: '#724e58',
+            //          fontSize: 14
+            //     }
             // },
             tooltip: {
                 trigger: 'axis',
@@ -679,103 +804,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '南宁市': '省会城市，经济、科技、教育中心，交通枢纽',
-                        '柳州市': '工业重镇，汽车制造和机械工业发达',
-                        '桂林市': '国际旅游名城，文化旅游和生态资源丰富',
-                        '梧州市': '历史文化名城，轻工业和商贸业发达',
-                        '北海市': '沿海开放城市，旅游业和海洋经济发达',
-                        '防城港市': '港口城市，国际贸易和物流业发达',
-                        '钦州市': '港口城市，制造业和海洋经济发达',
-                        '贵港市': '农业和制造业发达，交通枢纽',
-                        '玉林市': '制造业和现代农业发达，商贸业繁荣',
-                        '百色市': '革命老区，农业和矿产资源丰富',
-                        '贺州市': '生态农业和旅游业发达，历史文化名城',
-                        '河池市': '生态资源丰富，农业和矿业发达',
-                        '来宾市': '农业和制造业发达，生态资源丰富',
-                        '崇左市': '边境贸易城市，农业和旅游业发达'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '广西省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '广西', // 使用广西省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                    { name: '南宁市', value: 950 },  // 省会城市，经济、交通、教育中心，历史文化名城
-                    { name: '柳州市', value: 900 },  // 工业重镇，汽车制造和机械工业发达
-                    { name: '桂林市', value: 880 },  // 国际旅游名城，文化旅游和生态资源丰富
-                    { name: '梧州市', value: 850 },  // 历史文化名城，轻工业和商贸业发达
-                    { name: '北海市', value: 820 },  // 沿海开放城市，旅游业和海洋经济发达
-                    { name: '防城港市', value: 800 },  // 港口城市，国际贸易和物流业发达
-                    { name: '钦州市', value: 780 },  // 港口城市，制造业和海洋经济发达
-                    { name: '贵港市', value: 760 },  // 农业和制造业发达，交通枢纽
-                    { name: '玉林市', value: 740 },  // 制造业和现代农业发达，商贸业繁荣
-                    { name: '百色市', value: 720 },  // 革命老区，农业和矿产资源丰富
-                    { name: '贺州市', value: 700 },  // 生态农业和旅游业发达，历史文化名城
-                    { name: '河池市', value: 680 },  // 生态资源丰富，农业和矿业发达
-                    { name: '来宾市', value: 660 },  // 农业和制造业发达，生态资源丰富
-                    { name: '崇左市', value: 640 }   // 边境贸易城市，农业和旅游业发达
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
             // 汉朝数据
@@ -1067,14 +1095,12 @@
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1086,6 +1112,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize

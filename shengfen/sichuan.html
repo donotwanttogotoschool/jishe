@@ -344,7 +344,11 @@
     <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/sichuan.js"></script>
+    <!-- 删除原来的四川省地图 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/sichuan.js"></script> -->
+
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
 
     <script>
         // 定义vintage主题的调色板
@@ -362,12 +366,143 @@
         ];
 
         // 初始化所有图表
-        const mapChart = echarts.init(document.getElementById('map'));
+        // const mapChart = echarts.init(document.getElementById('map')); // 注释掉原来的地图图表
         const timelineChart = echarts.init(document.getElementById('timelineChart'));
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart'));
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7, // 缩放级别
+            center: [104.065735, 30.659462], // 四川省中心点（成都市）
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建四川省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let sichuanLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['510000'], // 四川省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            sichuanLayer.setMap(amap);
+            
+            // 定义四川省城市数据
+            const cities = [
+                {name: '成都市', position: [104.065735, 30.659462], value: 1200},
+                {name: '绵阳市', position: [104.741722, 31.46402], value: 900},
+                {name: '德阳市', position: [104.398651, 31.127991], value: 800},
+                {name: '自贡市', position: [104.773447, 29.352765], value: 750},
+                {name: '攀枝花市', position: [101.716007, 26.580446], value: 700},
+                {name: '泸州市', position: [105.443348, 28.889138], value: 820},
+                {name: '内江市', position: [105.066138, 29.58708], value: 780},
+                {name: '乐山市', position: [103.761263, 29.582024], value: 850},
+                {name: '南充市', position: [106.082974, 30.795281], value: 830},
+                {name: '宜宾市', position: [104.630825, 28.760189], value: 840},
+                {name: '广安市', position: [106.633369, 30.456398], value: 730},
+                {name: '达州市', position: [107.502262, 31.209484], value: 760},
+                {name: '眉山市', position: [103.831788, 30.048318], value: 720},
+                {name: '雅安市', position: [103.001033, 29.987722], value: 680},
+                {name: '巴中市', position: [106.753669, 31.858809], value: 650},
+                {name: '资阳市', position: [104.641917, 30.122211], value: 670},
+                {name: '阿坝藏族羌族自治州', position: [102.221374, 31.899792], value: 620},
+                {name: '甘孜藏族自治州', position: [101.963815, 30.050663], value: 600},
+                {name: '凉山彝族自治州', position: [102.258746, 27.886762], value: 630}
+            ];
+            
+            // 科技文化信息
+            const scientificInfo = {
+                '成都市': '都江堰水利工程，蜀锦织机，天府之国，蜀地文化中心',
+                '绵阳市': '科技城，电子信息和制造业发达，李冰父子治水遗址',
+                '德阳市': '东汉科学家张衡故里，重工业基地，机械制造发达',
+                '自贡市': '盐业历史悠久，恐龙化石发掘地，井盐提炼技术发源地',
+                '攀枝花市': '钒钛资源丰富，冶金工业发达，古代铸造遗址',
+                '泸州市': '酒城，古代酿酒技术发源地，明清时期商贸中心',
+                '内江市': '甜城，糖业技术发源地，古代制糖工艺保存完好',
+                '乐山市': '大佛之城，古代石刻艺术中心，竹编工艺发达',
+                '南充市': '丝绸之乡，古代纺织技术中心，明清时期商贸重镇',
+                '宜宾市': '酒都，竹文化发源地，明清时期科举人才密集区',
+                '广安市': '农业和旅游业发达，邓小平故里，革命历史文化名城',
+                '达州市': '秦汉时期冶金中心，巴文化发源地，古代造纸工艺传承地',
+                '眉山市': '农业和食品加工业发达，苏轼故里，北宋文化高地',
+                '雅安市': '茶马古道重要驿站，藏茶加工技术发祥地',
+                '巴中市': '巴文化核心区，古代水利工程技术保存地',
+                '资阳市': '汉代陶瓷技术中心，古代建筑技术传承地',
+                '阿坝藏族羌族自治州': '藏医药发源地，古代天文历法研究中心',
+                '甘孜藏族自治州': '藏族文化中心，古代天文观测地',
+                '凉山彝族自治州': '彝族文化中心，古代农业灌溉技术保存地'
+            };
+            
+            // 为每个城市添加标记
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.position,
+                    title: city.name,
+                    label: {
+                        direction: 'right',
+                        offset: new AMap.Pixel(5, 0),
+                        content: `<div style="color:#724e58;font-size:12px;font-weight:bold;">${city.name}</div>`,
+                        color: '#724e58',
+                        fontSize: 12
+                    },
+                    anchor: 'center',
+                    zIndex: 100,
+                    extData: {
+                        city: city.name,
+                        value: city.value,
+                        info: scientificInfo[city.name]
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scientificInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为四川省
+            amap.setCity('四川省');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
@@ -679,114 +814,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '成都市': '省会城市，经济、科技、教育中心，交通枢纽',
-                        '绵阳市': '科技城，电子信息和制造业发达',
-                        '德阳市': '重工业基地，机械制造和化工产业发达',
-                        '乐山市': '历史文化名城，旅游业和农业发达',
-                        '宜宾市': '白酒之都，食品加工业和旅游业发达',
-                        '泸州市': '酒城，食品加工业和化工产业发达',
-                        '南充市': '农业和制造业发达，历史文化名城',
-                        '达州市': '能源和矿产资源丰富，农业发达',
-                        '遂宁市': '农业和食品加工业发达，生态资源丰富',
-                        '广安市': '农业和旅游业发达，历史文化名城',
-                        '眉山市': '农业和食品加工业发达，历史文化名城',
-                        '雅安市': '生态资源丰富，旅游业和农业发达',
-                        '自贡市': '盐业和化工产业发达，历史文化名城',
-                        '攀枝花市': '钢铁和矿产资源丰富，生态资源丰富',
-                        '广元市': '农业和旅游业发达，历史文化名城',
-                        '内江市': '农业和食品加工业发达，历史文化名城',
-                        '资阳市': '农业和制造业发达，生态资源丰富',
-                        '巴中市': '农业和旅游业发达，生态资源丰富'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '四川省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '四川', // 使用四川省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                    { name: '成都市', value: 1050 },  // 省会城市，经济、科技、教育中心，交通枢纽
-                    { name: '绵阳市', value: 1000 },  // 科技城，电子信息和制造业发达
-                    { name: '德阳市', value: 950 },   // 重工业基地，机械制造和化工产业发达
-                    { name: '乐山市', value: 910 },   // 历史文化名城，旅游业和农业发达
-                    { name: '宜宾市', value: 870 },   // 白酒之都，食品加工业和旅游业发达
-                    { name: '泸州市', value: 880 },   // 酒城，食品加工业和化工产业发达
-                    { name: '南充市', value: 840 },   // 农业和制造业发达，历史文化名城
-                    { name: '达州市', value: 850 },   // 能源和矿产资源丰富，农业发达
-                    { name: '遂宁市', value: 810 },   // 农业和食品加工业发达，生态资源丰富
-                    { name: '广安市', value: 770 },   // 农业和旅游业发达，历史文化名城
-                    { name: '眉山市', value: 780 },   // 农业和食品加工业发达，历史文化名城
-                    { name: '雅安市', value: 700 },   // 生态资源丰富，旅游业和农业发达
-                    { name: '自贡市', value: 730 },   // 盐业和化工产业发达，历史文化名城
-                    { name: '攀枝花市', value: 710 }, // 钢铁和矿产资源丰富，生态资源丰富
-                    { name: '广元市', value: 700 },   // 农业和旅游业发达，历史文化名城
-                    { name: '内江市', value: 670 },   // 农业和食品加工业发达，历史文化名城
-                    { name: '资阳市', value: 650 },    // 农业和制造业发达，生态资源丰富
-                    { name: '甘孜藏族自治州', value: 630 }, 
-                    { name: '凉山彝族自治州', value: 580 }, 
-                    { name: '阿坝藏族羌族自治州', value: 550 }, 
-                    { name: '巴中市', value: 550 }
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
                 // 汉朝数据
@@ -1073,19 +1100,17 @@
             ]
         };
 
-        // 渲染所有图表
+        // 渲染所有图表 - 移除地图图表渲染
         timelineChart.setOption(timelineOption);
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1097,6 +1122,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize

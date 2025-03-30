@@ -344,7 +344,11 @@
     <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/jilin.js"></script>
+    <!-- 删除原来的吉林省地图 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/jilin.js"></script> -->
+
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
 
     <script>
         // 定义vintage主题的调色板
@@ -362,22 +366,159 @@
         ];
 
         // 初始化所有图表
-        const mapChart = echarts.init(document.getElementById('map'));
+        // const mapChart = echarts.init(document.getElementById('map')); // 注释掉原来的地图图表
         const timelineChart = echarts.init(document.getElementById('timelineChart'));
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart'));
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7, // 缩放级别
+            center: [125.3245, 43.886841], // 吉林省中心点（长春市）
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建吉林省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let jilinLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['220000'], // 吉林省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            jilinLayer.setMap(amap);
+            
+            // 科技文化信息，从原地图配置中获取
+            const scientificInfo = {
+                '长春市': '省会城市，经济、科技、教育中心，交通枢纽',
+                '吉林市': '化工和制造业发达，冰雪旅游胜地',
+                '四平市': '农业和制造业发达，历史文化名城',
+                '辽源市': '煤炭资源丰富，制造业和农业发达',
+                '通化市': '医药产业发达，农业和旅游业资源丰富',
+                '白山市': '生态资源丰富，旅游业和矿产业发达',
+                '松原市': '农业和能源产业发达，生态资源丰富',
+                '白城市': '农业和新能源产业发达，生态资源丰富',
+                '延边朝鲜族自治州': '边境贸易和旅游业发达，民族文化特色鲜明',
+                '公主岭市': '农业和食品加工业发达，历史文化名城',
+                '梅河口市': '农业和制造业发达，生态资源丰富',
+                '榆树市': '农业和食品加工业发达，历史文化名城',
+                '德惠市': '农业和食品加工业发达，生态资源丰富',
+                '蛟河市': '农业和旅游业发达，生态资源丰富',
+                '桦甸市': '农业和矿产业发达，生态资源丰富',
+                '舒兰市': '农业和食品加工业发达，生态资源丰富',
+                '磐石市': '农业和矿产业发达，生态资源丰富',
+                '双辽市': '农业和能源产业发达，生态资源丰富',
+                '长白山保护开发区': '生态旅游和自然资源丰富',
+                '图们市': '边境贸易和旅游业发达',
+                '珲春市': '边境贸易和旅游业发达，生态资源丰富'
+            };
+            
+            // 定义城市数据，包括名称、坐标和发展指数值
+            const cities = [
+                { name: '长春市', position: [125.3245, 43.886841], value: 1050 },
+                { name: '吉林市', position: [126.549572, 43.837883], value: 1000 },
+                { name: '四平市', position: [124.370785, 43.170344], value: 950 },
+                { name: '辽源市', position: [125.145349, 42.902692], value: 910 },
+                { name: '通化市', position: [125.936501, 41.721177], value: 870 },
+                { name: '白山市', position: [126.427839, 41.942505], value: 880 },
+                { name: '松原市', position: [124.823608, 45.118243], value: 840 },
+                { name: '白城市', position: [122.840777, 45.619998], value: 850 },
+                { name: '延边朝鲜族自治州', position: [129.513228, 42.904823], value: 810 },
+                { name: '公主岭市', position: [124.829102, 43.509434], value: 770 },
+                { name: '梅河口市', position: [125.684757, 42.530002], value: 780 },
+                { name: '榆树市', position: [126.533025, 44.812896], value: 700 },
+                { name: '德惠市', position: [125.705507, 44.521762], value: 730 },
+                { name: '蛟河市', position: [127.344499, 43.724087], value: 710 },
+                { name: '桦甸市', position: [126.746309, 42.972096], value: 700 },
+                { name: '舒兰市', position: [126.965607, 44.406105], value: 670 },
+                { name: '磐石市', position: [126.06035, 42.946285], value: 650 },
+                { name: '双辽市', position: [123.502724, 43.518302], value: 630 },
+                { name: '长白山保护开发区', position: [127.86, 41.942], value: 580 },
+                { name: '图们市', position: [129.843597, 42.968044], value: 550 },
+                { name: '珲春市', position: [130.366036, 42.862821], value: 550 }
+            ];
+            
+            // 为每个城市添加标记
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.position,
+                    title: city.name,
+                    label: {
+                        direction: 'right',
+                        offset: new AMap.Pixel(5, 0),
+                        content: `<div style="color:#724e58;font-size:12px;font-weight:bold;">${city.name}</div>`,
+                        color: '#724e58',
+                        fontSize: 12
+                    },
+                    anchor: 'center',
+                    zIndex: 100,
+                    extData: {
+                        city: city.name,
+                        value: city.value,
+                        info: scientificInfo[city.name]
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scientificInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为吉林省
+            amap.setCity('吉林省');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
             //title: {
             //   text: '历史科技成就时间轴',
-            //   textStyle: {
-            //        color: '#724e58',
-            //       fontSize: 16
-            //    }
-            // },
+            //    left: 'center',
+            //     top: 5,
+            //      textStyle: {
+            //          color: '#724e58',
+            //          fontSize: 14
+            //     }
+            //  },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -679,114 +820,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '长春市': '省会城市，经济、科技、教育中心，交通枢纽',
-                        '吉林市': '化工和制造业发达，冰雪旅游胜地',
-                        '四平市': '农业和制造业发达，历史文化名城',
-                        '辽源市': '煤炭资源丰富，制造业和农业发达',
-                        '通化市': '医药产业发达，农业和旅游业资源丰富',
-                        '白山市': '生态资源丰富，旅游业和矿产业发达',
-                        '松原市': '农业和能源产业发达，生态资源丰富',
-                        '白城市': '农业和新能源产业发达，生态资源丰富',
-                        '延边朝鲜族自治州': '边境贸易和旅游业发达，民族文化特色鲜明',
-                        '公主岭市': '农业和食品加工业发达，历史文化名城',
-                        '梅河口市': '农业和制造业发达，生态资源丰富',
-                        '榆树市': '农业和食品加工业发达，历史文化名城',
-                        '德惠市': '农业和食品加工业发达，生态资源丰富',
-                        '蛟河市': '农业和旅游业发达，生态资源丰富',
-                        '桦甸市': '农业和矿产业发达，生态资源丰富',
-                        '舒兰市': '农业和食品加工业发达，生态资源丰富',
-                        '磐石市': '农业和矿产业发达，生态资源丰富',
-                        '双辽市': '农业和能源产业发达，生态资源丰富'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '吉林省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '吉林', // 使用吉林省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                    { name: '长春市', value: 1050 },  // 省会城市，经济、科技、教育中心，交通枢纽
-                    { name: '吉林市', value: 1000 },  // 化工和制造业发达，冰雪旅游胜地
-                    { name: '四平市', value: 950 },   // 农业和制造业发达，历史文化名城
-                    { name: '辽源市', value: 910 },   // 煤炭资源丰富，制造业和农业发达
-                    { name: '通化市', value: 870 },   // 医药产业发达，农业和旅游业资源丰富
-                    { name: '白山市', value: 880 },   // 生态资源丰富，旅游业和矿产业发达
-                    { name: '松原市', value: 840 },   // 农业和能源产业发达，生态资源丰富
-                    { name: '白城市', value: 850 },   // 农业和新能源产业发达，生态资源丰富
-                    { name: '延边朝鲜族自治州', value: 810 }, // 边境贸易和旅游业发达，民族文化特色鲜明
-                    { name: '公主岭市', value: 770 }, // 农业和食品加工业发达，历史文化名城
-                    { name: '梅河口市', value: 780 }, // 农业和制造业发达，生态资源丰富
-                    { name: '榆树市', value: 700 },   // 农业和食品加工业发达，历史文化名城
-                    { name: '德惠市', value: 730 },   // 农业和食品加工业发达，生态资源丰富
-                    { name: '蛟河市', value: 710 },   // 农业和旅游业发达，生态资源丰富
-                    { name: '桦甸市', value: 700 },   // 农业和矿产业发达，生态资源丰富
-                    { name: '舒兰市', value: 670 },   // 农业和食品加工业发达，生态资源丰富
-                    { name: '磐石市', value: 650 },   // 农业和矿产业发达，生态资源丰富
-                    { name: '双辽市', value: 630 },   // 农业和能源产业发达，生态资源丰富
-                    { name: '长白山保护开发区', value: 580 }, // 生态旅游和自然资源丰富
-                    { name: '图们市', value: 550 },   // 边境贸易和旅游业发达
-                    { name: '珲春市', value: 550 }    // 边境贸易和旅游业发达，生态资源丰富
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
             // 汉朝数据
@@ -1073,19 +1106,17 @@
             ]
         };
 
-        // 渲染所有图表
+        // 渲染所有图表 - 移除地图图表渲染
         timelineChart.setOption(timelineOption);
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1097,6 +1128,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize

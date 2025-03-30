@@ -344,7 +344,11 @@
     <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/hubei.js"></script>
+    <!-- 删除原来的湖北省地图 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/hubei.js"></script> -->
+
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
 
     <script>
         // 定义vintage主题的调色板
@@ -362,12 +366,137 @@
         ];
 
         // 初始化所有图表
-        const mapChart = echarts.init(document.getElementById('map'));
+        // const mapChart = echarts.init(document.getElementById('map')); // 注释掉原来的地图图表
         const timelineChart = echarts.init(document.getElementById('timelineChart'));
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart'));
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7.5, // 缩放级别
+            center: [114.298572, 30.584355], // 湖北省中心点（武汉市）
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建湖北省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let hubeiLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['420000'], // 湖北省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            hubeiLayer.setMap(amap);
+            
+            // 定义城市科技信息
+            const scientificInfo = {
+                '武汉市': '近代科技教育中心',
+                '宜昌市': '三峡工程科技成就',
+                '襄阳市': '张衡故里，发明地动仪',
+                '黄冈市': '李时珍家乡，本草研究基地',
+                '神农架林区': '中医药发源地之一',
+                '荆州市': '古代农业科技发达地区',
+                '十堰市': '道教医学发源地',
+                '孝感市': '古代手工业技术中心',
+                '黄石市': '古代冶金技术重镇',
+                '咸宁市': '温泉疗养历史悠久',
+                '荆门市': '楚文化科技遗址丰富',
+                '随州市': '曾侯乙编钟出土地',
+                '恩施土家族苗族自治州': '土家族苗族传统医药发源地',
+                '鄂州市': '古代陶瓷技术发达',
+                '天门市': '传统农业技术丰富',
+                '仙桃市': '传统纺织技术中心',
+                '潜江市': '淡水养殖技术发达'
+            };
+            
+            // 添加地市标记
+            const cities = [
+                { name: '武汉市', location: [114.298572, 30.584355], value: 1000 },
+                { name: '宜昌市', location: [111.290843, 30.702636], value: 800 },
+                { name: '襄阳市', location: [112.144146, 32.042426], value: 750 },
+                { name: '黄冈市', location: [114.879365, 30.447711], value: 600 },
+                { name: '孝感市', location: [113.926655, 30.926423], value: 580 },
+                { name: '荆州市', location: [112.23813, 30.326857], value: 550 },
+                { name: '十堰市', location: [110.787916, 32.646907], value: 500 },
+                { name: '黄石市', location: [115.077048, 30.220074], value: 450 },
+                { name: '咸宁市', location: [114.328963, 29.832798], value: 400 },
+                { name: '荆门市', location: [112.204251, 31.03542], value: 380 },
+                { name: '随州市', location: [113.37377, 31.717497], value: 350 },
+                { name: '恩施土家族苗族自治州', location: [109.48699, 30.283114], value: 300 },
+                { name: '鄂州市', location: [114.890593, 30.396536], value: 280 },
+                { name: '天门市', location: [113.165862, 30.653061], value: 250 },
+                { name: '仙桃市', location: [113.453974, 30.364953], value: 230 },
+                { name: '潜江市', location: [112.896866, 30.421215], value: 200 },
+                { name: '神农架林区', location: [110.671525, 31.744449], value: 150 }
+            ];
+            
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.location,
+                    title: city.name,
+                    label: {
+                        content: city.name,
+                        direction: 'top',
+                        offset: new AMap.Pixel(0, -5),
+                        style: {
+                            color: '#724e58',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            padding: '3px 6px',
+                            backgroundColor: 'rgba(254, 248, 239, 0.8)',
+                            borderRadius: '3px'
+                        }
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scientificInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为湖北省
+            amap.setCity('湖北省');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
@@ -666,97 +795,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '武汉市': '近代科技教育中心',
-                        '宜昌市': '三峡工程科技成就',
-                        '襄阳市': '张衡故里，发明地动仪',
-                        '黄冈市': '李时珍家乡，本草研究基地',
-                        '神农架林区': '中医药发源地之一'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '湖北省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '湖北', // 使用湖北省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                        { name: '武汉市', value: 1000 },
-                        { name: '宜昌市', value: 800 },
-                        { name: '襄阳市', value: 750 },
-                        { name: '黄冈市', value: 600 },
-                        { name: '孝感市', value: 580 },
-                        { name: '荆州市', value: 550 },
-                        { name: '十堰市', value: 500 },
-                        { name: '黄石市', value: 450 },
-                        { name: '咸宁市', value: 400 },
-                        { name: '荆门市', value: 380 },
-                        { name: '随州市', value: 350 },
-                        { name: '恩施土家族苗族自治州', value: 300 },
-                        { name: '鄂州市', value: 280 },
-                        { name: '天门市', value: 250 },
-                        { name: '仙桃市', value: 230 },
-                        { name: '潜江市', value: 200 },
-                        { name: '神农架林区', value: 150 }
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
             // 汉朝数据
@@ -1043,19 +1081,17 @@
             ]
         };
 
-        // 渲染所有图表
+        // 渲染所有图表 - 移除地图图表渲染
         timelineChart.setOption(timelineOption);
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1067,6 +1103,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize

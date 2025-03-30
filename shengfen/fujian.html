@@ -312,7 +312,7 @@
                         </tr>
                         <tr>
                             <td>2</td>
-                            <td>水密隔舱 “福船” 制造技艺</td>
+                            <td>水密隔舱 "福船" 制造技艺</td>
                             <td>8.5</td>
                         </tr>
                         <tr>
@@ -346,6 +346,9 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/fujian.js"></script>
 
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
+
     <script>
         // 定义vintage主题的调色板
         const colorPalette = [
@@ -367,17 +370,119 @@
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart'));
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7.5, // 缩放级别
+            center: [118.306239, 26.075302], // 福建省中心点
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建福建省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let fujianLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['350000'], // 福建省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            fujianLayer.setMap(amap);
+            
+            // 添加地市标记
+            const cities = [
+                { name: '福州市', location: [119.306239, 26.075302], value: 1050 },
+                { name: '厦门市', location: [118.11022, 24.490474], value: 1000 },
+                { name: '泉州市', location: [118.589421, 24.908853], value: 950 },
+                { name: '漳州市', location: [117.661801, 24.510897], value: 910 },
+                { name: '莆田市', location: [119.007558, 25.431011], value: 870 },
+                { name: '三明市', location: [117.635001, 26.265444], value: 880 },
+                { name: '南平市', location: [118.178459, 26.635627], value: 840 },
+                { name: '龙岩市', location: [117.02978, 25.091603], value: 850 },
+                { name: '宁德市', location: [119.527082, 26.65924], value: 810 }
+            ];
+            
+            // 为每个城市添加标记
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.location,
+                    title: city.name,
+                    label: {
+                        content: city.name,
+                        direction: 'top',
+                        offset: new AMap.Pixel(0, -5),
+                        style: {
+                            color: '#724e58',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            padding: '3px 6px',
+                            backgroundColor: 'rgba(254, 248, 239, 0.8)',
+                            borderRadius: '3px'
+                        }
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let scienceInfo = {
+                    '福州市': '省会城市，经济、科技、教育中心，交通枢纽',
+                    '厦门市': '沿海开放城市，港口经济和旅游业发达，国际化程度高',
+                    '泉州市': '制造业和商贸业发达，历史文化名城',
+                    '漳州市': '农业和食品加工业发达，生态资源丰富',
+                    '莆田市': '制鞋和木材加工业发达，历史文化名城',
+                    '三明市': '林业和矿产资源丰富，生态资源丰富',
+                    '南平市': '生态农业和旅游业发达，历史文化名城',
+                    '龙岩市': '矿产资源丰富，机械制造业发达',
+                    '宁德市': '海洋经济和食品加工业发达，生态资源丰富'
+                };
+                
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scienceInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为福建省
+            amap.setCity('福建省');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
-            //title: {
-            //   text: '历史科技成就时间轴',
-            //   textStyle: {
-            //        color: '#724e58',
-            //       fontSize: 16
-            //    }
-            // },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -679,110 +784,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '福州市': '省会城市，经济、科技、教育中心，交通枢纽',
-                        '厦门市': '沿海开放城市，港口经济和旅游业发达，国际化程度高',
-                        '泉州市': '制造业和商贸业发达，历史文化名城',
-                        '漳州市': '农业和食品加工业发达，生态资源丰富',
-                        '莆田市': '制鞋和木材加工业发达，历史文化名城',
-                        '三明市': '林业和矿产资源丰富，生态资源丰富',
-                        '南平市': '生态农业和旅游业发达，历史文化名城',
-                        '龙岩市': '矿产资源丰富，机械制造业发达',
-                        '宁德市': '海洋经济和食品加工业发达，生态资源丰富',
-                        '平潭综合实验区': '国家级新区，海洋经济和旅游业发达',
-                        '晋江市': '制造业和商贸业发达，鞋都',
-                        '石狮市': '纺织服装业发达，商贸业繁荣',
-                        '福清市': '制造业和现代农业发达，港口经济',
-                        '长乐市': '纺织业和食品加工业发达，历史文化名城',
-                        '武夷山市': '旅游业和生态农业发达，历史文化名城',
-                        '永安市': '林业和矿产资源丰富，生态资源丰富',
-                        '邵武市': '农业和机械制造业发达，历史文化名城',
-                        '建瓯市': '农业和食品加工业发达，生态资源丰富'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '福建省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '福建', // 使用福建省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                    { name: '福州市', value: 1050 },  // 省会城市，经济、科技、教育中心，交通枢纽
-                    { name: '厦门市', value: 1000 },  // 沿海开放城市，港口经济和旅游业发达，国际化程度高
-                    { name: '泉州市', value: 950 },   // 制造业和商贸业发达，历史文化名城
-                    { name: '漳州市', value: 910 },   // 农业和食品加工业发达，生态资源丰富
-                    { name: '莆田市', value: 870 },   // 制鞋和木材加工业发达，历史文化名城
-                    { name: '三明市', value: 880 },   // 林业和矿产资源丰富，生态资源丰富
-                    { name: '南平市', value: 840 },   // 生态农业和旅游业发达，历史文化名城
-                    { name: '龙岩市', value: 850 },   // 矿产资源丰富，机械制造业发达
-                    { name: '宁德市', value: 810 },   // 海洋经济和食品加工业发达，生态资源丰富
-                    { name: '平潭综合实验区', value: 770 },  // 国家级新区，海洋经济和旅游业发达
-                    { name: '晋江市', value: 780 },   // 制造业和商贸业发达，鞋都
-                    { name: '石狮市', value: 700 },   // 纺织服装业发达，商贸业繁荣
-                    { name: '福清市', value: 730 },   // 制造业和现代农业发达，港口经济
-                    { name: '长乐市', value: 710 },   // 纺织业和食品加工业发达，历史文化名城
-                    { name: '武夷山市', value: 700 }, // 旅游业和生态农业发达，历史文化名城
-                    { name: '永安市', value: 670 },   // 林业和矿产资源丰富，生态资源丰富
-                    { name: '邵武市', value: 650 }    // 农业和机械制造业发达，历史文化名城
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
                 // 汉朝数据
@@ -961,15 +962,6 @@
                     type: 'shadow'
                 }
             },
-            // title: {
-            //   text: '各地区科技文化分布',
-            //    left: 'center',
-            //     top: 5,
-            //      textStyle: {
-            //          color: '#724e58',
-            //          fontSize: 14
-            //     }
-            //  },
             legend: {
                 data: ['成就', '人物', '著作'],
                 top: 0,
@@ -1074,14 +1066,12 @@
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1093,6 +1083,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize

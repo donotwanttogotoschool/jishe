@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>高德地图-中国</title>
+    <style>
+        #map-container {
+            width: 600px;
+            height: 600px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="map-container"></div>
+
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
+    <script>
+        // 初始化地图
+        var map = new AMap.Map('map-container', {
+            resizeEnable: true,
+            zoom: 5,
+            center: [112.2, 31.1]  // 中国中部，靠近湖北省
+        });
+        
+        // 湖北省的经纬度大致范围
+        var hubeiRange = {
+            minLng: 108.4,
+            maxLng: 116.1,
+            minLat: 29.1,
+            maxLat: 33.3
+        };
+        
+        // 湖北省核心区域（更精确的判断）
+        var hubeiCoreRange = {
+            minLng: 109.5,
+            maxLng: 115.0,
+            minLat: 29.8,
+            maxLat: 32.5
+        };
+        
+        // 监听地图点击事件
+        map.on('click', function(e) {
+            var lng = e.lnglat.getLng();
+            var lat = e.lnglat.getLat();
+            
+            // 判断是否点击在湖北省区域
+            if (isInRange(lng, lat, hubeiCoreRange)) {
+                // 点击在湖北省核心区域，直接跳转
+                window.location.href = 'hubei.html';
+            } 
+            else if (isInRange(lng, lat, hubeiRange)) {
+                // 点击在湖北省大致范围内，需要进一步确认
+                AMap.plugin('AMap.Geocoder', function() {
+                    var geocoder = new AMap.Geocoder();
+                    geocoder.getAddress(e.lnglat, function(status, result) {
+                        if (status === 'complete' && result.regeocode) {
+                            var address = result.regeocode.addressComponent;
+                            if (address.province && address.province.indexOf('湖北') !== -1) {
+                                window.location.href = 'hubei.html';
+                            }
+                        }
+                    });
+                });
+            }
+        });
+        
+        // 辅助函数：判断点是否在范围内
+        function isInRange(lng, lat, range) {
+            return lng >= range.minLng && lng <= range.maxLng && 
+                   lat >= range.minLat && lat <= range.maxLat;
+        }
+    </script>
+</body>
+</html>

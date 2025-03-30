@@ -344,7 +344,11 @@
     <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/jiangsu.js"></script>
+    <!-- 删除原来的江苏省地图 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/jiangsu.js"></script> -->
+
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
 
     <script>
         // 定义vintage主题的调色板
@@ -362,12 +366,140 @@
         ];
 
         // 初始化所有图表
-        const mapChart = echarts.init(document.getElementById('map'));
+        // const mapChart = echarts.init(document.getElementById('map')); // 注释掉原来的地图图表
         const timelineChart = echarts.init(document.getElementById('timelineChart'));
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart'));
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7.5, // 缩放级别
+            center: [118.767413, 32.041544], // 江苏省中心点（南京市）
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建江苏省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let jiangsuLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['320000'], // 江苏省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            jiangsuLayer.setMap(amap);
+            
+            // 科技文化信息，从原地图配置中获取
+            const scientificInfo = {
+                '南京市': '省会城市，经济、科技、教育中心，历史文化名城',
+                '苏州市': '经济强市，制造业和旅游业发达',
+                '无锡市': '制造业和科技创新中心',
+                '常州市': '制造业和现代服务业发达',
+                '徐州市': '交通枢纽，能源和制造业重镇',
+                '南通市': '港口城市，制造业和海洋经济发达',
+                '扬州市': '历史文化名城，旅游业和轻工业发达',
+                '盐城市': '生态农业和海洋经济发达',
+                '泰州市': '制造业和医药产业发达',
+                '镇江市': '历史文化名城，制造业和旅游业发达',
+                '淮安市': '农业和制造业发达，历史文化名城',
+                '连云港市': '港口城市，能源和海洋经济发达',
+                '宿迁市': '生态农业和现代服务业发展较快',
+                '昆山市': '制造业和电子信息产业发达',
+                '江阴市': '制造业和港口经济发达',
+                '张家港市': '港口城市，制造业和物流业发达',
+                '常熟市': '制造业和旅游业发达',
+                '宜兴市': '陶瓷产业和生态旅游发达'
+            };
+            
+            // 城市数据，从原地图配置中获取
+            const cities = [
+                { name: '南京市', value: 950, location: [118.767413, 32.041544] },
+                { name: '苏州市', value: 930, location: [120.585315, 31.298886] },
+                { name: '无锡市', value: 910, location: [120.301663, 31.574729] },
+                { name: '常州市', value: 880, location: [119.946973, 31.772752] },
+                { name: '徐州市', value: 850, location: [117.284124, 34.205768] },
+                { name: '南通市', value: 830, location: [120.864608, 32.016212] },
+                { name: '扬州市', value: 800, location: [119.421003, 32.393159] },
+                { name: '盐城市', value: 780, location: [120.139998, 33.377631] },
+                { name: '泰州市', value: 750, location: [119.915176, 32.484882] },
+                { name: '镇江市', value: 730, location: [119.452753, 32.204402] },
+                { name: '淮安市', value: 700, location: [119.021265, 33.597506] },
+                { name: '连云港市', value: 680, location: [119.178821, 34.600018] },
+                { name: '宿迁市', value: 650, location: [118.275162, 33.963008] },
+                { name: '昆山市', value: 630, location: [120.980737, 31.385598] },
+                { name: '江阴市', value: 600, location: [120.284939, 31.920658] },
+                { name: '张家港市', value: 580, location: [120.555821, 31.875428] },
+                { name: '常熟市', value: 550, location: [120.752481, 31.654376] },
+                { name: '宜兴市', value: 520, location: [119.82, 31.36] }
+            ];
+            
+            // 为每个城市添加标记点
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.location,
+                    title: city.name,
+                    label: {
+                        content: city.name,
+                        direction: 'top',
+                        offset: new AMap.Pixel(0, -5),
+                        style: {
+                            color: '#724e58',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            padding: '3px 6px',
+                            backgroundColor: 'rgba(254, 248, 239, 0.8)',
+                            borderRadius: '3px'
+                        }
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scientificInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为江苏省
+            amap.setCity('江苏省');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
@@ -676,111 +808,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '南京市': '省会城市，经济、科技、教育中心，历史文化名城',
-                        '苏州市': '经济强市，制造业和旅游业发达',
-                        '无锡市': '制造业和科技创新中心',
-                        '常州市': '制造业和现代服务业发达',
-                        '徐州市': '交通枢纽，能源和制造业重镇',
-                        '南通市': '港口城市，制造业和海洋经济发达',
-                        '扬州市': '历史文化名城，旅游业和轻工业发达',
-                        '盐城市': '生态农业和海洋经济发达',
-                        '泰州市': '制造业和医药产业发达',
-                        '镇江市': '历史文化名城，制造业和旅游业发达',
-                        '淮安市': '农业和制造业发达，历史文化名城',
-                        '连云港市': '港口城市，能源和海洋经济发达',
-                        '宿迁市': '生态农业和现代服务业发展较快',
-                        '昆山市': '制造业和电子信息产业发达',
-                        '江阴市': '制造业和港口经济发达',
-                        '张家港市': '港口城市，制造业和物流业发达',
-                        '常熟市': '制造业和旅游业发达',
-                        '宜兴市': '陶瓷产业和生态旅游发达'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '江苏省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '江苏', // 使用江苏省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                    { name: '南京市', value: 950 },  // 省会城市，经济、科技、教育中心，历史文化名城
-                    { name: '苏州市', value: 930 },  // 经济强市，制造业和旅游业发达
-                    { name: '无锡市', value: 910 },  // 制造业和科技创新中心
-                    { name: '常州市', value: 880 },  // 制造业和现代服务业发达
-                    { name: '徐州市', value: 850 },  // 交通枢纽，能源和制造业重镇
-                    { name: '南通市', value: 830 },  // 港口城市，制造业和海洋经济发达
-                    { name: '扬州市', value: 800 },  // 历史文化名城，旅游业和轻工业发达
-                    { name: '盐城市', value: 780 },  // 生态农业和海洋经济发达
-                    { name: '泰州市', value: 750 },  // 制造业和医药产业发达
-                    { name: '镇江市', value: 730 },  // 历史文化名城，制造业和旅游业发达
-                    { name: '淮安市', value: 700 },  // 农业和制造业发达，历史文化名城
-                    { name: '连云港市', value: 680 },  // 港口城市，能源和海洋经济发达
-                    { name: '宿迁市', value: 650 },  // 生态农业和现代服务业发展较快
-                    { name: '昆山市', value: 630 },  // 制造业和电子信息产业发达
-                    { name: '江阴市', value: 600 },  // 制造业和港口经济发达
-                    { name: '张家港市', value: 580 },  // 港口城市，制造业和物流业发达
-                    { name: '常熟市', value: 550 },  // 制造业和旅游业发达
-                    { name: '宜兴市', value: 520 }   // 陶瓷产业和生态旅游发达
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
             // 汉朝数据
@@ -1067,19 +1094,17 @@
             ]
         };
 
-        // 渲染所有图表
+        // 渲染所有图表 - 移除地图图表渲染
         timelineChart.setOption(timelineOption);
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1091,6 +1116,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize

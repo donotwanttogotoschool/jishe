@@ -344,7 +344,11 @@
     <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/jiangxi.js"></script>
+    <!-- 删除原来的江西省地图 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/jiangxi.js"></script> -->
+
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
 
     <script>
         // 定义vintage主题的调色板
@@ -362,12 +366,141 @@
         ];
 
         // 初始化所有图表
-        const mapChart = echarts.init(document.getElementById('map'));
+        // const mapChart = echarts.init(document.getElementById('map')); // 注释掉原来的地图图表
         const timelineChart = echarts.init(document.getElementById('timelineChart'));
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart'));
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7.5, // 缩放级别
+            center: [115.892151, 28.676493], // 江西省中心点（南昌市）
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建江西省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let jiangxiLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['360000'], // 江西省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            jiangxiLayer.setMap(amap);
+            
+            // 科技文化信息，从原地图配置中获取
+            const scientificInfo = {
+                '南昌市': '省会城市，科技创新中心，红色文化发源地',
+                '九江市': '长江沿岸城市，生态旅游和港口经济发达',
+                '赣州市': '红色文化名城，稀土资源和现代农业发达',
+                '上饶市': '三清山所在地，生态旅游和农业发展区',
+                '抚州市': '文化名城，生态农业和轻工业发达',
+                '宜春市': '生态旅游和农业示范区',
+                '吉安市': '井冈山所在地，红色文化和生态旅游融合区',
+                '景德镇市': '陶瓷之都，传统工艺与现代科技结合',
+                '萍乡市': '能源工业重镇，煤炭和电力产业发达',
+                '新余市': '钢铁工业基地，生态资源丰富',
+                '鹰潭市': '铜产业中心，生态旅游和工业发达',
+                '瑞金市': '红色文化发源地，革命历史名城',
+                '井冈山市': '红色旅游胜地，生态资源丰富',
+                '丰城市': '农业和轻工业发达，生态资源丰富',
+                '樟树市': '中医药产业基地，生态农业发达',
+                '高安市': '陶瓷产业和现代农业发达',
+                '乐平市': '矿产资源丰富，生态农业和工业发达',
+                '德兴市': '铜矿资源丰富，生态旅游和工业发达'
+            };
+            
+            // 城市数据，从原地图配置中获取
+            const cities = [
+                { name: '南昌市', value: 900, location: [115.892151, 28.676493] },  // 省会城市
+                { name: '九江市', value: 850, location: [116.001930, 29.705077] },
+                { name: '赣州市', value: 820, location: [114.935029, 25.831829] },
+                { name: '上饶市', value: 800, location: [117.943433, 28.454863] },
+                { name: '抚州市', value: 780, location: [116.358181, 27.949217] },
+                { name: '宜春市', value: 750, location: [114.400039, 27.811108] },
+                { name: '吉安市', value: 730, location: [114.986373, 27.111699] },
+                { name: '景德镇市', value: 700, location: [117.214664, 29.292561] },
+                { name: '萍乡市', value: 680, location: [113.854556, 27.622768] },
+                { name: '新余市', value: 650, location: [114.917346, 27.817808] },
+                { name: '鹰潭市', value: 630, location: [117.069202, 28.260189] },
+                { name: '瑞金市', value: 600, location: [116.027134, 25.885590] },
+                { name: '井冈山市', value: 580, location: [114.289228, 26.748081] },
+                { name: '丰城市', value: 550, location: [115.771094, 28.159258] },
+                { name: '樟树市', value: 530, location: [115.546385, 28.055898] },
+                { name: '高安市', value: 500, location: [115.375618, 28.417222] },
+                { name: '乐平市', value: 480, location: [117.129169, 28.978494] },
+                { name: '德兴市', value: 450, location: [117.578732, 28.946345] }
+            ];
+            
+            // 为每个城市添加标记
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.location,
+                    title: city.name,
+                    label: {
+                        direction: 'right',
+                        offset: new AMap.Pixel(5, 0),
+                        content: `<div style="color:#724e58;font-size:12px;font-weight:bold;">${city.name}</div>`,
+                        color: '#724e58',
+                        fontSize: 12
+                    },
+                    anchor: 'center',
+                    zIndex: 100,
+                    extData: {
+                        city: city.name,
+                        value: city.value,
+                        info: scientificInfo[city.name]
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scientificInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为江西省
+            amap.setCity('江西省');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
@@ -676,111 +809,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '南昌市': '省会城市，科技创新中心，红色文化发源地',
-                        '九江市': '长江沿岸城市，生态旅游和港口经济发达',
-                        '赣州市': '红色文化名城，稀土资源和现代农业发达',
-                        '上饶市': '三清山所在地，生态旅游和农业发展区',
-                        '抚州市': '文化名城，生态农业和轻工业发达',
-                        '宜春市': '生态旅游和农业示范区',
-                        '吉安市': '井冈山所在地，红色文化和生态旅游融合区',
-                        '景德镇市': '陶瓷之都，传统工艺与现代科技结合',
-                        '萍乡市': '能源工业重镇，煤炭和电力产业发达',
-                        '新余市': '钢铁工业基地，生态资源丰富',
-                        '鹰潭市': '铜产业中心，生态旅游和工业发达',
-                        '瑞金市': '红色文化发源地，革命历史名城',
-                        '井冈山市': '红色旅游胜地，生态资源丰富',
-                        '丰城市': '农业和轻工业发达，生态资源丰富',
-                        '樟树市': '中医药产业基地，生态农业发达',
-                        '高安市': '陶瓷产业和现代农业发达',
-                        '乐平市': '矿产资源丰富，生态农业和工业发达',
-                        '德兴市': '铜矿资源丰富，生态旅游和工业发达'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '江西省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '江西', // 使用江西省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                    { name: '南昌市', value: 900 },  // 省会城市，经济、科技、教育中心，红色文化发源地
-                    { name: '九江市', value: 850 },  // 长江沿岸城市，生态旅游和港口经济发达
-                    { name: '赣州市', value: 820 },  // 红色文化名城，稀土资源和现代农业发达
-                    { name: '上饶市', value: 800 },  // 三清山所在地，生态旅游和农业发展区
-                    { name: '抚州市', value: 780 },  // 文化名城，生态农业和轻工业发达
-                    { name: '宜春市', value: 750 },  // 生态旅游和农业示范区
-                    { name: '吉安市', value: 730 },  // 井冈山所在地，红色文化和生态旅游融合区
-                    { name: '景德镇市', value: 700 },  // 陶瓷之都，传统工艺与现代科技结合
-                    { name: '萍乡市', value: 680 },  // 能源工业重镇，煤炭和电力产业发达
-                    { name: '新余市', value: 650 },  // 钢铁工业基地，生态资源丰富
-                    { name: '鹰潭市', value: 630 },  // 铜产业中心，生态旅游和工业发达
-                    { name: '瑞金市', value: 600 },  // 红色文化发源地，革命历史名城
-                    { name: '井冈山市', value: 580 },  // 红色旅游胜地，生态资源丰富
-                    { name: '丰城市', value: 550 },  // 农业和轻工业发达，生态资源丰富
-                    { name: '樟树市', value: 530 },  // 中医药产业基地，生态农业发达
-                    { name: '高安市', value: 500 },  // 陶瓷产业和现代农业发达
-                    { name: '乐平市', value: 480 },  // 矿产资源丰富，生态农业和工业发达
-                    { name: '德兴市', value: 450 }   // 铜矿资源丰富，生态旅游和工业发达
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
             // 汉朝数据
@@ -1067,19 +1095,17 @@
             ]
         };
 
-        // 渲染所有图表
+        // 渲染所有图表 - 移除地图图表渲染
         timelineChart.setOption(timelineOption);
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1091,6 +1117,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize

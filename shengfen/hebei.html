@@ -344,7 +344,11 @@
     <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/hebei.js"></script>
+    <!-- 删除原来的河北省地图 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/hebei.js"></script> -->
+
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
 
     <script>
         // 定义vintage主题的调色板
@@ -362,12 +366,132 @@
         ];
 
         // 初始化所有图表
-        const mapChart = echarts.init(document.getElementById('map'));
+        // const mapChart = echarts.init(document.getElementById('map')); // 注释掉原来的地图图表
         const timelineChart = echarts.init(document.getElementById('timelineChart'));
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart'));
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7.5, // 缩放级别
+            center: [114.502461, 38.045474], // 河北省中心点（石家庄市）
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建河北省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let hebeiLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['130000'], // 河北省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            hebeiLayer.setMap(amap);
+            
+            // 添加地市标记
+            const cities = [
+                { name: '石家庄市', location: [114.502461, 38.045474], value: 950 },
+                { name: '唐山市', location: [118.175393, 39.635113], value: 920 },
+                { name: '保定市', location: [115.482331, 38.867657], value: 890 },
+                { name: '邯郸市', location: [114.490686, 36.612273], value: 860 },
+                { name: '秦皇岛市', location: [119.586579, 39.942531], value: 830 },
+                { name: '邢台市', location: [114.508851, 37.0682], value: 800 },
+                { name: '张家口市', location: [114.884091, 40.811901], value: 780 },
+                { name: '承德市', location: [117.939152, 40.976204], value: 760 },
+                { name: '沧州市', location: [116.857461, 38.310582], value: 740 },
+                { name: '廊坊市', location: [116.704441, 39.523927], value: 720 },
+                { name: '衡水市', location: [115.665993, 37.735097], value: 700 },
+                { name: '辛集市', location: [115.217658, 37.94193], value: 680 },
+                { name: '定州市', location: [114.990389, 38.516541], value: 660 },
+                { name: '雄安新区', location: [115.872501, 38.928784], value: 640 }
+            ];
+            
+            // 科技信息对象
+            const scientificInfo = {
+                '石家庄市': '省会城市，经济、科技、教育中心，交通枢纽',
+                '唐山市': '工业重镇，钢铁制造和能源产业发达',
+                '保定市': '历史文化名城，制造业和现代农业发达',
+                '邯郸市': '历史文化名城，钢铁和制造业发达',
+                '秦皇岛市': '沿海开放城市，旅游业和港口经济发达',
+                '邢台市': '农业和制造业发达，历史文化名城',
+                '张家口市': '生态资源丰富，冰雪产业和旅游业发达',
+                '承德市': '历史文化名城，生态旅游和农业发达',
+                '沧州市': '港口城市，制造业和化工产业发达',
+                '廊坊市': '京津冀协同发展重要城市，现代服务业发达',
+                '衡水市': '农业和制造业发达，生态资源丰富',
+                '辛集市': '制造业和现代农业发达，商贸业繁荣',
+                '定州市': '农业和制造业发达，历史文化名城',
+                '雄安新区': '国家级新区，科技创新和现代服务业发展迅速'
+            };
+            
+            // 添加每个城市的标记
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.location,
+                    title: city.name,
+                    label: {
+                        content: city.name,
+                        direction: 'top',
+                        offset: new AMap.Pixel(0, -5),
+                        style: {
+                            color: '#724e58',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            padding: '3px 6px',
+                            backgroundColor: 'rgba(254, 248, 239, 0.8)',
+                            borderRadius: '3px'
+                        }
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scientificInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为河北省
+            amap.setCity('河北省');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
@@ -679,103 +803,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '石家庄市': '省会城市，经济、科技、教育中心，交通枢纽',
-                        '唐山市': '工业重镇，钢铁制造和能源产业发达',
-                        '保定市': '历史文化名城，制造业和现代农业发达',
-                        '邯郸市': '历史文化名城，钢铁和制造业发达',
-                        '秦皇岛市': '沿海开放城市，旅游业和港口经济发达',
-                        '邢台市': '农业和制造业发达，历史文化名城',
-                        '张家口市': '生态资源丰富，冰雪产业和旅游业发达',
-                        '承德市': '历史文化名城，生态旅游和农业发达',
-                        '沧州市': '港口城市，制造业和化工产业发达',
-                        '廊坊市': '京津冀协同发展重要城市，现代服务业发达',
-                        '衡水市': '农业和制造业发达，生态资源丰富',
-                        '辛集市': '制造业和现代农业发达，商贸业繁荣',
-                        '定州市': '农业和制造业发达，历史文化名城',
-                        '雄安新区': '国家级新区，科技创新和现代服务业发展迅速'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '河北省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '河北', // 使用河北省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                    { name: '石家庄市', value: 950 },  // 省会城市，经济、交通、教育中心，历史文化名城
-                    { name: '唐山市', value: 920 },  // 工业重镇，钢铁制造和能源产业发达
-                    { name: '保定市', value: 890 },  // 历史文化名城，制造业和现代农业发达
-                    { name: '邯郸市', value: 860 },  // 历史文化名城，钢铁和制造业发达
-                    { name: '秦皇岛市', value: 830 },  // 沿海开放城市，旅游业和港口经济发达
-                    { name: '邢台市', value: 800 },  // 农业和制造业发达，历史文化名城
-                    { name: '张家口市', value: 780 },  // 生态资源丰富，冰雪产业和旅游业发达
-                    { name: '承德市', value: 760 },  // 历史文化名城，生态旅游和农业发达
-                    { name: '沧州市', value: 740 },  // 港口城市，制造业和化工产业发达
-                    { name: '廊坊市', value: 720 },  // 京津冀协同发展重要城市，现代服务业发达
-                    { name: '衡水市', value: 700 },  // 农业和制造业发达，生态资源丰富
-                    { name: '辛集市', value: 680 },  // 制造业和现代农业发达，商贸业繁荣
-                    { name: '定州市', value: 660 },  // 农业和制造业发达，历史文化名城
-                    { name: '雄安新区', value: 640 }   // 国家级新区，科技创新和现代服务业发展迅速
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
             // 汉朝数据
@@ -1062,19 +1089,17 @@
             ]
         };
 
-        // 渲染所有图表
+        // 渲染所有图表 - 移除地图图表渲染
         timelineChart.setOption(timelineOption);
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1086,6 +1111,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize

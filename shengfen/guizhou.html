@@ -344,7 +344,11 @@
     <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/guizhou.js"></script>
+    <!-- 删除原来的贵州省地图 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/province/guizhou.js"></script> -->
+
+    <!-- 引入高德地图 API -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
 
     <script>
         // 定义vintage主题的调色板
@@ -362,12 +366,140 @@
         ];
 
         // 初始化所有图表
-        const mapChart = echarts.init(document.getElementById('map'));
+        // const mapChart = echarts.init(document.getElementById('map')); // 注释掉原来的地图图表
         const timelineChart = echarts.init(document.getElementById('timelineChart'));
         const pieChart = echarts.init(document.getElementById('pieChart'));
         const barChart = echarts.init(document.getElementById('barChart'));
         const scatterChart = echarts.init(document.getElementById('scatterChart'));
-        const trendChart = echarts.init(document.getElementById('trendChart')); // 添加这行
+        const trendChart = echarts.init(document.getElementById('trendChart')); 
+
+        // 初始化高德地图
+        let amap = new AMap.Map('map', {
+            zoom: 7.5, // 缩放级别
+            center: [106.713478, 26.578343], // 贵州省中心点（贵阳市）
+            resizeEnable: true, // 允许调整大小
+            viewMode: '3D', // 使用3D视图
+            pitch: 35, // 俯仰角度
+            mapStyle: 'amap://styles/whitesmoke', // 浅色样式
+            showIndoorMap: false, // 不显示室内地图
+            features: ['bg', 'road'], // 只显示背景和道路
+            showBuildingBlock: false // 不显示建筑物
+        });
+        
+        // 创建贵州省行政区实例
+        AMap.plugin('AMap.DistrictLayer', function() {
+            // 创建行政区图层
+            let guizhouLayer = new AMap.DistrictLayer.Province({
+                zIndex: 12,
+                adcode: ['520000'], // 贵州省行政编码
+                depth: 2, // 显示市级行政区
+                styles: {
+                    'fill': 'rgba(254, 248, 239, 0.6)', // 填充颜色
+                    'province-stroke': '#d7ab82', // 省边界颜色
+                    'city-stroke': 'rgba(215, 171, 130, 0.5)', // 市边界颜色
+                    'county-stroke': 'rgba(215, 171, 130, 0.2)' // 区县边界颜色
+                }
+            });
+            
+            // 添加行政区图层到地图
+            guizhouLayer.setMap(amap);
+            
+            // 添加地市标记
+            const cities = [
+                { name: '贵阳市', location: [106.713478, 26.578343], value: 850 },
+                { name: '遵义市', location: [106.937265, 27.706626], value: 780 },
+                { name: '六盘水市', location: [104.846743, 26.584643], value: 700 },
+                { name: '安顺市', location: [105.932188, 26.245544], value: 680 },
+                { name: '毕节市', location: [105.28501, 27.301693], value: 650 },
+                { name: '铜仁市', location: [109.191555, 27.718346], value: 620 },
+                { name: '黔西南布依族苗族自治州', location: [104.897971, 25.08812], value: 600 },
+                { name: '黔东南苗族侗族自治州', location: [107.977488, 26.583352], value: 580 },
+                { name: '黔南布依族苗族自治州', location: [107.517156, 26.258219], value: 550 },
+                { name: '仁怀市', location: [106.412476, 27.803377], value: 530 },
+                { name: '凯里市', location: [107.977541, 26.582964], value: 500 },
+                { name: '都匀市', location: [107.517021, 26.258205], value: 480 },
+                { name: '兴义市', location: [104.895367, 25.096148], value: 450 },
+                { name: '赤水市', location: [105.697472, 28.590337], value: 430 },
+                { name: '福泉市', location: [107.520405, 26.702509], value: 400 },
+                { name: '清镇市', location: [106.470277, 26.551289], value: 380 },
+                { name: '盘州市', location: [104.471514, 25.709878], value: 350 },
+                { name: '威宁彝族回族苗族自治县', location: [104.286523, 26.859099], value: 320 }
+            ];
+            
+            // 城市科技信息
+            const scientificInfo = {
+                '贵阳市': '大数据产业中心，生态科技示范区',
+                '遵义市': '红色文化名城，白酒产业核心区',
+                '六盘水市': '能源工业重镇，煤炭和电力产业发达',
+                '安顺市': '黄果树瀑布所在地，生态旅游示范区',
+                '毕节市': '脱贫攻坚重点地区，生态农业发达',
+                '铜仁市': '梵净山所在地，生态旅游和农业发展区',
+                '黔西南布依族苗族自治州': '生态旅游和民族文化特色',
+                '黔东南苗族侗族自治州': '民族文化与生态旅游融合示范区',
+                '黔南布依族苗族自治州': '生态农业和旅游业发达',
+                '仁怀市': '茅台酒产地，白酒产业核心区',
+                '凯里市': '黔东南州首府，民族文化和生态旅游发达',
+                '都匀市': '黔南州首府，生态农业和轻工业发达',
+                '兴义市': '黔西南州首府，生态旅游和能源产业发达',
+                '赤水市': '竹产业和生态旅游发达',
+                '福泉市': '磷化工产业发达，生态资源丰富',
+                '清镇市': '贵阳市卫星城，生态农业和旅游业发达',
+                '盘州市': '能源工业重镇，煤炭和电力产业发达',
+                '威宁彝族回族苗族自治县': '生态农业和民族文化特色'
+            };
+            
+            // 为每个城市添加标记
+            cities.forEach(city => {
+                // 创建标记
+                let marker = new AMap.Marker({
+                    position: city.location,
+                    title: city.name,
+                    label: {
+                        content: city.name,
+                        direction: 'top',
+                        offset: new AMap.Pixel(0, -5),
+                        style: {
+                            color: '#724e58',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            padding: '3px 6px',
+                            backgroundColor: 'rgba(254, 248, 239, 0.8)',
+                            borderRadius: '3px'
+                        }
+                    },
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(20, 20),
+                        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                        imageSize: new AMap.Size(20, 20)
+                    })
+                });
+                
+                // 创建信息窗体
+                let infoWindow = new AMap.InfoWindow({
+                    content: `<div style="padding:10px;font-family:'楷体',KaiTi;">
+                                <h3 style="margin:0;color:#724e58;">${city.name}</h3>
+                                <p style="margin:5px 0;">发展指数：${city.value}</p>
+                                <p style="margin:5px 0;">${scientificInfo[city.name] || ''}</p>
+                             </div>`,
+                    offset: new AMap.Pixel(0, -30)
+                });
+                
+                // 点击标记时打开信息窗体
+                marker.on('click', function() {
+                    infoWindow.open(amap, marker.getPosition());
+                });
+                
+                amap.add(marker);
+            });
+            
+            // 设置地图显示范围为贵州省
+            amap.setCity('贵州省');
+        });
+        
+        // 添加适合的控件
+        amap.plugin(['AMap.Scale'], function() {
+            amap.addControl(new AMap.Scale());
+        });
 
         // 修改时间轴配置
         const timelineOption = {
@@ -676,111 +808,6 @@
             ]
         };
 
-        // 修改地图配置
-        const mapOption = {
-            title: {
-                left: 'center',
-                textStyle: {
-                    color: '#2c5530',
-                    fontSize: 24
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    const scientificInfo = {
-                        '贵阳市': '大数据产业中心，生态科技示范区',
-                        '遵义市': '红色文化名城，白酒产业核心区',
-                        '六盘水市': '能源工业重镇，煤炭和电力产业发达',
-                        '安顺市': '黄果树瀑布所在地，生态旅游示范区',
-                        '毕节市': '脱贫攻坚重点地区，生态农业发达',
-                        '铜仁市': '梵净山所在地，生态旅游和农业发展区',
-                        '黔西南布依族苗族自治州': '生态旅游和民族文化特色',
-                        '黔东南苗族侗族自治州': '民族文化与生态旅游融合示范区',
-                        '黔南布依族苗族自治州': '生态农业和旅游业发达',
-                        '仁怀市': '茅台酒产地，白酒产业核心区',
-                        '凯里市': '黔东南州首府，民族文化和生态旅游发达',
-                        '都匀市': '黔南州首府，生态农业和轻工业发达',
-                        '兴义市': '黔西南州首府，生态旅游和能源产业发达',
-                        '赤水市': '竹产业和生态旅游发达',
-                        '福泉市': '磷化工产业发达，生态资源丰富',
-                        '清镇市': '贵阳市卫星城，生态农业和旅游业发达',
-                        '盘州市': '能源工业重镇，煤炭和电力产业发达',
-                        '威宁彝族回族苗族自治县': '生态农业和民族文化特色'
-                    };
-                    return `${params.name}<br/>发展指数：${params.value || 0}<br/>${scientificInfo[params.name] || ''}`;
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1000,
-                left: 'left',
-                top: 'bottom',
-                text: ['高', '低'],
-                calculable: true,
-                inRange: {
-                    color: ['#fef8ef', '#d87c7c']  // vintage风格配色
-                },
-                textStyle: {
-                    color: '#724e58'
-                }
-            },
-            series: [
-                {
-                    name: '贵州省',
-                    type: 'map3D', // 使用 3D 地图
-                    map: '贵州', // 使用贵州省地图
-                    roam: true, // 允许缩放和拖动
-                    itemStyle: {
-                        areaColor: '#fef8ef',
-                        borderColor: '#d7ab82',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            color: '#724e58'
-                        },
-                        itemStyle: {
-                            areaColor: '#efa18d'
-                        }
-                    },
-                    data: [
-                    { name: '贵阳市', value: 850 },  // 省会城市，经济、科技、教育中心，大数据产业发达
-                    { name: '遵义市', value: 780 },  // 红色文化名城，白酒产业和制造业发达
-                    { name: '六盘水市', value: 700 },  // 能源工业重镇，煤炭和电力产业发达
-                    { name: '安顺市', value: 680 },  // 旅游业发达，黄果树瀑布所在地
-                    { name: '毕节市', value: 650 },  // 农业和生态资源丰富，脱贫攻坚重点地区
-                    { name: '铜仁市', value: 620 },  // 生态旅游和农业发展较好，梵净山所在地
-                    { name: '黔西南布依族苗族自治州', value: 600 },  // 生态旅游和民族文化特色
-                    { name: '黔东南苗族侗族自治州', value: 580 },  // 民族文化与生态旅游融合示范区
-                    { name: '黔南布依族苗族自治州', value: 550 },  // 生态农业和旅游业发达
-                    { name: '仁怀市', value: 530 },  // 白酒产业核心区，茅台酒产地
-                    { name: '凯里市', value: 500 },  // 黔东南州首府，民族文化和生态旅游发达
-                    { name: '都匀市', value: 480 },  // 黔南州首府，生态农业和轻工业发达
-                    { name: '兴义市', value: 450 },  // 黔西南州首府，生态旅游和能源产业发达
-                    { name: '赤水市', value: 430 },  // 生态旅游和竹产业发达
-                    { name: '福泉市', value: 400 },  // 磷化工产业发达，生态资源丰富
-                    { name: '清镇市', value: 380 },  // 贵阳市卫星城，生态农业和旅游业发达
-                    { name: '盘州市', value: 350 },  // 能源工业重镇，煤炭和电力产业发达
-                    { name: '威宁彝族回族苗族自治县', value: 320 }  // 生态农业和民族文化特色
-                    ],
-                    shading: 'color', // 着色方式
-                    light: {
-                        main: {
-                            intensity: 1.2, // 光照强度
-                            shadow: true, // 是否显示阴影
-                            shadowQuality: 'high' // 阴影质量
-                        },
-                        ambient: {
-                            intensity: 0.3 // 环境光强度
-                        }
-                    }
-                }
-            ]
-        };
-
         // 修改散点图配置
         const data = [
             // 汉朝数据
@@ -1067,19 +1094,17 @@
             ]
         };
 
-        // 渲染所有图表
+        // 渲染所有图表 - 移除地图图表渲染
         timelineChart.setOption(timelineOption);
         pieChart.setOption(pieOption);
         barChart.setOption(barOption);
         scatterChart.setOption(scatterOption);
-        mapChart.setOption(mapOption);
         trendChart.setOption(trendOption);
 
         // 修改resize事件处理
         function resizeAllCharts() {
             const charts = [
                 timelineChart,
-                mapChart,
                 pieChart,
                 barChart,
                 scatterChart,
@@ -1091,6 +1116,11 @@
                     chart.resize();
                 }
             });
+            
+            // 为高德地图添加resize处理
+            if (amap) {
+                amap.resize();
+            }
         }
 
         // 添加防抖功能，避免频繁调用resize
