@@ -19,6 +19,12 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/modules/timeline.js"></script>
+    <!-- Highcharts 核心和必要模块 -->
+    <script src="https://code.highcharts.com/modules/sankey.js"></script>
+    <script src="https://code.highcharts.com/modules/dependency-wheel.js"></script>
+    <script src="https://code.highcharts.com/modules/xrange.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
 
     <style>
         .nav-treeview {
@@ -191,44 +197,105 @@
         <!-- Content Wrapper -->
         <div class="content-wrapper">
             <div class="content-header">
-                <h1>工程建筑发展史</h1>
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">中国古代工程建筑技术</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+            <!-- Main content -->
             <div class="content">
                 <div class="container-fluid">
+                    <!-- 第一行:跨度排名和材料强度 -->
                     <div class="row">
-                        <!-- 都江堰水利系统 -->
-                        <div class="col-12">
+                        <!-- 跨度排名柱状图 -->
+                        <div class="col-lg-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">都江堰水利系统结构图</h3>
+                                    <h3 class="card-title">古代桥梁跨度排名</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div id="dujiangyanChart" style="height: 500px;"></div>
+                                    <div id="bridgeSpanChart" style="height: 400px;"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 古代建筑类型统计 -->
-                        <div class="col-12">
+                        <!-- 材料强度弦图 -->
+                        <div class="col-lg-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">古代建筑类型分布</h3>
+                                    <h3 class="card-title">建筑材料强度对比</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div id="buildingTypeChart" style="height: 400px;"></div>
+                                    <div id="materialStrengthChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二行:构件词云和结构演变 -->
+                    <div class="row mt-4">
+                        <!-- 构件词云 -->
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">斗拱构件系统</h3>
+                                </div>
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/engineers/dougong.png') }}"
+                                        class="material-image mb-3" alt="斗拱构件">
+                                    <h5>主要构件</h5>
+                                    <ul>
+                                        <li><strong>昂</strong>：斜向上翘的构件,用于承托檐角</li>
+                                        <li><strong>栌斗</strong>：承托华栱的方形构件</li>
+                                        <li><strong>华栱</strong>：横向承重构件,连接柱与梁</li>
+                                        <li><strong>令栱</strong>：最下层的横向构件</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 长城建造技术演进 -->
-                        <div class="col-12">
+                        <!-- 结构演变甘特图 -->
+                        <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">长城建造技术演进</h3>
+                                    <h3 class="card-title">斗拱结构演变历程</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div id="greatWallChart" style="height: 400px;"></div>
+                                    <div id="structureEvolutionChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第三行:潮汐影响和应力分析 -->
+                    <div class="row mt-4">
+                        <!-- 潮汐影响曲线 -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">洛阳桥基础沉降分析</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="tidalEffectChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 应力云图 -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">赵州桥应力分析</h3>
+                                </div>s
+                                <div class="card-body">
+                                    <img src="{{ url_for('static', filename='images/engineers/zhaozhouqiao.jpg') }}"
+                                        class="material-image mb-3" alt="桥梁应力分析">
+                                    <p>赵州桥在最大荷载作用下的应力分布云图，展示了其卓越的力学性能。
+                                        最大应力集中在拱顶和拱脚处，应力分布均匀，充分体现了李春采用的"敞肩式"设计的优越性。</p>
                                 </div>
                             </div>
                         </div>
@@ -249,102 +316,98 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
 
-    <!-- 保持原有的图表初始化脚本不变 -->
+    <!-- 初始化图表的脚本 -->
     <script>
-        // 都江堰水利系统3D结构图
-        Highcharts.chart('dujiangyanChart', {
-            chart: {
-                type: 'scatter3d',
-                options3d: {
-                    enabled: true,
-                    alpha: 20,
-                    beta: 30,
-                    depth: 200,
-                    viewDistance: 5
-                }
-            },
-            title: {
-                text: '都江堰水利系统主要构件分布'
-            },
-            subtitle: {
-                text: '鱼嘴、飞沙堰、宝瓶口等核心工程'
-            },
-            plotOptions: {
-                scatter: {
-                    marker: {
-                        radius: 5
-                    }
-                }
+        // 跨度排名柱状图
+        Highcharts.chart('bridgeSpanChart', {
+            chart: { type: 'column' },
+            title: { text: '古代桥梁跨度排名' },
+            xAxis: { categories: ['安平桥', '宝带桥', '卢沟桥'] },
+            yAxis: {
+                title: { text: '跨度 (m)' }
             },
             series: [{
-                name: '主要工程构件',
-                data: [
-                    [1, 1, 1], // 鱼嘴
-                    [2, 3, 2], // 飞沙堰
-                    [3, 2, 3], // 宝瓶口
-                    [4, 1, 2]  // 内外金沙堰
-                ]
+                name: '跨度',
+                data: [2250, 317, 266.5]
             }]
         });
 
-        // 古代建筑类型统计
-        Highcharts.chart('buildingTypeChart', {
-            chart: {
-                type: 'pie',
-                options3d: {
-                    enabled: true,
-                    alpha: 45
-                }
-            },
-            title: {
-                text: '古代建筑类型分布'
-            },
-            plotOptions: {
-                pie: {
-                    innerSize: 100,
-                    depth: 45
-                }
-            },
-            series: [{
-                name: '建筑数量',
-                data: [
-                    ['宫殿建筑', 25],
-                    ['宗教建筑', 20],
-                    ['民居建筑', 30],
-                    ['园林建筑', 15],
-                    ['军事建筑', 10]
-                ]
-            }]
-        });
-
-        // 长城建造技术演进
-        Highcharts.chart('greatWallChart', {
-            chart: {
-                type: 'timeline'
-            },
-            title: {
-                text: '长城建造技术演进'
-            },
+        // 建筑材料强度对比 - 改用柱状图替代依赖轮图
+        Highcharts.chart('materialStrengthChart', {
+            chart: { type: 'column' },
+            title: { text: '建筑材料强度对比' },
             xAxis: {
-                type: 'datetime'
+                categories: ['石料抗压', '木料抗弯', '石料抗弯', '木料抗压']
+            },
+            yAxis: {
+                title: { text: '强度 (MPa)' }
             },
             series: [{
+                name: '强度值',
+                data: [800, 50, 40, 35]
+            }]
+        });
+
+        // 斗拱结构演变历程
+        Highcharts.chart('structureEvolutionChart', {
+            chart: { type: 'timeline' },
+            xAxis: {
+                type: 'datetime',
+                visible: false
+            },
+            yAxis: {
+                visible: false
+            },
+            title: {
+                text: '斗拱结构演变'
+            },
+            series: [{
+                dataLabels: {
+                    allowOverlap: false,
+                    format: '<span style="color:{point.color}">● </span><span style="font-weight: bold;" > ' +
+                        '{point.x:%d %b %Y}</span><br/>{point.label}'
+                },
+                marker: {
+                    symbol: 'circle'
+                },
                 data: [{
-                    x: Date.UTC(-700, 0, 1),
-                    name: '春秋战国',
-                    label: '夯土墙',
-                    description: '以土为主要材料'
+                    x: Date.UTC(200, 0, 1),
+                    name: '汉阙挑梁',
+                    label: '初期发展阶段'
                 }, {
-                    x: Date.UTC(-200, 0, 1),
-                    name: '秦朝',
-                    label: '石块加固',
-                    description: '开始使用石材'
+                    x: Date.UTC(600, 0, 1),
+                    name: '唐佛光寺',
+                    label: '成熟期'
                 }, {
-                    x: Date.UTC(1400, 0, 1),
-                    name: '明朝',
-                    label: '砖石结构',
-                    description: '砖石混合建造'
+                    x: Date.UTC(900, 0, 1),
+                    name: '辽独乐寺',
+                    label: '鼎盛期'
                 }]
+            }]
+        });
+
+        // 洛阳桥基础沉降分析
+        Highcharts.chart('tidalEffectChart', {
+            chart: { type: 'spline' },
+            title: { text: '洛阳桥基础沉降周期变化' },
+            xAxis: {
+                categories: ['初一', '初七', '十五', '廿二', '三十']
+            },
+            yAxis: {
+                title: { text: '沉降量 (mm)' },
+                min: 0
+            },
+            tooltip: {
+                formatter: function () {
+                    return '日期: ' + this.x + '<br>沉降量: ' + this.y + 'mm';
+                }
+            },
+            series: [{
+                name: '沉降量',
+                data: [5, 3, 4, 3, 5],
+                marker: {
+                    enabled: true
+                }
             }]
         });
     </script>
