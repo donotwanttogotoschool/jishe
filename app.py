@@ -127,6 +127,10 @@ def time_analysis():
 def articles():
     return render_template('articles.html')
 
+@app.route('/timeline')
+def timeline():
+    return render_template('timeline.html')
+
 # 添加静态首页路由
 @app.route('/index.html')
 def static_index():

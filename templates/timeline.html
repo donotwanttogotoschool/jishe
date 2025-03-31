@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>时间轴 - 中国古代自然科学知识库</title>
+
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
+
+    <!-- 引入中文字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .nav-treeview {
+            display: none;
+        }
+
+        .menu-open .nav-treeview {
+            display: block;
+        }
+
+        .timeline-wrapper {
+            background-color: #f4f1ea;
+            background-image: url("{{ url_for('static', filename='images/paper_texture.png') }}");
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: #8D6E63;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: #FFF8E1;
+            border: 4px solid #8D6E63;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-item.left {
+            left: 0;
+        }
+
+        .timeline-item.right {
+            left: 50%;
+        }
+
+        .timeline-item.right::after {
+            left: -16px;
+        }
+
+        .timeline-content {
+            padding: 20px 30px;
+            background: #FFF8E1;
+            position: relative;
+            border-radius: 6px;
+            border: 1px solid #8D6E63;
+            box-shadow: 0 4px 8px rgba(141, 110, 99, 0.2);
+        }
+
+        .timeline-date {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.5em;
+            color: #5D4037;
+            margin-bottom: 15px;
+        }
+
+        .timeline-title {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            color: #3E2723;
+            margin-bottom: 15px;
+        }
+
+        .timeline-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #8D6E63;
+            margin-bottom: 15px;
+        }
+
+        .timeline-description {
+            font-family: 'Noto Serif SC', serif;
+            color: #5D4037;
+            line-height: 1.6;
+        }
+
+        @media screen and (max-width: 600px) {
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-item.right {
+                left: 0%;
+            }
+
+            .timeline-item.left::after,
+            .timeline-item.right::after {
+                left: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-light">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">关于</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-bg-light">
+            <div class="brand-container">
+                <a href="/" class="brand-link">
+                    <span class="brand-text">中国古代科学家知识库</span>
+                </a>
+            </div>
+
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <!-- 搜索查询 -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-page="search">
+                                <i class="nav-icon fas fa-search"></i>
+                                <p>搜索查询</p>
+                            </a>
+                        </li>
+
+                        <!-- 统计分析 -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>
+                                    统计分析
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/overview" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>总体概览</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/field-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>领域分析</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/time-analysis" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>时间分析</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 分类浏览 -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    分类浏览
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/category/agriculture" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>农业</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/chemistry" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>化学</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/medicine" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>医学生物</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/astronomy" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>天文地理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/engineering" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>工程建筑</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/mathematics" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>数学计量</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/category/physics" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>物理</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- 时间轴 -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active" data-page="timeline">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>时间轴</p>
+                            </a>
+                        </li>
+
+                        <!-- 科学文萃 -->
+                        <li class="nav-item">
+                            <a href="/articles" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>科学文萃</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper timeline-wrapper">
+            <!-- Content Header -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0" style="font-family: 'Ma Shan Zheng', cursive;">中国古代科学发展时间轴</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="timeline">
+                        <!-- 商代 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">前16世纪-前11世纪</div>
+                                <h3 class="timeline-title">甲骨文天文记录</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/oracle.jpg') }}" alt="甲骨文"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    商代甲骨文记载了最早的日食、月食及恒星观测记录，开创了中国系统天文观测的先河。这些记录为研究古代天象和历法提供了重要史料。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 战国 -->
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <div class="timeline-date">前5世纪</div>
+                                <h3 class="timeline-title">司南发明</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/sinan.jpg') }}" alt="司南"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    战国时期发明的司南是世界上最早的指向仪器，利用天然磁石制成，为后世指南针的发展奠定了基础。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 西汉 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">前2世纪</div>
+                                <h3 class="timeline-title">《九章算术》成书</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/jiuzhang.jpg') }}" alt="九章算术"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    《九章算术》确立了中国古代数学体系框架，涵盖方程、几何、分数运算等内容，对东亚数学发展产生深远影响。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 时间节点1 -->
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <div class="timeline-date">公元前300年</div>
+                                <h3 class="timeline-title">张衡发明地动仪</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/didongyi.jpg') }}" alt="地动仪"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    张衡在东汉时期发明了地动仪，这是世界上最早的地震仪，能够感知并记录地震波动。
+                                    此发明为后代的地震研究奠定了基础。地动仪采用精巧的机械结构，可以准确判断地震发生的方向。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 时间节点2 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">公元1世纪</div>
+                                <h3 class="timeline-title">《黄帝内经》成书</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/huangdineijing.jpg') }}"
+                                    alt="黄帝内经" class="timeline-image">
+                                <p class="timeline-description">
+                                    《黄帝内经》是中国古代最重要的医学经典之一，提出了很多关于人体、生理、疾病等方面的理论，
+                                    其中包含的阴阳五行学说、经络学说等理论体系对中医发展产生了深远影响。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 东汉造纸术 -->
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <div class="timeline-date">公元105年</div>
+                                <h3 class="timeline-title">蔡伦改进造纸术</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/papermaking.jpg') }}" alt="造纸术"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    蔡伦改进造纸工艺，以树皮、麻头、破布等为原料制成"蔡侯纸"，大大降低了造纸成本，推动了文化传播与知识记录。这项发明后来传播到世界各地，对人类文明发展产生深远影响。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 张衡地动仪 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">132年</div>
+                                <h3 class="timeline-title">张衡发明地动仪</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/seismograph.jpg') }}" alt="地动仪"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    张衡发明的地动仪是世界上最早的地震检测仪器，能够准确判断地震发生的方向。这一发明比西方同类仪器早1700多年，展现了东汉时期的精密机械技术水平。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 火药发现 -->
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <div class="timeline-date">3世纪</div>
+                                <h3 class="timeline-title">火药的发现与早期应用</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/gunpowder.jpg') }}" alt="火药"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    道士在炼丹过程中意外发现硝石、硫磺与木炭混合物的爆炸特性，开启了火药的发展史。三国时期马钧已利用火药制作爆竹，为后世火药军事应用奠定基础。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 雕版印刷 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">7世纪</div>
+                                <h3 class="timeline-title">雕版印刷术普及</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/woodblock.jpg') }}" alt="雕版印刷"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    唐代雕版印刷技术得到广泛应用，敦煌出土的《金刚经》是现存最早的雕版印刷品。这项技术大大提高了书籍的生产效率，推动了文化的传播与保存。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 僧一行测量子午线 -->
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <div class="timeline-date">724年</div>
+                                <h3 class="timeline-title">僧一行测量子午线</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/meridian.jpg') }}" alt="子午线测量"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    唐代天文学家僧一行首次通过实地测量计算地球子午线长度，这标志着中国古代天文学从定性观测迈向定量研究的重要转折点。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 活字印刷 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">1041年</div>
+                                <h3 class="timeline-title">毕昇发明活字印刷</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/movabletype.jpg') }}"
+                                    alt="活字印刷" class="timeline-image">
+                                <p class="timeline-description">
+                                    北宋毕昇发明泥活字印刷术，开创了活字印刷的先河。这项发明比欧洲古腾堡活字印刷术早400多年，极大地提高了印刷效率和灵活性。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 指南针航海 -->
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <div class="timeline-date">11世纪</div>
+                                <h3 class="timeline-title">指南针用于航海</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/compass.jpg') }}" alt="指南针"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    北宋时期，指南针开始在航海中得到广泛应用，沈括在《梦溪笔谈》中详细记录了磁针指向的原理。这一技术后来传入欧洲，对全球航海事业发展产生重大影响。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 火药武器 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">13世纪</div>
+                                <h3 class="timeline-title">火药武器的成熟</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/firearm.jpg') }}" alt="火药武器"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    南宋时期，火药武器发展成熟，出现了突火枪、震天雷等先进火器。这些技术经蒙古西征传入欧洲，彻底改变了世界军事发展史。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 郭守敬历法 -->
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <div class="timeline-date">13世纪</div>
+                                <h3 class="timeline-title">郭守敬改革历法</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/calendar.jpg') }}" alt="授时历"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    元代天文学家郭守敬创制简仪、仰仪等精密天文仪器，编制《授时历》，其准确度超越当时世界水平，领先欧洲300多年。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 本草纲目 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">1578年</div>
+                                <h3 class="timeline-title">《本草纲目》问世</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/bencao.jpg') }}" alt="本草纲目"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    明代医学家李时珍历时27年编撰《本草纲目》，收录药物1892种，建立了科学的药物分类体系，被誉为东方医学百科全书。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 天工开物 -->
+                        <div class="timeline-item right">
+                            <div class="timeline-content">
+                                <div class="timeline-date">1637年</div>
+                                <h3 class="timeline-title">《天工开物》出版</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/tiangong.jpg') }}" alt="天工开物"
+                                    class="timeline-image">
+                                <p class="timeline-description">
+                                    明末科学家宋应星编著《天工开物》，系统总结了中国古代农业和手工业技术，涵盖冶铁、制盐、纺织等18个领域，被称为"中国17世纪的工艺百科全书"。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 梅文鼎数学 -->
+                        <div class="timeline-item left">
+                            <div class="timeline-content">
+                                <div class="timeline-date">17世纪</div>
+                                <h3 class="timeline-title">梅文鼎数学研究</h3>
+                                <img src="{{ url_for('static', filename='images/timeline/mathematics.jpg') }}"
+                                    alt="梅氏数学" class="timeline-image">
+                                <p class="timeline-description">
+                                    清初数学家梅文鼎系统整理中国古代数学成就，在三角学、天文算法等方面做出重要贡献，并融合中西数学思想，推动了中国数学的发展。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2024</strong> All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
