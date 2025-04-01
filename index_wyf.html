@@ -497,6 +497,124 @@
             font-size: 0.9em;
             line-height: 1.5;
         }
+
+        /* 添加图表样式 */
+        .chart-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
+        }
+
+        .chart-container h4 {
+            color: var(--text-brown);
+            font-size: 1.1em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(154, 75, 44, 0.2);
+        }
+
+        /* 图表提示框样式 */
+        .echarts-tooltip {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(154, 75, 44, 0.2) !important;
+            border-radius: 4px !important;
+            padding: 10px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+            font-family: "ZCOOL XiaoWei", serif !important;
+        }
+
+        /* 在历史人物画像标题下方添加轮播图 */
+        .scientist-carousel {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 80px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+            width: 500%;
+            /* 5个项目，每个20% */
+        }
+
+        .carousel-item {
+            flex: 0 0 20%;
+            /* 每个项目占20%宽度 */
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+        }
+
+        .scientist-portrait {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+            border: 2px solid #9A4B2C;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        .scientist-portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scientist-brief {
+            flex-grow: 1;
+        }
+
+        .scientist-brief h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            color: #9A4B2C;
+        }
+
+        .scientist-brief p {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .carousel-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 0 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .carousel-dot.active {
+            background-color: #9A4B2C;
+        }
     </style>
 </head>
 
@@ -532,12 +650,85 @@
         <!-- 左侧面板 -->
         <div class="left-panel">
             <h3>历史人物画像</h3>
-            <div class="scientist-card">
-                <img src="path/to/scientist1.jpg" alt="科学家">
-                <div>
-                    <h4>张衡</h4>
-                    <p>发明地动仪</p>
+
+            <!-- 轮播图放在最上方 -->
+            <div class="scientist-carousel">
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <!-- 轮播项 -->
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/zhang_heng.jpg" alt="张衡"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>张衡 (78-139)</h4>
+                                <p>东汉天文学家，发明地动仪，著《灵宪》</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/shen_kuo.jpg" alt="沈括"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>沈括 (1031-1095)</h4>
+                                <p>北宋科学家，著《梦溪笔谈》，多领域贡献</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/li_shizhen.jpg" alt="李时珍"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>李时珍 (1518-1593)</h4>
+                                <p>明代医学家，著《本草纲目》，收录药物1892种</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/zu_chongzhi.jpg" alt="祖冲之"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>祖冲之 (429-500)</h4>
+                                <p>南北朝数学家，圆周率精确至小数点后7位</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/song_yingxing.jpg" alt="宋应星"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>宋应星 (1587-1666)</h4>
+                                <p>明代科学家，著《天工开物》，中国古代"工艺百科全书"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 轮播控制按钮 -->
+                    <div class="carousel-nav">
+                        <span class="carousel-dot active" data-index="0"></span>
+                        <span class="carousel-dot" data-index="1"></span>
+                        <span class="carousel-dot" data-index="2"></span>
+                        <span class="carousel-dot" data-index="3"></span>
+                        <span class="carousel-dot" data-index="4"></span>
+                    </div>
                 </div>
+            </div>
+
+            <!-- 领域分布图表 -->
+            <div class="chart-container">
+                <h4>领域分布</h4>
+                <div id="field-chart" style="width: 100%; height: 200px;"></div>
+            </div>
+
+            <!-- 朝代-地区分布热力图 -->
+            <div class="chart-container">
+                <h4>朝代-地区分布</h4>
+                <div id="region-chart" style="width: 100%; height: 220px;"></div>
             </div>
         </div>
 
@@ -587,8 +778,7 @@
     </div>
 
     <!-- 引入必要的JavaScript库 -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
     <script>
         // 这里将添加地图、时间轴、3D效果等的具体实现代码
         // 初始化函数
@@ -718,25 +908,26 @@
 
             // 加载行政区划插件
             map.plugin('AMap.DistrictLayer', function () {
-                // 创建省份图层，确保包含台湾省(710000)
+                // 创建省份图层，确保包含台湾省(710000)、香港特别行政区(810000)和澳门特别行政区(820000)
                 var provinceLayer = new AMap.DistrictLayer.Province({
                     zIndex: 10,
                     adcode: [110000, 120000, 130000, 140000, 150000, 210000, 220000, 230000,
                         310000, 320000, 330000, 340000, 350000, 360000, 370000, 410000,
                         420000, 430000, 440000, 450000, 460000, 500000, 510000, 520000,
-                        530000, 540000, 610000, 620000, 630000, 640000, 650000, 710000],
+                        530000, 540000, 610000, 620000, 630000, 640000, 650000, 710000,
+                        810000, 820000],
                     depth: 2,
                     styles: {
                         'fill': function (properties) {
-                            // 台湾省使用稍微突出的颜色
-                            if (properties.adcode === 710000) {
+                            // 台湾、香港、澳门使用稍微突出的颜色
+                            if (properties.adcode === 710000 || properties.adcode === 810000 || properties.adcode === 820000) {
                                 return '#2E4E7E30'; // 稍微不透明一些
                             }
                             return '#2E4E7E20'; // 其他省份
                         },
                         'stroke': function (properties) {
-                            // 台湾省边界线稍微加粗
-                            if (properties.adcode === 710000) {
+                            // 台湾、香港、澳门边界线稍微加粗
+                            if (properties.adcode === 710000 || properties.adcode === 810000 || properties.adcode === 820000) {
                                 return {
                                     color: '#2E4E7E',
                                     width: 1.5,
@@ -762,7 +953,7 @@
                 [135, 53]  // 东北角经纬度
             ));
 
-            // 定义古代科技成就地点，添加台湾相关成就
+            // 定义古代科技成就地点，添加台湾、香港、澳门相关成就
             var sciencePoints = [
                 { name: '洛阳', location: [112.454, 34.618], achievement: '东汉蔡伦改进造纸术', year: '公元105年' },
                 { name: '西安', location: [108.939, 34.343], achievement: '张衡发明地动仪', year: '公元132年' },
@@ -770,7 +961,9 @@
                 { name: '杭州', location: [120.155, 30.274], achievement: '沈括《梦溪笔谈》', year: '公元1088年' },
                 { name: '南京', location: [118.796, 32.059], achievement: '郑和下西洋', year: '公元1405年' },
                 { name: '苏州', location: [120.619, 31.299], achievement: '宋应星《天工开物》', year: '公元1637年' },
-                { name: '台北', location: [121.520, 25.030], achievement: '台湾古代农业技术', year: '明清时期' }
+                { name: '台北', location: [121.520, 25.030], achievement: '台湾古代农业技术', year: '明清时期' },
+                { name: '香港', location: [114.173, 22.320], achievement: '古代海上贸易中转站', year: '宋元明清时期' },
+                { name: '澳门', location: [113.549, 22.198], achievement: '中西文化交流门户', year: '明清时期' }
             ];
 
             // 添加标记点
@@ -819,6 +1012,403 @@
 
         // 页面加载完成后初始化地图
         document.addEventListener('DOMContentLoaded', initMap);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // 初始化领域分布图表
+            initFieldChart();
+
+            // 初始化地区分布热力图
+            initRegionChart();
+        });
+
+        // 领域分布环状图 - 精致版（无外部标注）
+        function initFieldChart() {
+            var chartDom = document.getElementById('field-chart');
+            var myChart = echarts.init(chartDom);
+
+            // 领域数据
+            var data = [
+                {
+                    value: 25,
+                    name: '天文学',
+                    itemStyle: { color: '#2E4E7E' },
+                    selected: true
+                },
+                {
+                    value: 20,
+                    name: '医学',
+                    itemStyle: { color: '#9A4B2C' }
+                },
+                {
+                    value: 18,
+                    name: '农学',
+                    itemStyle: { color: '#5D8B3E' }
+                },
+                {
+                    value: 15,
+                    name: '数学',
+                    itemStyle: { color: '#A87C4F' }
+                },
+                {
+                    value: 12,
+                    name: '工程学',
+                    itemStyle: { color: '#4C6473' }
+                },
+                {
+                    value: 10,
+                    name: '其他',
+                    itemStyle: { color: '#8E8C7D' }
+                }
+            ];
+
+            // 代表性人物
+            var representatives = {
+                '天文学': '张衡、沈括',
+                '医学': '李时珍、华佗',
+                '农学': '贾思勰、徐光启',
+                '数学': '祖冲之、刘徽',
+                '工程学': '李冰、郭守敬',
+                '其他': '宋应星、徐霞客'
+            };
+
+            // 代表性成就
+            var achievements = {
+                '天文学': '浑天仪、地动仪、《梦溪笔谈》天文篇',
+                '医学': '《本草纲目》、麻沸散、《伤寒杂病论》',
+                '农学': '《齐民要术》、《农政全书》',
+                '数学': '圆周率计算、《九章算术注》',
+                '工程学': '都江堰、简仪、指南针',
+                '其他': '《天工开物》、《徐霞客游记》'
+            };
+
+            // 图表配置
+            var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function (params) {
+                        return '<div style="font-weight:bold;font-size:14px;margin-bottom:5px;color:' +
+                            params.color + '">' + params.name + '</div>' +
+                            '<div style="margin:3px 0">人物数量: <span style="float:right;font-weight:bold">' +
+                            params.value + '</span></div>' +
+                            '<div style="margin:3px 0">占比: <span style="float:right;font-weight:bold">' +
+                            params.percent + '%</span></div>' +
+                            '<div style="margin:3px 0">代表人物: <span style="float:right">' +
+                            representatives[params.name] + '</span></div>' +
+                            '<div style="margin:3px 0">代表成就: <span style="float:right">' +
+                            achievements[params.name] + '</span></div>';
+                    },
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderColor: '#ccc',
+                    borderWidth: 1,
+                    padding: 10,
+                    textStyle: {
+                        color: '#333'
+                    },
+                    extraCssText: 'box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);'
+                },
+                legend: {
+                    orient: 'vertical',
+                    right: '5%',
+                    top: 'center',
+                    itemWidth: 10,
+                    itemHeight: 10,
+                    itemGap: 10,
+                    textStyle: {
+                        fontSize: 12,
+                        color: '#333'
+                    },
+                    formatter: function (name) {
+                        // 查找对应数据项
+                        var item = data.find(function (item) {
+                            return item.name === name;
+                        });
+                        // 计算百分比
+                        var total = data.reduce(function (sum, item) {
+                            return sum + item.value;
+                        }, 0);
+                        var percent = ((item.value / total) * 100).toFixed(1);
+
+                        return name + ' ' + percent + '%';
+                    }
+                },
+                series: [
+                    {
+                        name: '领域分布',
+                        type: 'pie',
+                        radius: ['45%', '70%'],
+                        center: ['40%', '50%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderColor: '#fff',
+                            borderWidth: 2,
+                            borderRadius: 5,
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.2)'
+                        },
+                        label: {
+                            show: false  // 不显示外部标签
+                        },
+                        emphasis: {
+                            label: {
+                                show: false  // 高亮时也不显示标签
+                            },
+                            itemStyle: {
+                                shadowBlur: 20,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+                        labelLine: {
+                            show: false  // 不显示标签连接线
+                        },
+                        data: data,
+                        animationType: 'scale',
+                        animationEasing: 'elasticOut',
+                        animationDelay: function (idx) {
+                            return Math.random() * 200;
+                        }
+                    }
+                ]
+            };
+
+            // 设置图表选项并渲染
+            myChart.setOption(option);
+
+            // 添加点击事件
+            myChart.on('click', function (params) {
+                // 找到当前点击的项
+                var clickedItem = data.find(function (item) {
+                    return item.name === params.name;
+                });
+
+                // 更新所有项的选中状态
+                data.forEach(function (item) {
+                    item.selected = (item.name === clickedItem.name);
+                });
+
+                // 更新图表
+                myChart.setOption({
+                    series: [{
+                        data: data
+                    }]
+                });
+            });
+
+            // 响应窗口大小变化
+            window.addEventListener('resize', function () {
+                myChart.resize();
+            });
+        }
+
+        // 地区分布热力图 - 朝代与地区的交叉分析
+        function initRegionChart() {
+            var chartDom = document.getElementById('region-chart');
+            var myChart = echarts.init(chartDom);
+
+            // 朝代数据
+            var dynasties = ['先秦', '秦汉', '魏晋南北朝', '隋唐', '宋元', '明清'];
+
+            // 地区数据 - 移除广州和成都
+            var regions = ['长安/西安', '洛阳', '开封', '杭州', '南京', '苏州'];
+
+            // 热力图数据 [朝代索引, 地区索引, 数值] - 移除成都相关数据
+            var data = [
+                [0, 0, 15], [0, 1, 20], [0, 2, 5], [0, 3, 3], [0, 4, 2], [0, 5, 1],
+                [1, 0, 30], [1, 1, 25], [1, 2, 10], [1, 3, 5], [1, 4, 8], [1, 5, 6],
+                [2, 0, 20], [2, 1, 30], [2, 2, 15], [2, 3, 8], [2, 4, 10], [2, 5, 5],
+                [3, 0, 25], [3, 1, 20], [3, 2, 30], [3, 3, 15], [3, 4, 12], [3, 5, 10],
+                [4, 0, 15], [4, 1, 10], [4, 2, 25], [4, 3, 30], [4, 4, 20], [4, 5, 15],
+                [5, 0, 10], [5, 1, 5], [5, 2, 15], [5, 3, 20], [5, 4, 30], [5, 5, 25]
+            ];
+
+            // 代表性科学家数据 - 移除成都相关科学家
+            var scientists = {
+                '先秦-长安/西安': '墨子、公输班',
+                '先秦-洛阳': '管仲、商鞅',
+                '秦汉-长安/西安': '张衡、张仲景',
+                '秦汉-洛阳': '蔡伦、华佗',
+                '魏晋南北朝-洛阳': '祖冲之、刘徽',
+                '隋唐-长安/西安': '李淳风、一行',
+                '宋元-开封': '沈括、毕昇',
+                '宋元-杭州': '沈括、朱熹',
+                '明清-南京': '徐光启、宋应星',
+                '明清-苏州': '宋应星、梅文鼎'
+            };
+
+            // 最大值计算
+            var maxValue = Math.max.apply(
+                null,
+                data.map(function (item) {
+                    return item[2];
+                })
+            );
+
+            // 图表配置
+            var option = {
+                tooltip: {
+                    position: 'top',
+                    formatter: function (params) {
+                        var dynasty = dynasties[params.data[0]];
+                        var region = regions[params.data[1]];
+                        var key = dynasty + '-' + region;
+                        var scientistsText = scientists[key] || '暂无记录';
+
+                        return dynasty + ' · ' + region + '<br/>' +
+                            '科学家数量: ' + params.data[2] + '<br/>' +
+                            '代表人物: ' + scientistsText;
+                    },
+                    className: 'echarts-tooltip'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    top: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: regions,
+                    splitArea: {
+                        show: true
+                    },
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 45,
+                        fontSize: 10
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#9A4B2C'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: dynasties,
+                    splitArea: {
+                        show: true
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#9A4B2C'
+                        }
+                    }
+                },
+                visualMap: {
+                    min: 0,
+                    max: maxValue,
+                    calculable: true,
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '0%',
+                    inRange: {
+                        color: ['#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']
+                    },
+                    textStyle: {
+                        color: '#333'
+                    }
+                },
+                series: [{
+                    name: '科学家分布',
+                    type: 'heatmap',
+                    data: data,
+                    label: {
+                        show: true,
+                        color: '#fff',
+                        fontSize: 10
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+
+            // 设置图表选项并渲染
+            myChart.setOption(option);
+
+            // 响应窗口大小变化
+            window.addEventListener('resize', function () {
+                myChart.resize();
+            });
+        }
+
+        // 添加轮播图脚本
+        document.addEventListener('DOMContentLoaded', function () {
+            initScientistCarousel();
+        });
+
+        function initScientistCarousel() {
+            console.log("初始化轮播图");
+            const track = document.querySelector('.carousel-track');
+            const dots = document.querySelectorAll('.carousel-dot');
+            let currentIndex = 0;
+            let interval;
+
+            // 直接设置固定宽度和位置
+            track.style.width = '500%'; // 5个项目，每个20%
+
+            // 移动到指定索引
+            function moveToIndex(index) {
+                if (index < 0) index = 4;
+                if (index >= 5) index = 0;
+
+                currentIndex = index;
+                track.style.transform = `translateX(-${currentIndex * 20}%)`;
+
+                // 更新指示点
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
+                });
+            }
+
+            // 自动轮播
+            function startAutoPlay() {
+                interval = setInterval(() => {
+                    moveToIndex(currentIndex + 1);
+                }, 5000); // 5秒切换一次
+            }
+
+            // 停止自动轮播
+            function stopAutoPlay() {
+                clearInterval(interval);
+            }
+
+            // 初始化
+            moveToIndex(0); // 确保从第一个开始
+            startAutoPlay();
+
+            // 点击指示点切换
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => {
+                    moveToIndex(i);
+                    stopAutoPlay();
+                    startAutoPlay();
+                });
+            });
+
+            // 触摸事件
+            let startX, moveX;
+            track.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                stopAutoPlay();
+            });
+
+            track.addEventListener('touchmove', (e) => {
+                moveX = e.touches[0].clientX;
+            });
+
+            track.addEventListener('touchend', () => {
+                if (startX - moveX > 50) {
+                    moveToIndex(currentIndex + 1);
+                } else if (moveX - startX > 50) {
+                    moveToIndex(currentIndex - 1);
+                }
+                startAutoPlay();
+            });
+        }
     </script>
 </body>
 
