@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国古代自然科学主题信息可视化大屏</title>
+
+    <!-- 引入所需字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 全局配色变量 */
+        :root {
+            --primary-blue: #2E4E7E;
+            /* 靛青主色 */
+            --secondary-blue: #2b4570;
+            /* 深蓝辅色 */
+            --accent-gold: #D4AF37;
+            /* 点缀金色 */
+            --bg-cream: #F5F1E6;
+            /* 米色背景 */
+            --text-brown: #9A4B2C;
+            /* 棕色文字 */
+            --shadow-color: rgba(46, 78, 126, 0.15);
+            /* 阴影色 */
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-brown);
+            font-family: 'Noto Serif SC', serif;
+            overflow: hidden;
+            background-image:
+                linear-gradient(rgba(245, 241, 230, 0.97), rgba(245, 241, 230, 0.97)),
+                url('path/to/chinese-pattern.png');
+            padding-top: 60px;
+            /* 为固定导航栏留出空间 */
+        }
+
+        /* 调整容器布局 */
+        .container {
+            display: grid;
+            grid-template-columns: 27% 46% 27%;
+            /* 按照 28:44:28 的比例分配 */
+            gap: 20px;
+            padding: 20px;
+            max-width: 100%;
+            margin: 0 auto;
+            height: calc(100vh - 60px);
+            /* 减去导航栏高度 */
+        }
+
+        /* 左侧面板 */
+        .left-panel {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
+        }
+
+        /* 中间面板 */
+        .center-panel {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 右侧面板 */
+        .right-panel {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 卡片样式统一 */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
+            border: 1px solid rgba(46, 78, 126, 0.1);
+            height: 100%;
+        }
+
+        /* 调整统计数字展示区样式 */
+        .stats-header {
+            width: 100%;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px 30px;
+            /* 减小上下内边距 */
+            box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 地图容器 */
+        .map-container {
+            flex: 1;
+            min-height: 400px;
+            /* 增加最小高度 */
+        }
+
+        /* 时间轴容器 */
+        .timeline-container {
+            flex: 1;
+            min-height: 200px;
+        }
+
+        /* 确保内容不会溢出 */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* 响应式布局调整 */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 250px 1fr 250px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+        }
+
+        /* 优化标题样式 */
+        .main-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #333333;
+            margin: 20px 0 30px;
+            font-family: "汉仪尚巍手书", "Noto Serif SC", serif;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-title::before,
+        .main-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #9A4B2C, transparent);
+        }
+
+        .main-title::before {
+            left: -120px;
+        }
+
+        .main-title::after {
+            right: -120px;
+        }
+
+        /* 优化人物卡片 */
+        .scientist-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(245, 241, 230, 0.7);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(154, 75, 44, 0.1);
+        }
+
+        .scientist-card:hover {
+            transform: translateX(5px);
+            background: rgba(245, 241, 230, 0.9);
+            border-color: rgba(154, 75, 44, 0.3);
+        }
+
+        .scientist-card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-right: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 3px solid #fff;
+        }
+
+        /* 卡片标题样式 */
+        .card h3 {
+            color: #2E4E7E;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(154, 75, 44, 0.2);
+            position: relative;
+        }
+
+        .card h3::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: #9A4B2C;
+        }
+
+        /* 添加古典装饰元素 */
+        .corner-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #9A4B2C;
+            opacity: 0.3;
+        }
+
+        .corner-decoration.top-left {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration.top-right {
+            top: 10px;
+            right: 10px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration.bottom-left {
+            bottom: 10px;
+            left: 10px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner-decoration.bottom-right {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* 添加水墨效果 */
+        .ink-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url('path/to/ink-texture.png');
+            mix-blend-mode: multiply;
+        }
+
+        /* 优化顶部导航栏样式 */
+        .top-nav {
+            width: 100%;
+            height: 60px;
+            /* 使用更优雅的渐变背景 */
+            background: linear-gradient(to right,
+                    #2E4E7E,
+                    /* 靛青色 */
+                    #2b4570,
+                    /* 深蓝色 */
+                    #2E4E7E
+                    /* 靛青色 */
+                );
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-center {
+            flex: 1;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #F5F1E6;
+            /* 米色文字 */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #D4AF37;
+            /* 金色下划线 */
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-item:hover::before {
+            width: 80%;
+        }
+
+        .home-icon {
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .datetime {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* 添加毛玻璃效果 */
+        .top-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+
+        .stats-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            /* 减小数字和文字之间的间距 */
+            padding: 0 20px;
+        }
+
+        .stats-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -1px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 70%;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(46, 78, 126, 0.2), transparent);
+        }
+
+        .stats-num {
+            font-family: "ZCOOL XiaoWei", serif;
+            font-size: 2.2em;
+            /* 稍微减小字号 */
+            color: var(--primary-blue);
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(46, 78, 126, 0.1);
+        }
+
+        .stats-text {
+            font-size: 0.9em;
+            /* 稍微减小说明文字大小 */
+            color: var(--text-brown);
+            opacity: 0.9;
+        }
+
+        /* 添加装饰角 */
+        .stats-header::before,
+        .stats-header::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid var(--primary-blue);
+            opacity: 0.3;
+        }
+
+        .stats-header::before {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .stats-header::after {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* 数字滚动动画 */
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-num {
+            animation: countUp 1.5s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 背景纹理 -->
+    <div class="texture-overlay"></div>
+
+    <!-- 在 body 最开始添加导航栏 -->
+    <nav class="top-nav">
+        <!-- 左侧导航 -->
+        <div class="nav-left">
+            <a href="/" class="nav-item home-icon">
+                <i class="fas fa-home"></i> 首页
+            </a>
+            <a href="#" class="nav-item">灵板AI</a>
+            <a href="#" class="nav-item">坤舆智库</a>
+        </div>
+
+        <!-- 中间标题 -->
+        <div class="nav-center">
+            千载格物：中国古代自然科技的可视化探索
+        </div>
+
+        <!-- 右侧导航 -->
+        <div class="nav-right">
+            <a href="#" class="nav-item">专题探索</a>
+            <a href="#" class="nav-item">文明解码</a>
+            <span class="datetime">2025/3/31 22:31:48</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 左侧面板 -->
+        <div class="left-panel">
+            <h3>历史人物画像</h3>
+            <div class="scientist-card">
+                <img src="path/to/scientist1.jpg" alt="科学家">
+                <div>
+                    <h4>张衡</h4>
+                    <p>发明地动仪</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间面板 -->
+        <div class="center-panel">
+            <div class="stats-header">
+                <div class="stats-item">
+                    <span class="stats-num">358</span>
+                    <span class="stats-text">重要成就</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-num">1452</span>
+                    <span class="stats-text">历史人物</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-num">532</span>
+                    <span class="stats-text">典籍著作</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-num">52</span>
+                    <span class="stats-text">研究领域</span>
+                </div>
+            </div>
+
+            <!-- 地图 -->
+            <div class="card map-container">
+                <h3>九州科技发展地图</h3>
+            </div>
+
+            <!-- 时间轴 -->
+            <div class="card timeline-container">
+                <h3>科技成就时间轴</h3>
+            </div>
+        </div>
+
+        <!-- 右侧面板 -->
+        <div class="right-panel">
+            <div class="card">
+                <h3>典籍3D翻页效果</h3>
+            </div>
+            <div class="card">
+                <h3>科技贡献统计</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入必要的JavaScript库 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script>
+        // 这里将添加地图、时间轴、3D效果等的具体实现代码
+        // 初始化函数
+        function init() {
+            // 初始化地图
+            initMap();
+            // 初始化时间轴
+            initTimeline();
+            // 初始化3D书籍效果
+            init3DBooks();
+            // 初始化统计图表
+            initStats();
+        }
+
+        // 页面加载完成后执行初始化
+        window.addEventListener('load', init);
+
+        // 添加页面载入动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.8s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+
+        // 添加鼠标移动视差效果
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.card');
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardX = (rect.left + rect.width / 2) / window.innerWidth - 0.5;
+                const cardY = (rect.top + rect.height / 2) / window.innerHeight - 0.5;
+
+                const angle = Math.atan2(mouseY - cardY, mouseX - cardX);
+                const distance = Math.sqrt(Math.pow(mouseX - cardX, 2) + Math.pow(mouseY - cardY, 2));
+
+                card.style.transform = `
+                    perspective(1000px)
+                    rotateX(${mouseY * 2}deg)
+                    rotateY(${mouseX * -2}deg)
+                    translateZ(0)
+                `;
+            });
+        });
+
+        /* 更新日期时间的JavaScript */
+        function updateDateTime() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).replace(/\//g, '/');
+            const timeStr = now.toLocaleTimeString('zh-CN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            document.querySelector('.datetime').textContent =
+                `${dateStr} ${timeStr}`;
+        }
+
+        // 初始更新
+        updateDateTime();
+        // 每秒更新一次
+        setInterval(updateDateTime, 1000);
+
+        // 数字滚动动画
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stats-num');
+            numbers.forEach(number => {
+                const targetNumber = parseInt(number.innerText);
+                let currentNumber = 0;
+                const duration = 1500;
+                const steps = 60;
+                const increment = targetNumber / steps;
+                const interval = duration / steps;
+
+                const counter = setInterval(() => {
+                    currentNumber += increment;
+                    if (currentNumber >= targetNumber) {
+                        number.innerText = targetNumber;
+                        clearInterval(counter);
+                    } else {
+                        number.innerText = Math.floor(currentNumber);
+                    }
+                }, interval);
+            });
+        }
+
+        // 页面加载时启动动画
+        document.addEventListener('DOMContentLoaded', animateNumbers);
+    </script>
+</body>
+
+</html>
