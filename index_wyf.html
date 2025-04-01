@@ -9,6 +9,9 @@
     <!-- 引入所需字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
+    <script src="https://webapi.amap.com/ui/1.1/main.js"></script>
+
     <style>
         /* 全局配色变量 */
         :root {
@@ -63,9 +66,12 @@
         /* 中间面板 */
         .center-panel {
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            display: grid;
+            grid-template-rows: auto 57% 32%;
+            /* 统计区自适应高度，地图60%，时间轴35% */
+            gap: 5px;
+            /* 减小间距 */
+            height: 100%;
         }
 
         /* 右侧面板 */
@@ -80,7 +86,8 @@
         .card {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
-            padding: 20px;
+            padding: 15px 20px;
+            /* 减小整体内边距 */
             box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
             border: 1px solid rgba(46, 78, 126, 0.1);
             height: 100%;
@@ -190,14 +197,19 @@
 
         /* 卡片标题样式 */
         .card h3 {
-            color: #2E4E7E;
+            color: var(--primary-blue);
             font-size: 1.3em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            margin-top: 0;
+            /* 移除顶部外边距 */
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            padding-top: 0;
+            /* 移除顶部内边距 */
             border-bottom: 1px solid rgba(154, 75, 44, 0.2);
             position: relative;
         }
 
+        /* 为标题添加装饰线 */
         .card h3::after {
             content: '';
             position: absolute;
@@ -441,6 +453,50 @@
         .stats-num {
             animation: countUp 1.5s ease-out forwards;
         }
+
+        /* 地图容器样式 */
+        #map-container {
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 审图号样式 */
+        .map-copyright {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.7em;
+            color: rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2px 5px;
+            border-radius: 2px;
+            z-index: 100;
+        }
+
+        /* 自定义地图信息窗口样式 */
+        .custom-info-window {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(154, 75, 44, 0.2);
+            max-width: 280px;
+        }
+
+        .info-title {
+            color: #2E4E7E;
+            font-weight: bold;
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(154, 75, 44, 0.2);
+            padding-bottom: 5px;
+        }
+
+        .info-content {
+            color: #333;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
     </style>
 </head>
 
@@ -455,7 +511,7 @@
             <a href="/" class="nav-item home-icon">
                 <i class="fas fa-home"></i> 首页
             </a>
-            <a href="#" class="nav-item">灵板AI</a>
+            <a href="#" class="nav-item">灵枢AI</a>
             <a href="#" class="nav-item">坤舆智库</a>
         </div>
 
@@ -509,6 +565,8 @@
             <!-- 地图 -->
             <div class="card map-container">
                 <h3>九州科技发展地图</h3>
+                <div id="map-container" style="width: 100%; height: calc(100% - 40px);"></div>
+                <div class="map-copyright">GS(2023)3377号 - 甲测资字1100471</div>
             </div>
 
             <!-- 时间轴 -->
@@ -633,6 +691,134 @@
 
         // 页面加载时启动动画
         document.addEventListener('DOMContentLoaded', animateNumbers);
+
+        // 地图初始化函数
+        function initMap() {
+            // 创建地图实例
+            var map = new AMap.Map('map-container', {
+                zoom: 5,
+                center: [108.953, 34.265], // 中国中心位置
+                viewMode: '2D',
+                mapStyle: 'amap://styles/vintage', // 使用vintage风格
+                resizeEnable: true
+            });
+
+            // 添加地图控件
+            map.plugin(['AMap.ToolBar', 'AMap.Scale'], function () {
+                // 添加工具条
+                var toolBar = new AMap.ToolBar({
+                    position: 'RB'
+                });
+                map.addControl(toolBar);
+
+                // 添加比例尺
+                var scale = new AMap.Scale();
+                map.addControl(scale);
+            });
+
+            // 加载行政区划插件
+            map.plugin('AMap.DistrictLayer', function () {
+                // 创建省份图层，确保包含台湾省(710000)
+                var provinceLayer = new AMap.DistrictLayer.Province({
+                    zIndex: 10,
+                    adcode: [110000, 120000, 130000, 140000, 150000, 210000, 220000, 230000,
+                        310000, 320000, 330000, 340000, 350000, 360000, 370000, 410000,
+                        420000, 430000, 440000, 450000, 460000, 500000, 510000, 520000,
+                        530000, 540000, 610000, 620000, 630000, 640000, 650000, 710000],
+                    depth: 2,
+                    styles: {
+                        'fill': function (properties) {
+                            // 台湾省使用稍微突出的颜色
+                            if (properties.adcode === 710000) {
+                                return '#2E4E7E30'; // 稍微不透明一些
+                            }
+                            return '#2E4E7E20'; // 其他省份
+                        },
+                        'stroke': function (properties) {
+                            // 台湾省边界线稍微加粗
+                            if (properties.adcode === 710000) {
+                                return {
+                                    color: '#2E4E7E',
+                                    width: 1.5,
+                                    opacity: 0.7
+                                };
+                            }
+                            return {
+                                color: '#2E4E7E', // 边界线颜色
+                                width: 1,         // 边界线宽度
+                                opacity: 0.5      // 边界线透明度
+                            };
+                        }
+                    }
+                });
+
+                // 添加省份图层到地图
+                provinceLayer.setMap(map);
+            });
+
+            // 确保地图显示完整的中国领土
+            map.setLimitBounds(new AMap.Bounds(
+                [73, 18], // 西南角经纬度
+                [135, 53]  // 东北角经纬度
+            ));
+
+            // 定义古代科技成就地点，添加台湾相关成就
+            var sciencePoints = [
+                { name: '洛阳', location: [112.454, 34.618], achievement: '东汉蔡伦改进造纸术', year: '公元105年' },
+                { name: '西安', location: [108.939, 34.343], achievement: '张衡发明地动仪', year: '公元132年' },
+                { name: '开封', location: [114.307, 34.797], achievement: '北宋活字印刷术', year: '公元1041年' },
+                { name: '杭州', location: [120.155, 30.274], achievement: '沈括《梦溪笔谈》', year: '公元1088年' },
+                { name: '南京', location: [118.796, 32.059], achievement: '郑和下西洋', year: '公元1405年' },
+                { name: '苏州', location: [120.619, 31.299], achievement: '宋应星《天工开物》', year: '公元1637年' },
+                { name: '台北', location: [121.520, 25.030], achievement: '台湾古代农业技术', year: '明清时期' }
+            ];
+
+            // 添加标记点
+            sciencePoints.forEach(function (point) {
+                var marker = new AMap.Marker({
+                    position: point.location,
+                    title: point.name,
+                    // 使用内置图标，不需要外部图片
+                    icon: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+                    animation: 'AMAP_ANIMATION_DROP',
+                    map: map
+                });
+
+                // 创建信息窗体
+                var infoWindow = new AMap.InfoWindow({
+                    isCustom: true,  // 使用自定义窗体
+                    content: createInfoContent(point),
+                    offset: new AMap.Pixel(0, -30)
+                });
+
+                // 绑定点击事件
+                marker.on('click', function () {
+                    infoWindow.open(map, marker.getPosition());
+                });
+            });
+
+            // 创建自定义信息窗体内容
+            function createInfoContent(point) {
+                var content = document.createElement('div');
+                content.className = 'custom-info-window';
+
+                var title = document.createElement('div');
+                title.className = 'info-title';
+                title.innerHTML = point.name;
+                content.appendChild(title);
+
+                var info = document.createElement('div');
+                info.className = 'info-content';
+                info.innerHTML = '<p><b>成就：</b>' + point.achievement + '</p>' +
+                    '<p><b>年代：</b>' + point.year + '</p>';
+                content.appendChild(info);
+
+                return content;
+            }
+        }
+
+        // 页面加载完成后初始化地图
+        document.addEventListener('DOMContentLoaded', initMap);
     </script>
 </body>
 
