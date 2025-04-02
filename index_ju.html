@@ -1,0 +1,984 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>千载格物：中国古代自然科技的可视化探索</title>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/echarts.min.js"></script>
+    <script type="text/javascript" src="js/china.js"></script>
+    <script type="text/javascript" src="js/js.js"></script>
+    <style>
+        /* Vintage Style CSS */
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: #f5f5f0;
+            color: #333;
+            background-image: url('images/千里江山1.png');
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(245, 245, 240, 0.7); /* 半透明覆盖层，确保文字可读性 */
+            z-index: -1;
+        }
+        
+        .head {
+            background-color: #8B4513;
+            color: #FFEBCD;
+            padding: 15px 20px;
+            border-bottom: 3px solid #5D2906;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .head h1 {
+            font-family: 'SimSun', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+            margin: 0 20px;
+            font-size: 24px;
+            font-weight: normal;
+            text-align: center;
+            margin-left: 190px;
+        }
+        
+        .home a, .menu a {
+            color: #FFEBCD;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .home a:hover, .menu a:hover {
+            color: #FFF;
+            text-shadow: 0 0 5px rgba(255,255,255,0.7);
+        }
+        
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .menu li {
+            display: inline-block;
+            margin: 0 10px;
+            position: relative;
+        }
+        
+        /* 修改为只针对导航菜单的li */
+        /*.head .menu li:after {
+            content: "•";
+            color: #FFEBCD;
+            position: absolute;
+            right: -15px;
+        }*/
+
+        /* 确保不应用到其他元素 */
+        /*.tit:after, .boxnav li:after {
+            content: none !important;
+        }*/
+        
+        .menu li:last-child:after {
+            display: none;
+        }
+        
+        .time {
+            font-family: 'Courier New', monospace;
+            background-color: rgba(139, 69, 19, 0.7);
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #5D2906;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            margin-left: 45px;
+        }
+        
+        .mainbox {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .box {
+            background-color: #FFF8E7;
+            border: 1px solid #D2B48C;
+            margin-bottom: 20px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .box:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(210,180,140,0.1) 0%, rgba(255,255,255,0) 50%, rgba(210,180,140,0.1) 100%);
+            pointer-events: none;
+        }
+        
+        .tit {
+            background-color: #8B4513;
+            color: #FFEBCD;
+            padding: 8px 15px;
+            font-size: 16px;
+            border-bottom: 1px solid #5D2906;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .boxnav {
+            padding: 15px;
+            background-color: #FFF8E7;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        th, td {
+            border: 1px solid #D2B48C;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #8B4513;
+            color: #FFEBCD;
+            font-weight: normal;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(210, 180, 140, 0.1);
+        }
+        
+        tr:hover {
+            background-color: rgba(210, 180, 140, 0.3);
+        }
+        
+        .mapc {
+            position: relative;
+            border: 8px solid #8B4513;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+            background-color: #FFF8E7;
+        }
+        
+        .mapnav {
+            position: absolute;
+            top: 20px;
+            left: 120px;
+            z-index: 10;
+        }
+        
+        .mapnav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .mapnav li {
+            margin-bottom: 10px;
+            background-color: rgba(139, 69, 19, 0.8);
+            color: #FFEBCD;
+            padding: 8px 12px;
+            border-radius: 3px;
+            border: 1px solid #5D2906;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            font-size: 14px;
+        }
+        
+        .mapnav li div span {
+            display: block;
+            font-size: 12px;
+        }
+        
+        .mapnav li div p {
+            margin: 5px 0 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .leidanav ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .leidanav li {
+            text-align: center;
+            background-color: rgba(139, 69, 19, 0.1);
+            padding: 8px;
+            border-radius: 3px;
+            border: 1px solid #D2B48C;
+            flex: 1;
+            margin: 0 5px;
+        }
+        
+        .leidanav li span {
+            display: block;
+            font-size: 12px;
+            color: #5D2906;
+        }
+        
+        .leidanav li p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: #8B4513;
+        }
+        
+        .tit01 {
+            background-color: #8B4513;
+            color: #FFEBCD;
+            padding: 8px 15px;
+            font-size: 16px;
+            border-bottom: 1px solid #5D2906;
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* 移除所有标题左侧的黑点 */
+        .tit::before, .tit01::before {
+            content: none !important;
+        }
+
+        /* 确保列表项不显示默认的项目符号 */
+        .nav1 li, .nav2 li {
+            list-style-type: none;
+        }
+
+        /* 为确保完全覆盖所有可能的情况 */
+        .tit, .tit01 {
+            list-style-type: none;
+            display: block;
+        }
+        
+        .ftechart {
+            height: 200px;
+            background-color: #FFF8E7;
+            border: 1px solid #D2B48C;
+            padding: 10px;
+        }
+        
+        .clearfix:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        
+        .pulll_left {
+            margin: 0 5px;
+        }
+        
+        .nav1 li {
+            float: left;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        
+        .nav2 li {
+            float: left;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        
+        .ybp li {
+            float: left;
+            width: 50%;
+            height: 120px;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+        
+        /* Vintage scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #8B4513;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5D2906;
+        }
+        
+        /* 只移动"灵枢AI" */
+        .menu.menu1 ul li:first-child {
+            position: relative;
+            left: 120px;
+        }
+
+        /* 只移动"坤舆智库" */
+        .menu.menu1 ul li:last-child {
+            position: relative;
+            left: 120px;
+        }
+
+        /* 只移动"专题探索" */
+        .menu.menu2 ul li:first-child {
+            position: relative;
+            left: 45px;
+        }
+
+        /* 只移动"文明解码" */
+        .menu.menu2 ul li:last-child {
+            position: relative;
+            left: 45px;
+        }
+
+        .home a {
+            display: inline-flex;
+            align-items: center;
+        }
+        .home i {
+            position: relative;
+            top: 0px;
+            margin-left: 4px; /* 可选：增加文字和图标的间距 */
+            font-style: normal; /* 移除斜体效果 */
+            font-family: 'SimSun', serif; /* 添加与导航菜单相同的字体 */
+        }
+
+        /* 将包含"中国古代自然科学名著"和"著作统计"的盒子往左移动 */
+        .nav1 li:first-child {
+            margin-left: -25px; /* 可以根据需要调整这个负值大小 */
+        }
+
+        /* 为表格容器添加滚动功能 */
+        .box .boxnav {
+            overflow-y: auto; /* 启用垂直滚动 */
+        }
+
+        /* 特别为表格容器设置样式 */
+        .box .boxnav:has(table.table1) {
+            overflow-y: auto; /* 启用垂直滚动 */
+            max-height: 200px; /* 保持原高度限制 */
+        }
+
+        /* 美化滚动条样式，保持复古风格 */
+        .boxnav::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .boxnav::-webkit-scrollbar-track {
+            background: #FFF8E7;
+            border-radius: 5px;
+        }
+
+        .boxnav::-webkit-scrollbar-thumb {
+            background: #8B4513;
+            border-radius: 5px;
+            border: 1px solid #5D2906;
+        }
+
+        .boxnav::-webkit-scrollbar-thumb:hover {
+            background: #5D2906;
+        }
+
+        /* 控制表格中的文本换行和高度 */
+        .table1 td {
+            max-height: 40px;       /* 控制单元格最大高度 */
+            line-height: 1.2;       /* 控制行间距 */
+            white-space: normal;    /* 允许文本换行 */
+            overflow: hidden;       /* 隐藏溢出内容 */
+            text-overflow: ellipsis; /* 显示省略号 */
+            max-width: 0;           /* 强制文本截断 */
+        }
+
+        /* 让表格标题居中显示 */
+        .table1 th, .table1 td {
+            text-align: center;     /* 水平居中 */
+            vertical-align: middle; /* 垂直居中 */
+        }
+
+        .leidanav ul.clearfix {
+            padding-left: 25px; /* 将整个列表向右移动 */
+            display: flex;
+            justify-content: space-around; /* 更均匀地分布这些元素 */
+        }
+
+        /* 设置著作统计图表中的文字颜色为棕色 */
+        .ybp li text,
+        .ybp canvas text,
+        .ybp .echart-text,
+        #echart5 text, #echart6 text, #echart7 text, #echart8 text {
+            fill: #8B4513 !important;  /* 使用棕色 */
+            color: #8B4513 !important;
+        }
+
+        /* 确保图表标题和说明文本也显示为棕色 */
+        .ybp .echarts-title,
+        .ybp .echarts-legend,
+        .ybp .echarts-label {
+            color: #8B4513 !important;
+        }
+
+        .nav2 {
+            margin-left: -40px; /* 添加负左边距将四个盒子整体向左移动 */
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="head clearfix">
+        <div class="home"><a href="#"><img src="images/Home.png" width="28"> <i> 首页</i></a></div>
+        <div class="menu menu1 pulll_left">
+            <ul>
+                <li><a href="./Norstar/ai.html">灵枢AI </a></li>
+                <li><a href="./templates/index.html">坤舆智库</a></li>
+            </ul>
+        </div>
+        <h1 class="pulll_left">千载格物：中国古代自然科技的可视化探索</h1>
+        <div class="menu menu2 pulll_left">
+            <ul>
+                <li><a href="./Norstar/index.html">专题探索 </a></li>
+                <li><a href="./Terris/index.html">文明解码</a></li>
+            </ul>
+        </div>
+
+        <div class="time" id="showTime">2018/6/12 17:00:12</div>
+        <script>
+            var t = null;
+            t = setTimeout(time, 1000);//開始运行
+            function time() {
+                clearTimeout(t);//清除定时器
+                dt = new Date();
+                var y = dt.getFullYear();
+                var mt = dt.getMonth() + 1;
+                var day = dt.getDate();
+                var h = dt.getHours();//获取时
+                var m = dt.getMinutes();//获取分
+                var s = dt.getSeconds();//获取秒
+                document.getElementById("showTime").innerHTML = y + "/" + mt + "/" + day + " " + h + ":" + m + ":" + s + "";
+                t = setTimeout(time, 1000); //设定定时器，循环运行
+            }
+
+        </script>
+    </div>
+    <div class="mainbox">
+
+        <ul class="clearfix nav1">
+            <li style="width: 28%">  <!-- 从22%增加到28% -->
+                <div class="box">
+                    <div class="tit">中国古代自然科学名著</div>
+                    <div class="boxnav" style="height: 200px; overflow-y: auto;">
+                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; word-break: break-word;">
+                            <tbody>
+                                <tr>
+                                    <th>著作<br>名称</th>
+                                    <th>作者</th>
+                                    <th>年代</th>
+                                    <th>领域</th>
+                                    <th>历史<br>地位</th>
+                                </tr>
+                                <tr>
+                                    <td>本草<br>纲目</td>
+                                    <td>李时珍</td>
+                                    <td>明代</td>
+                                    <td>医药</td>
+                                    <td>东方医药巨著</td>
+                                </tr>
+                                <tr>
+                                    <td>天工<br>开物</td>
+                                    <td>宋应星</td>
+                                    <td>明代</td>
+                                    <td>工艺</td>
+                                    <td>中国科技史明珠</td>
+                                </tr>
+                                <tr>
+                                    <td>农政<br>全书</td>
+                                    <td>徐光启</td>
+                                    <td>明代</td>
+                                    <td>农学</td>
+                                    <td>农学集大成者</td>
+                                </tr>
+                                <tr>
+                                    <td>九章<br>算术</td>
+                                    <td>多人</td>
+                                    <td>汉代</td>
+                                    <td>数学</td>
+                                    <td>东方数学圭臬</td>
+                                </tr>
+                                <tr>
+                                    <td>伤寒论</td>
+                                    <td>张仲景</td>
+                                    <td>汉代</td>
+                                    <td>医学</td>
+                                    <td>医家<br>圣典</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="tit">著作统计</div>
+                    <div class="boxnav" style="height: 250px;">
+                        <ul class="ybp clearfix">
+                            <li id="echart5"></li>
+                            <li id="echart6"></li>
+                            <li id="echart7"></li>
+                            <li id="echart8"></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li style="width:44%">
+                <div class="box">
+                    <div class="boxnav mapc" style="height: 550px; position: relative">
+                        <div class="mapnav">
+                            <ul>
+                                <li>
+                                    <div><span>重要成就</span>
+                                        <p>358</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div><span>历史人物</span>
+                                        <p>1452</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div><span>典籍著作</span>
+                                        <p>532</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div><span>科技发明</span>
+                                        <p>711</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div><span>研究领域</span>
+                                        <p>52</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 替换为新的地图容器 -->
+                        <div id="map-container" style="width: 100%; height: 100%;"></div>
+                        
+                        <!-- 添加高德地图相关脚本 -->
+                        <script src="https://webapi.amap.com/maps?v=1.4.15&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
+                        <script>
+                            // 初始化地图
+                            var map = new AMap.Map('map-container', {
+                                resizeEnable: true,
+                                zoom: 5,
+                                center: [112.2, 31.1],  // 中国中部
+                                viewMode: '2D',
+                                showBuildingBlock: false,
+                                showIndoorMap: false
+                            });
+                            
+                            // 添加这一行以确保显示审图号
+                            map.on('complete', function() {
+                                // 确保审图号显示
+                                document.getElementsByClassName('amap-logo')[0].style.display = 'block';
+                                document.getElementsByClassName('amap-copyright')[0].style.display = 'block';
+                            });
+                            
+                            // 设置自定义地图样式，包括海洋颜色
+                            map.setMapStyle({
+                                styleJson: [
+                                    {
+                                        "featureType": "water",
+                                        "elementType": "all",
+                                        "stylers": {
+                                            "color": "#c6d4e1"  // 设置海洋为淡灰蓝色，符合复古风格
+                                        }
+                                    }
+                                ]
+                            });
+                            
+                            // 定义所有省份的范围
+                            var provinces = {
+                                // 湖北省
+                                hubei: {
+                                    name: "湖北省",
+                                    url: "shengfen/hubei.html",
+                                    range: {
+                                        minLng: 108.4, maxLng: 116.1,
+                                        minLat: 29.1, maxLat: 33.3
+                                    },
+                                    coreRange: {
+                                        minLng: 109.5, maxLng: 115.0,
+                                        minLat: 29.8, maxLat: 32.5
+                                    }
+                                },
+                                // 吉林省
+                                jilin: {
+                                    name: "吉林省",
+                                    url: "shengfen/jilin.html",
+                                    range: {
+                                        minLng: 121.7, maxLng: 131.3,
+                                        minLat: 40.9, maxLat: 46.3
+                                    },
+                                    coreRange: {
+                                        minLng: 123.5, maxLng: 128.5,
+                                        minLat: 42.5, maxLat: 45.0
+                                    }
+                                },
+                                // 四川省
+                                sichuan: {
+                                    name: "四川省",
+                                    url: "shengfen/sichuan.html",
+                                    range: {
+                                        minLng: 97.5, maxLng: 108.5,
+                                        minLat: 26.0, maxLat: 34.3
+                                    },
+                                    coreRange: {
+                                        minLng: 102.0, maxLng: 106.0,
+                                        minLat: 28.5, maxLat: 32.0
+                                    }
+                                },
+                                // 福建省
+                                fujian: {
+                                    name: "福建省",
+                                    url: "shengfen/fujian.html",
+                                    range: {
+                                        minLng: 115.5, maxLng: 120.5,
+                                        minLat: 23.5, maxLat: 28.3
+                                    },
+                                    coreRange: {
+                                        minLng: 117.0, maxLng: 119.0,
+                                        minLat: 24.5, maxLat: 27.0
+                                    }
+                                },
+                                // 山东省
+                                shandong: {
+                                    name: "山东省",
+                                    url: "shengfen/shandong.html",
+                                    range: {
+                                        minLng: 114.5, maxLng: 122.7,
+                                        minLat: 34.3, maxLat: 38.4
+                                    },
+                                    coreRange: {
+                                        minLng: 116.0, maxLng: 120.0,
+                                        minLat: 35.5, maxLat: 37.5
+                                    }
+                                },
+                                // 河北省
+                                hebei: {
+                                    name: "河北省",
+                                    url: "shengfen/hebei.html",
+                                    range: {
+                                        minLng: 113.5, maxLng: 120.0,
+                                        minLat: 36.0, maxLat: 42.7
+                                    },
+                                    coreRange: {
+                                        minLng: 114.5, maxLng: 118.0,
+                                        minLat: 37.5, maxLat: 41.0
+                                    }
+                                },
+                                // 广西省
+                                guangxi: {
+                                    name: "广西省",
+                                    url: "shengfen/guangxi.html",
+                                    range: {
+                                        minLng: 104.5, maxLng: 112.0,
+                                        minLat: 21.5, maxLat: 26.4
+                                    },
+                                    coreRange: {
+                                        minLng: 107.0, maxLng: 110.0,
+                                        minLat: 22.5, maxLat: 25.0
+                                    }
+                                },
+                                // 河南省
+                                henan: {
+                                    name: "河南省",
+                                    url: "shengfen/henan.html",
+                                    range: {
+                                        minLng: 110.3, maxLng: 116.7,
+                                        minLat: 31.2, maxLat: 36.4
+                                    },
+                                    coreRange: {
+                                        minLng: 112.0, maxLng: 115.0,
+                                        minLat: 33.0, maxLat: 35.0
+                                    }
+                                },
+                                // 江苏省
+                                jiangsu: {
+                                    name: "江苏省",
+                                    url: "shengfen/jiangsu.html",
+                                    range: {
+                                        minLng: 116.3, maxLng: 121.9,
+                                        minLat: 30.8, maxLat: 35.1
+                                    },
+                                    coreRange: {
+                                        minLng: 118.0, maxLng: 120.0,
+                                        minLat: 31.5, maxLat: 34.0
+                                    }
+                                },
+                                // 广东省
+                                guangdong: {
+                                    name: "广东省",
+                                    url: "shengfen/guangdong.html",
+                                    range: {
+                                        minLng: 109.7, maxLng: 117.3,
+                                        minLat: 20.2, maxLat: 25.5
+                                    },
+                                    coreRange: {
+                                        minLng: 112.0, maxLng: 115.0,
+                                        minLat: 22.0, maxLat: 24.0
+                                    }
+                                },
+                                // 贵州省
+                                guizhou: {
+                                    name: "贵州省",
+                                    url: "shengfen/guizhou.html",
+                                    range: {
+                                        minLng: 103.6, maxLng: 109.6,
+                                        minLat: 24.6, maxLat: 29.2
+                                    },
+                                    coreRange: {
+                                        minLng: 105.0, maxLng: 108.0,
+                                        minLat: 25.5, maxLat: 28.0
+                                    }
+                                },
+                                // 湖南省
+                                hunan: {
+                                    name: "湖南省",
+                                    url: "shengfen/hunan.html",
+                                    range: {
+                                        minLng: 108.8, maxLng: 114.2,
+                                        minLat: 24.6, maxLat: 30.1
+                                    },
+                                    coreRange: {
+                                        minLng: 110.0, maxLng: 113.0,
+                                        minLat: 26.0, maxLat: 29.0
+                                    }
+                                },
+                                // 江西省
+                                jiangxi: {
+                                    name: "江西省",
+                                    url: "shengfen/jiangxi.html",
+                                    range: {
+                                        minLng: 113.5, maxLng: 118.5,
+                                        minLat: 24.5, maxLat: 30.1
+                                    },
+                                    coreRange: {
+                                        minLng: 114.5, maxLng: 117.0,
+                                        minLat: 26.0, maxLat: 29.0
+                                    }
+                                },
+                                // 浙江省
+                                zhejiang: {
+                                    name: "浙江省",
+                                    url: "shengfen/zhejiang.html",
+                                    range: {
+                                        minLng: 118.0, maxLng: 123.0,
+                                        minLat: 27.0, maxLat: 31.2
+                                    },
+                                    coreRange: {
+                                        minLng: 119.0, maxLng: 121.5,
+                                        minLat: 28.0, maxLat: 30.5
+                                    }
+                                }
+                            };
+                            
+                            // 监听地图点击事件
+                            map.on('click', function(e) {
+                                var lng = e.lnglat.getLng();
+                                var lat = e.lnglat.getLat();
+                                
+                                // 检查点击位置是否在任何省份的核心区域内
+                                for (var key in provinces) {
+                                    var province = provinces[key];
+                                    if (isInRange(lng, lat, province.coreRange)) {
+                                        // 核心区域直接跳转
+                                        window.location.href = province.url;
+                                        return;
+                                    }
+                                }
+                                
+                                // 如果不在核心区域，检查是否在大致范围内
+                                var possibleProvinces = [];
+                                for (var key in provinces) {
+                                    var province = provinces[key];
+                                    if (isInRange(lng, lat, province.range)) {
+                                        possibleProvinces.push(province);
+                                    }
+                                }
+                                
+                                // 如果只有一个可能的省份，直接跳转
+                                if (possibleProvinces.length === 1) {
+                                    window.location.href = possibleProvinces[0].url;
+                                    return;
+                                }
+                                
+                                // 如果有多个可能的省份，使用逆地理编码确认
+                                if (possibleProvinces.length > 0) {
+                                    AMap.plugin('AMap.Geocoder', function() {
+                                        var geocoder = new AMap.Geocoder();
+                                        geocoder.getAddress(e.lnglat, function(status, result) {
+                                            if (status === 'complete' && result.regeocode) {
+                                                var address = result.regeocode.addressComponent;
+                                                if (address.province) {
+                                                    // 检查地址是否匹配任何可能的省份
+                                                    for (var i = 0; i < possibleProvinces.length; i++) {
+                                                        var province = possibleProvinces[i];
+                                                        if (address.province.indexOf(province.name.substring(0, 2)) !== -1) {
+                                                            window.location.href = province.url;
+                                                            return;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    });
+                                }
+                            });
+                            
+                            // 辅助函数：判断点是否在范围内
+                            function isInRange(lng, lat, range) {
+                                return lng >= range.minLng && lng <= range.maxLng && 
+                                       lat >= range.minLat && lat <= range.maxLat;
+                            }
+                        </script>
+                    </div>
+                </div>
+            </li>
+            <li style="width: 28%">
+
+                <div class="box">
+                    <div class="tit">中国古代自然科学与社会发展的互动关系</div>
+                    <div class="boxnav" style="height: 200px;">
+                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tbody>
+                                <tr>
+                                    <th>时期</th>
+                                    <th>科技<br>成就</th>
+                                    <th>经济<br>影响</th>
+                                    <th>政治<br>影响</th>
+                                    <th>社会<br>影响</th>
+                                </tr>
+                                <tr>
+                                    <td>先秦</td>
+                                    <td>青铜<br>冶炼</td>
+                                    <td>手工业<br>发展</td>
+                                    <td>军事<br>装备</td>
+                                    <td>礼器<br>文化</td>
+                                </tr>
+                                <tr>
+                                    <td>汉代</td>
+                                    <td>造纸术</td>
+                                    <td>文化<br>传播</td>
+                                    <td>政令<br>推广</td>
+                                    <td>教育<br>普及</td>
+                                </tr>
+                                <tr>
+                                    <td>唐代</td>
+                                    <td>天文<br>历法</td>
+                                    <td>农业<br>生产</td>
+                                    <td>朝贡<br>体系</td>
+                                    <td>文化<br>交流</td>
+                                </tr>
+                                <tr>
+                                    <td>宋代</td>
+                                    <td>指南针</td>
+                                    <td>海上<br>贸易</td>
+                                    <td>航海<br>外交</td>
+                                    <td>商业<br>繁荣</td>
+                                </tr>
+                                <tr>
+                                    <td>明代</td>
+                                    <td>火药<br>技术</td>
+                                    <td>军工<br>产业</td>
+                                    <td>国防<br>建设</td>
+                                    <td>军事<br>变革</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="tit">中国古代思想</div>
+                    <div class="boxnav" style="height: 250px;">
+                        <div class="" style="height: 190px" id="echart1"></div>
+                        <div class="leidanav">
+                            <ul class="clearfix">
+                                <li><span>儒家</span>
+                                    <p>143</p>
+                                </li>
+                                <li><span>道家</span>
+                                    <p>100</p>
+                                </li>
+                                <li><span>法家</span>
+                                    <p>78</p>
+                                </li>
+                                <li><span>墨家</span>
+                                    <p>63</p>
+                                </li>
+                                <li><span>兵家</span>
+                                    <p>50</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+        </ul>
+
+        <div class="box" style="padding: 20px 0;">
+            <ul class="clearfix nav2 ">
+                <li style="width:25%">
+                    <div class="tit01">成就统计时间轴</div>
+                    <div class="ftechart" id="echart2"></div>
+                </li>
+                <li style="width:31%">
+                    <div class="tit01">成就统计柱状图</div>
+                    <div class="ftechart" id="echart9"></div>
+                </li>
+                <li style="width:25%">
+                    <div class="tit01">科学家或学者统计时间轴</div>
+                    <div class="ftechart" id="echart3"></div>
+                </li>
+                <li style="width:19%">
+                    <div class="tit01">科学家或学者统计柱状图</div>
+                    <div class="ftechart" id="echart4"></div>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>
