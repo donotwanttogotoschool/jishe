@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background: #f9f5e9; /* 古籍底色 */
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+        #math-radar {
+            width: 800px;
+            height: 600px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect width="100%" height="100%" fill="none" stroke="%232F3C7E" stroke-width="2" stroke-dasharray="5,5"/></svg>');
+            position: relative;
+        }
+        .annotation {
+            position: absolute;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 4px;
+            border-left: 3px solid #C3272B;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 200px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="math-radar"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script>
+        // 初始化图表
+        const chart = echarts.init(document.getElementById('math-radar'));
+        
+        // 数据配置
+        const option = {
+            title: {
+                text: '中国古代数学五大领域成就',
+                left: 'center',
+                textStyle: {
+                    fontFamily: 'SimSun',
+                    fontSize: 22,
+                    color: '#2F3C7E'
+                },
+                subtext: '与世界同期发展水平对比',
+                subtextStyle: {
+                    fontFamily: 'SimSun',
+                    color: '#8B2323'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: params => {
+                    return `<strong>${params.seriesName}</strong><br/>
+                    ${params.data.name}: ${params.data.value}%`;
+                }
+            },
+            legend: {
+                data: ['中国成就', '世界同期'],
+                bottom: 20,
+                textStyle: {
+                    fontFamily: 'SimSun'
+                }
+            },
+            radar: {
+                shape: 'circle',
+                center: ['50%', '50%'],
+                radius: '60%',
+                axisName: {
+                    color: '#2F3C7E',
+                    fontFamily: 'SimSun',
+                    fontSize: 14,
+                    padding: [3, 10]
+                },
+                splitArea: {
+                    areaStyle: {
+                        color: ['rgba(47, 60, 126, 0.1)', 'rgba(47, 60, 126, 0.05)'],
+                    }
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(47, 60, 126, 0.5)'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(47, 60, 126, 0.3)'
+                    }
+                },
+                indicator: [
+                    { name: '算术理论\n（《九章算术》）', max: 100 },
+                    { name: '圆周率计算\n（祖冲之）', max: 100 },
+                    { name: '代数方法\n（天元术）', max: 100 },
+                    { name: '组合数学\n（贾宪三角）', max: 100 },
+                    { name: '测量技术\n（勾股定理）', max: 100 }
+                ]
+            },
+            series: [{
+                name: '中国成就',
+                type: 'radar',
+                symbol: 'path://M10,0 L5,10 L-5,10 L-10,0 L-5,-10 L5,-10 Z',
+                symbolSize: 12,
+                itemStyle: {
+                    color: '#C3272B'
+                },
+                areaStyle: {
+                    color: 'rgba(195, 39, 43, 0.6)'
+                },
+                lineStyle: {
+                    width: 3,
+                    color: '#C3272B'
+                },
+                data: [{
+                    value: [95, 100, 85, 90, 92],
+                    name: '中国成就',
+                    /*label: {
+                        show: true,
+                        formatter: params => {
+                            const labels = [
+                                'π精度领先千年', 
+                                '天元术超前发展', 
+                                '组合数学首创', 
+                                '测量应用广泛'
+                            ];
+                            return labels[params.dataIndex];
+                        },  
+                        position: function(pos) {
+                            // 自定义标签位置
+                            const positions = [
+                                'top',    // 算术理论（默认上方）
+                                'top',    // 圆周率（保持上方）
+                                'right',  // 代数方法
+                                'bottom', // 组合数学
+                                'left'    // 测量技术
+                            ];
+                            return positions[pos.dataIndex];
+                        },
+                        distance: 15,      // 标签与数据点的距离
+                        offset: function(idx) {
+                            // 为第一个标签（已删除）提供更大的上移距离
+                            return idx === 0 ? [0, -25] : [0, -10];
+                        },
+                        fontFamily: 'SimSun',
+                        color: '#2F3C7E'
+                    }*/
+                }]
+            }, {
+                name: '世界同期',
+                type: 'radar',
+                symbol: 'circle',
+                symbolSize: 8,
+                itemStyle: {
+                    color: '#2F3C7E'
+                },
+                areaStyle: {
+                    color: 'rgba(47, 60, 126, 0.3)'
+                },
+                lineStyle: {
+                    width: 2,
+                    type: 'dashed',
+                    color: '#2F3C7E'
+                },
+                data: [{
+                    value: [65, 40, 60, 30, 70],
+                    name: '世界同期'
+                }]
+            }]
+        };
+
+        chart.setOption(option);
+        
+        // 添加古籍元素注释
+        const annotations = [
+            {
+                text: '祖冲之(480年)\n圆周率精确至3.1415926~3.1415927',
+                x: 50, y: 260
+            },
+            {
+                text: '贾宪三角(11世纪)\n二项式系数早帕斯卡600年',
+                x: 550, y: 390
+            },
+            {
+                text: '《九章算术》\n世界最早数学体系之一',
+                x: 170, y: 80
+            }
+        ];
+        
+        annotations.forEach(anno => {
+            const div = document.createElement('div');
+            div.className = 'annotation';
+            div.style.left = anno.x + 'px';
+            div.style.top = anno.y + 'px';
+            div.innerHTML = anno.text.replace(/\n/g, '<br>');
+            document.getElementById('math-radar').appendChild(div);
+        });
+        
+        // 响应式适配
+        window.addEventListener('resize', () => chart.resize());
+    </script>
+</body>
+</html>
