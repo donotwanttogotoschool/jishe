@@ -446,6 +446,10 @@
             color: #8B4513 !important;
         }
 
+        .nav2 {
+            margin-left: -40px; /* 添加负左边距将四个盒子整体向左移动 */
+        }
+
     </style>
 </head>
 
@@ -595,7 +599,17 @@
                             var map = new AMap.Map('map-container', {
                                 resizeEnable: true,
                                 zoom: 5,
-                                center: [112.2, 31.1]  // 中国中部
+                                center: [112.2, 31.1],  // 中国中部
+                                viewMode: '2D',
+                                showBuildingBlock: false,
+                                showIndoorMap: false
+                            });
+                            
+                            // 添加这一行以确保显示审图号
+                            map.on('complete', function() {
+                                // 确保审图号显示
+                                document.getElementsByClassName('amap-logo')[0].style.display = 'block';
+                                document.getElementsByClassName('amap-copyright')[0].style.display = 'block';
                             });
                             
                             // 设置自定义地图样式，包括海洋颜色
@@ -616,7 +630,7 @@
                                 // 湖北省
                                 hubei: {
                                     name: "湖北省",
-                                    url: "hubei.html",
+                                    url: "shengfen/hubei.html",
                                     range: {
                                         minLng: 108.4, maxLng: 116.1,
                                         minLat: 29.1, maxLat: 33.3
