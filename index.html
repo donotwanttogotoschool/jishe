@@ -1,984 +1,1834 @@
-﻿<!doctype html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="zh">
 
 <head>
-    <meta charset="utf-8">
-    <title>千载格物：中国古代自然科技的可视化探索</title>
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/echarts.min.js"></script>
-    <script type="text/javascript" src="js/china.js"></script>
-    <script type="text/javascript" src="js/js.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国古代自然科学主题信息可视化大屏</title>
+
+    <!-- 引入所需字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
+    <script src="https://webapi.amap.com/ui/1.1/main.js"></script>
+
     <style>
-        /* Vintage Style CSS */
+        /* 全局配色变量 */
+        :root {
+            --primary-blue: #2E4E7E;
+            /* 靛青主色 */
+            --secondary-blue: #2b4570;
+            /* 深蓝辅色 */
+            --accent-gold: #D4AF37;
+            /* 点缀金色 */
+            --bg-cream: #F5F1E6;
+            /* 米色背景 */
+            --text-brown: #9A4B2C;
+            /* 棕色文字 */
+            --shadow-color: rgba(46, 78, 126, 0.15);
+            /* 阴影色 */
+        }
+
         body {
-            font-family: 'Times New Roman', serif;
-            background-color: #f5f5f0;
-            color: #333;
-            background-image: url('images/千里江山1.png');
-            background-size: cover;
-            background-attachment: fixed;
-            margin: 0;
-            padding: 0;
+            background-color: var(--bg-cream);
+            color: var(--text-brown);
+            font-family: 'Noto Serif SC', serif;
+            overflow: hidden;
+            background-image:
+                linear-gradient(rgba(245, 241, 230, 0.97), rgba(245, 241, 230, 0.97)),
+                url('path/to/chinese-pattern.png');
+            padding-top: 60px;
+            /* 为固定导航栏留出空间 */
+        }
+
+        /* 调整容器布局 */
+        .container {
+            display: grid;
+            grid-template-columns: 27% 46% 27%;
+            /* 按照 28:44:28 的比例分配 */
+            gap: 20px;
+            padding: 20px;
+            max-width: 100%;
+            margin: 0 auto;
+            height: calc(100vh - 60px);
+            /* 减去导航栏高度 */
+        }
+
+        /* 左侧面板 */
+        .left-panel {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
+        }
+
+        /* 中间面板 */
+        .center-panel {
+            width: 100%;
+            display: grid;
+            grid-template-rows: auto 57% 32%;
+            /* 统计区自适应高度，地图60%，时间轴35% */
+            gap: 5px;
+            /* 减小间距 */
+            height: 100%;
+        }
+
+        /* 右侧面板 */
+        .right-panel {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 卡片样式统一 */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px 20px;
+            /* 减小整体内边距 */
+            box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
+            border: 1px solid rgba(46, 78, 126, 0.1);
+            height: 100%;
+        }
+
+        /* 调整统计数字展示区样式 */
+        .stats-header {
+            width: 100%;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px 30px;
+            /* 减小上下内边距 */
+            box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 地图容器 */
+        .map-container {
+            flex: 1;
+            min-height: 400px;
+            /* 增加最小高度 */
+        }
+
+        /* 时间轴容器 */
+        .timeline-container {
+            flex: 1;
+            min-height: 200px;
+        }
+
+        /* 确保内容不会溢出 */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* 响应式布局调整 */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 250px 1fr 250px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+        }
+
+        /* 优化标题样式 */
+        .main-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #333333;
+            margin: 20px 0 30px;
+            font-family: "汉仪尚巍手书", "Noto Serif SC", serif;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-title::before,
+        .main-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #9A4B2C, transparent);
+        }
+
+        .main-title::before {
+            left: -120px;
+        }
+
+        .main-title::after {
+            right: -120px;
+        }
+
+        /* 优化人物卡片 */
+        .scientist-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(245, 241, 230, 0.7);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(154, 75, 44, 0.1);
+        }
+
+        .scientist-card:hover {
+            transform: translateX(5px);
+            background: rgba(245, 241, 230, 0.9);
+            border-color: rgba(154, 75, 44, 0.3);
+        }
+
+        .scientist-card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-right: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 3px solid #fff;
+        }
+
+        /* 卡片标题样式 */
+        .card h3 {
+            color: var(--primary-blue);
+            font-size: 1.3em;
+            margin-top: 0;
+            /* 移除顶部外边距 */
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            padding-top: 0;
+            /* 移除顶部内边距 */
+            border-bottom: 1px solid rgba(154, 75, 44, 0.2);
             position: relative;
         }
-        
-        body::before {
-            content: "";
+
+        /* 为标题添加装饰线 */
+        .card h3::after {
+            content: '';
             position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: #9A4B2C;
+        }
+
+        /* 添加古典装饰元素 */
+        .corner-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #9A4B2C;
+            opacity: 0.3;
+        }
+
+        .corner-decoration.top-left {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration.top-right {
+            top: 10px;
+            right: 10px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration.bottom-left {
+            bottom: 10px;
+            left: 10px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner-decoration.bottom-right {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* 添加水墨效果 */
+        .ink-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url('path/to/ink-texture.png');
+            mix-blend-mode: multiply;
+        }
+
+        /* 优化顶部导航栏样式 */
+        .top-nav {
+            width: 100%;
+            height: 60px;
+            /* 使用更优雅的渐变背景 */
+            background: linear-gradient(to right,
+                    #2E4E7E,
+                    /* 靛青色 */
+                    #2b4570,
+                    /* 深蓝色 */
+                    #2E4E7E
+                    /* 靛青色 */
+                );
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(245, 245, 240, 0.7); /* 半透明覆盖层，确保文字可读性 */
-            z-index: -1;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .head {
-            background-color: #8B4513;
-            color: #FFEBCD;
-            padding: 15px 20px;
-            border-bottom: 3px solid #5D2906;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .head h1 {
-            font-family: 'SimSun', serif;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            letter-spacing: 1px;
-            margin: 0 20px;
-            font-size: 24px;
-            font-weight: normal;
-            text-align: center;
-            margin-left: 190px;
-        }
-        
-        .home a, .menu a {
-            color: #FFEBCD;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        
-        .home a:hover, .menu a:hover {
-            color: #FFF;
-            text-shadow: 0 0 5px rgba(255,255,255,0.7);
-        }
-        
-        .menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .menu li {
-            display: inline-block;
-            margin: 0 10px;
-            position: relative;
-        }
-        
-        /* 修改为只针对导航菜单的li */
-        /*.head .menu li:after {
-            content: "•";
-            color: #FFEBCD;
-            position: absolute;
-            right: -15px;
-        }*/
 
-        /* 确保不应用到其他元素 */
-        /*.tit:after, .boxnav li:after {
-            content: none !important;
-        }*/
-        
-        .menu li:last-child:after {
-            display: none;
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
         }
-        
-        .time {
-            font-family: 'Courier New', monospace;
-            background-color: rgba(139, 69, 19, 0.7);
-            padding: 5px 10px;
-            border-radius: 3px;
-            border: 1px solid #5D2906;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-            margin-left: 45px;
+
+        .nav-center {
+            flex: 1;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #F5F1E6;
+            /* 米色文字 */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        
-        .mainbox {
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-        
-        .box {
-            background-color: #FFF8E7;
-            border: 1px solid #D2B48C;
-            margin-bottom: 20px;
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
-        
-        .box:before {
-            content: "";
+
+        .nav-item:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #D4AF37;
+            /* 金色下划线 */
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-item:hover::before {
+            width: 80%;
+        }
+
+        .home-icon {
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .datetime {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* 添加毛玻璃效果 */
+        .top-nav::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(210,180,140,0.1) 0%, rgba(255,255,255,0) 50%, rgba(210,180,140,0.1) 100%);
-            pointer-events: none;
+            backdrop-filter: blur(10px);
+            z-index: -1;
         }
-        
-        .tit {
-            background-color: #8B4513;
-            color: #FFEBCD;
-            padding: 8px 15px;
-            font-size: 16px;
-            border-bottom: 1px solid #5D2906;
-            font-weight: bold;
-            letter-spacing: 1px;
+
+        .stats-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            /* 减小数字和文字之间的间距 */
+            padding: 0 20px;
         }
-        
-        .boxnav {
-            padding: 15px;
-            background-color: #FFF8E7;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        
-        th, td {
-            border: 1px solid #D2B48C;
-            padding: 8px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: #8B4513;
-            color: #FFEBCD;
-            font-weight: normal;
-        }
-        
-        tr:nth-child(even) {
-            background-color: rgba(210, 180, 140, 0.1);
-        }
-        
-        tr:hover {
-            background-color: rgba(210, 180, 140, 0.3);
-        }
-        
-        .mapc {
-            position: relative;
-            border: 8px solid #8B4513;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
-            background-color: #FFF8E7;
-        }
-        
-        .mapnav {
+
+        .stats-item:not(:last-child)::after {
+            content: '';
             position: absolute;
-            top: 20px;
-            left: 120px;
-            z-index: 10;
+            right: -1px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 70%;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(46, 78, 126, 0.2), transparent);
         }
-        
-        .mapnav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .mapnav li {
-            margin-bottom: 10px;
-            background-color: rgba(139, 69, 19, 0.8);
-            color: #FFEBCD;
-            padding: 8px 12px;
-            border-radius: 3px;
-            border: 1px solid #5D2906;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-            font-size: 14px;
-        }
-        
-        .mapnav li div span {
-            display: block;
-            font-size: 12px;
-        }
-        
-        .mapnav li div p {
-            margin: 5px 0 0;
-            font-size: 18px;
+
+        .stats-num {
+            font-family: "ZCOOL XiaoWei", serif;
+            font-size: 2.2em;
+            /* 稍微减小字号 */
+            color: var(--primary-blue);
             font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(46, 78, 126, 0.1);
         }
-        
-        #map {
+
+        .stats-text {
+            font-size: 0.9em;
+            /* 稍微减小说明文字大小 */
+            color: var(--text-brown);
+            opacity: 0.9;
+        }
+
+        /* 添加装饰角 */
+        .stats-header::before,
+        .stats-header::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid var(--primary-blue);
+            opacity: 0.3;
+        }
+
+        .stats-header::before {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .stats-header::after {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* 数字滚动动画 */
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-num {
+            animation: countUp 1.5s ease-out forwards;
+        }
+
+        /* 地图容器样式 */
+        #map-container {
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 审图号样式 */
+        .map-copyright {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.7em;
+            color: rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2px 5px;
+            border-radius: 2px;
+            z-index: 100;
+        }
+
+        /* 自定义地图信息窗口样式 */
+        .custom-info-window {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(154, 75, 44, 0.2);
+            max-width: 280px;
+        }
+
+        .info-title {
+            color: #2E4E7E;
+            font-weight: bold;
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(154, 75, 44, 0.2);
+            padding-bottom: 5px;
+        }
+
+        .info-content {
+            color: #333;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* 添加图表样式 */
+        .chart-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
+        }
+
+        .chart-container h4 {
+            color: var(--text-brown);
+            font-size: 1.1em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(154, 75, 44, 0.2);
+        }
+
+        /* 图表提示框样式 */
+        .echarts-tooltip {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(154, 75, 44, 0.2) !important;
+            border-radius: 4px !important;
+            padding: 10px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+            font-family: "ZCOOL XiaoWei", serif !important;
+        }
+
+        /* 在历史人物画像标题下方添加轮播图 */
+        .scientist-carousel {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 80px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+            width: 500%;
+            /* 5个项目，每个20% */
+        }
+
+        .carousel-item {
+            flex: 0 0 20%;
+            /* 每个项目占20%宽度 */
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+        }
+
+        .scientist-portrait {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+            border: 2px solid #9A4B2C;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        .scientist-portrait img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
-        
-        .leidanav ul {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0 0;
-            display: flex;
-            justify-content: space-between;
+
+        .scientist-brief {
+            flex-grow: 1;
         }
-        
-        .leidanav li {
-            text-align: center;
-            background-color: rgba(139, 69, 19, 0.1);
-            padding: 8px;
-            border-radius: 3px;
-            border: 1px solid #D2B48C;
-            flex: 1;
-            margin: 0 5px;
+
+        .scientist-brief h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            color: #9A4B2C;
         }
-        
-        .leidanav li span {
-            display: block;
+
+        .scientist-brief p {
+            margin: 0;
             font-size: 12px;
-            color: #5D2906;
+            color: #666;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-        
-        .leidanav li p {
-            margin: 5px 0 0;
-            font-size: 16px;
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .carousel-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 0 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .carousel-dot.active {
+            background-color: #9A4B2C;
+        }
+
+        /* 数字统计区域容器 */
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 10px 10px;
+            /* 减小上下内边距 */
+            margin: 12px 0;
+            /* 减小外边距 */
+            box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
+        }
+
+        /* 单个数字统计项 */
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            padding: 0 5px;
+        }
+
+        /* 数字样式 */
+        .stat-number {
+            font-size: 22px;
+            /* 减小字体大小 */
             font-weight: bold;
-            color: #8B4513;
-        }
-        
-        .tit01 {
-            background-color: #8B4513;
-            color: #FFEBCD;
-            padding: 8px 15px;
-            font-size: 16px;
-            border-bottom: 1px solid #5D2906;
-            margin-bottom: 10px;
-            font-weight: bold;
-            letter-spacing: 1px;
+            color: #2E4E7E;
+            margin-bottom: 2px;
+            /* 减小数字和标签之间的间距 */
+            line-height: 1.1;
+            /* 减小行高 */
         }
 
-        /* 移除所有标题左侧的黑点 */
-        .tit::before, .tit01::before {
-            content: none !important;
+        /* 标签样式 */
+        .stat-label {
+            font-size: 11px;
+            /* 减小标签字体大小 */
+            color: #9A4B2C;
+            margin: 0;
         }
 
-        /* 确保列表项不显示默认的项目符号 */
-        .nav1 li, .nav2 li {
-            list-style-type: none;
-        }
-
-        /* 为确保完全覆盖所有可能的情况 */
-        .tit, .tit01 {
-            list-style-type: none;
-            display: block;
-        }
-        
-        .ftechart {
-            height: 200px;
-            background-color: #FFF8E7;
-            border: 1px solid #D2B48C;
-            padding: 10px;
-        }
-        
-        .clearfix:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-        
-        .pulll_left {
+        /* 分隔线 */
+        .stat-divider {
+            width: 1px;
+            background-color: rgba(154, 75, 44, 0.2);
             margin: 0 5px;
         }
-        
-        .nav1 li {
-            float: left;
-            padding: 0 10px;
-            box-sizing: border-box;
-        }
-        
-        .nav2 li {
-            float: left;
-            padding: 0 10px;
-            box-sizing: border-box;
-        }
-        
-        .ybp li {
-            float: left;
-            width: 50%;
-            height: 120px;
-            box-sizing: border-box;
-            padding: 5px;
-        }
-        
-        /* Vintage scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #8B4513;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #5D2906;
-        }
-        
-        /* 只移动"灵枢AI" */
-        .menu.menu1 ul li:first-child {
-            position: relative;
-            left: 120px;
-        }
-
-        /* 只移动"坤舆智库" */
-        .menu.menu1 ul li:last-child {
-            position: relative;
-            left: 120px;
-        }
-
-        /* 只移动"专题探索" */
-        .menu.menu2 ul li:first-child {
-            position: relative;
-            left: 45px;
-        }
-
-        /* 只移动"文明解码" */
-        .menu.menu2 ul li:last-child {
-            position: relative;
-            left: 45px;
-        }
-
-        .home a {
-            display: inline-flex;
-            align-items: center;
-        }
-        .home i {
-            position: relative;
-            top: 0px;
-            margin-left: 4px; /* 可选：增加文字和图标的间距 */
-            font-style: normal; /* 移除斜体效果 */
-            font-family: 'SimSun', serif; /* 添加与导航菜单相同的字体 */
-        }
-
-        /* 将包含"中国古代自然科学名著"和"著作统计"的盒子往左移动 */
-        .nav1 li:first-child {
-            margin-left: -25px; /* 可以根据需要调整这个负值大小 */
-        }
-
-        /* 为表格容器添加滚动功能 */
-        .box .boxnav {
-            overflow-y: auto; /* 启用垂直滚动 */
-        }
-
-        /* 特别为表格容器设置样式 */
-        .box .boxnav:has(table.table1) {
-            overflow-y: auto; /* 启用垂直滚动 */
-            max-height: 200px; /* 保持原高度限制 */
-        }
-
-        /* 美化滚动条样式，保持复古风格 */
-        .boxnav::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .boxnav::-webkit-scrollbar-track {
-            background: #FFF8E7;
-            border-radius: 5px;
-        }
-
-        .boxnav::-webkit-scrollbar-thumb {
-            background: #8B4513;
-            border-radius: 5px;
-            border: 1px solid #5D2906;
-        }
-
-        .boxnav::-webkit-scrollbar-thumb:hover {
-            background: #5D2906;
-        }
-
-        /* 控制表格中的文本换行和高度 */
-        .table1 td {
-            max-height: 40px;       /* 控制单元格最大高度 */
-            line-height: 1.2;       /* 控制行间距 */
-            white-space: normal;    /* 允许文本换行 */
-            overflow: hidden;       /* 隐藏溢出内容 */
-            text-overflow: ellipsis; /* 显示省略号 */
-            max-width: 0;           /* 强制文本截断 */
-        }
-
-        /* 让表格标题居中显示 */
-        .table1 th, .table1 td {
-            text-align: center;     /* 水平居中 */
-            vertical-align: middle; /* 垂直居中 */
-        }
-
-        .leidanav ul.clearfix {
-            padding-left: 25px; /* 将整个列表向右移动 */
-            display: flex;
-            justify-content: space-around; /* 更均匀地分布这些元素 */
-        }
-
-        /* 设置著作统计图表中的文字颜色为棕色 */
-        .ybp li text,
-        .ybp canvas text,
-        .ybp .echart-text,
-        #echart5 text, #echart6 text, #echart7 text, #echart8 text {
-            fill: #8B4513 !important;  /* 使用棕色 */
-            color: #8B4513 !important;
-        }
-
-        /* 确保图表标题和说明文本也显示为棕色 */
-        .ybp .echarts-title,
-        .ybp .echarts-legend,
-        .ybp .echarts-label {
-            color: #8B4513 !important;
-        }
-
-        .nav2 {
-            margin-left: -40px; /* 添加负左边距将四个盒子整体向左移动 */
-        }
-
     </style>
 </head>
 
 <body>
-    <div class="head clearfix">
-        <div class="home"><a href="#"><img src="images/Home.png" width="28"> <i> 首页</i></a></div>
-        <div class="menu menu1 pulll_left">
-            <ul>
-                <li><a href="./Norstar/ai.html">灵枢AI </a></li>
-                <li><a href="./templates/index.html">坤舆智库</a></li>
-            </ul>
-        </div>
-        <h1 class="pulll_left">千载格物：中国古代自然科技的可视化探索</h1>
-        <div class="menu menu2 pulll_left">
-            <ul>
-                <li><a href="./Norstar/index.html">专题探索 </a></li>
-                <li><a href="./Terris/index.html">文明解码</a></li>
-            </ul>
+    <!-- 背景纹理 -->
+    <div class="texture-overlay"></div>
+
+    <!-- 在 body 最开始添加导航栏 -->
+    <nav class="top-nav">
+        <!-- 左侧导航 -->
+        <div class="nav-left">
+            <a href="/" class="nav-item home-icon">
+                <i class="fas fa-home"></i> 首页
+            </a>
+            <a href="#" class="nav-item">灵枢AI</a>
+            <a href="#" class="nav-item">坤舆智库</a>
         </div>
 
-        <div class="time" id="showTime">2018/6/12 17:00:12</div>
-        <script>
-            var t = null;
-            t = setTimeout(time, 1000);//開始运行
-            function time() {
-                clearTimeout(t);//清除定时器
-                dt = new Date();
-                var y = dt.getFullYear();
-                var mt = dt.getMonth() + 1;
-                var day = dt.getDate();
-                var h = dt.getHours();//获取时
-                var m = dt.getMinutes();//获取分
-                var s = dt.getSeconds();//获取秒
-                document.getElementById("showTime").innerHTML = y + "/" + mt + "/" + day + " " + h + ":" + m + ":" + s + "";
-                t = setTimeout(time, 1000); //设定定时器，循环运行
+        <!-- 中间标题 -->
+        <div class="nav-center">
+            千载格物：中国古代自然科技的可视化探索
+        </div>
+
+        <!-- 右侧导航 -->
+        <div class="nav-right">
+            <a href="#" class="nav-item">专题探索</a>
+            <a href="#" class="nav-item">文明解码</a>
+            <span class="datetime">2025/3/31 22:31:48</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 左侧面板 -->
+        <div class="left-panel">
+            <h3>历史人物画像</h3>
+
+            <!-- 轮播图放在最上方 -->
+            <div class="scientist-carousel">
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <!-- 轮播项 -->
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/zhang_heng.jpg" alt="张衡"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>张衡 (78-139)</h4>
+                                <p>东汉天文学家，发明地动仪，著《灵宪》</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/shen_kuo.jpg" alt="沈括"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>沈括 (1031-1095)</h4>
+                                <p>北宋科学家，著《梦溪笔谈》，多领域贡献</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/li_shizhen.jpg" alt="李时珍"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>李时珍 (1518-1593)</h4>
+                                <p>明代医学家，著《本草纲目》，收录药物1892种</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/zu_chongzhi.jpg" alt="祖冲之"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>祖冲之 (429-500)</h4>
+                                <p>南北朝数学家，圆周率精确至小数点后7位</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="scientist-portrait">
+                                <img src="images/scientists/song_yingxing.jpg" alt="宋应星"
+                                    onerror="this.src='images/default_portrait.jpg'">
+                            </div>
+                            <div class="scientist-brief">
+                                <h4>宋应星 (1587-1666)</h4>
+                                <p>明代科学家，著《天工开物》，中国古代"工艺百科全书"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 轮播控制按钮 -->
+                    <div class="carousel-nav">
+                        <span class="carousel-dot active" data-index="0"></span>
+                        <span class="carousel-dot" data-index="1"></span>
+                        <span class="carousel-dot" data-index="2"></span>
+                        <span class="carousel-dot" data-index="3"></span>
+                        <span class="carousel-dot" data-index="4"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 领域分布图表 -->
+            <div class="chart-container">
+                <h4>领域分布</h4>
+                <div id="field-chart" style="width: 100%; height: 200px;"></div>
+            </div>
+
+            <!-- 朝代-地区分布热力图 -->
+            <div class="chart-container">
+                <h4>朝代-地区分布</h4>
+                <div id="region-chart" style="width: 100%; height: 220px;"></div>
+            </div>
+        </div>
+
+        <!-- 中间面板 -->
+        <div class="center-panel">
+            <div class="stats-header">
+                <div class="stats-item">
+                    <span class="stats-num">358</span>
+                    <span class="stats-text">重要成就</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-num">1452</span>
+                    <span class="stats-text">历史人物</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-num">532</span>
+                    <span class="stats-text">典籍著作</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-num">52</span>
+                    <span class="stats-text">研究领域</span>
+                </div>
+            </div>
+
+            <!-- 地图 -->
+            <div class="card map-container">
+                <h3>九州科技发展地图</h3>
+                <div id="map-container" style="width: 100%; height: calc(100% - 40px);"></div>
+                <div class="map-copyright">GS(2023)3377号 - 甲测资字1100471</div>
+            </div>
+
+            <!-- 科技成就时间轴 -->
+            <div class="chart-container">
+                <h4>科技成就时间轴</h4>
+                <div id="timeline-chart" style="width: 100%; height: 280px;"></div>
+            </div>
+        </div>
+
+        <!-- 右侧面板 -->
+        <div class="right-panel">
+            <div class="card">
+                <h3>典籍3D翻页效果</h3>
+            </div>
+            <div class="card">
+                <h3>科技贡献统计</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数字统计区域HTML结构 -->
+    <div class="stats-container">
+        <div class="stat-item">
+            <div class="stat-number">358</div>
+            <div class="stat-label">重要成就</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-number">1452</div>
+            <div class="stat-label">历史人物</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-number">532</div>
+            <div class="stat-label">典籍著作</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-number">52</div>
+            <div class="stat-label">研究领域</div>
+        </div>
+    </div>
+
+    <!-- 引入必要的JavaScript库 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
+    <script>
+        // 这里将添加地图、时间轴、3D效果等的具体实现代码
+        // 初始化函数
+        function init() {
+            // 初始化地图
+            initMap();
+            // 初始化时间轴
+            initTimeline();
+            // 初始化3D书籍效果
+            init3DBooks();
+            // 初始化统计图表
+            initStats();
+        }
+
+        // 页面加载完成后执行初始化
+        window.addEventListener('load', init);
+
+        // 添加页面载入动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.8s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+
+        // 添加鼠标移动视差效果
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.card');
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardX = (rect.left + rect.width / 2) / window.innerWidth - 0.5;
+                const cardY = (rect.top + rect.height / 2) / window.innerHeight - 0.5;
+
+                const angle = Math.atan2(mouseY - cardY, mouseX - cardX);
+                const distance = Math.sqrt(Math.pow(mouseX - cardX, 2) + Math.pow(mouseY - cardY, 2));
+
+                card.style.transform = `
+                    perspective(1000px)
+                    rotateX(${mouseY * 2}deg)
+                    rotateY(${mouseX * -2}deg)
+                    translateZ(0)
+                `;
+            });
+        });
+
+        /* 更新日期时间的JavaScript */
+        function updateDateTime() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).replace(/\//g, '/');
+            const timeStr = now.toLocaleTimeString('zh-CN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            document.querySelector('.datetime').textContent =
+                `${dateStr} ${timeStr}`;
+        }
+
+        // 初始更新
+        updateDateTime();
+        // 每秒更新一次
+        setInterval(updateDateTime, 1000);
+
+        // 数字滚动动画
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stats-num');
+            numbers.forEach(number => {
+                const targetNumber = parseInt(number.innerText);
+                let currentNumber = 0;
+                const duration = 1500;
+                const steps = 60;
+                const increment = targetNumber / steps;
+                const interval = duration / steps;
+
+                const counter = setInterval(() => {
+                    currentNumber += increment;
+                    if (currentNumber >= targetNumber) {
+                        number.innerText = targetNumber;
+                        clearInterval(counter);
+                    } else {
+                        number.innerText = Math.floor(currentNumber);
+                    }
+                }, interval);
+            });
+        }
+
+        // 页面加载时启动动画
+        document.addEventListener('DOMContentLoaded', animateNumbers);
+
+        // 地图初始化函数
+        function initMap() {
+            // 创建地图实例
+            var map = new AMap.Map('map-container', {
+                zoom: 5,
+                center: [108.953, 34.265], // 中国中心位置
+                viewMode: '2D',
+                mapStyle: 'amap://styles/vintage', // 使用vintage风格
+                resizeEnable: true
+            });
+
+            // 添加地图控件
+            map.plugin(['AMap.ToolBar', 'AMap.Scale'], function () {
+                // 添加工具条
+                var toolBar = new AMap.ToolBar({
+                    position: 'RB'
+                });
+                map.addControl(toolBar);
+
+                // 添加比例尺
+                var scale = new AMap.Scale();
+                map.addControl(scale);
+            });
+
+            // 加载行政区划插件
+            map.plugin('AMap.DistrictLayer', function () {
+                // 创建省份图层，确保包含台湾省(710000)、香港特别行政区(810000)和澳门特别行政区(820000)
+                var provinceLayer = new AMap.DistrictLayer.Province({
+                    zIndex: 10,
+                    adcode: [110000, 120000, 130000, 140000, 150000, 210000, 220000, 230000,
+                        310000, 320000, 330000, 340000, 350000, 360000, 370000, 410000,
+                        420000, 430000, 440000, 450000, 460000, 500000, 510000, 520000,
+                        530000, 540000, 610000, 620000, 630000, 640000, 650000, 710000,
+                        810000, 820000],
+                    depth: 2,
+                    styles: {
+                        'fill': function (properties) {
+                            // 台湾、香港、澳门使用稍微突出的颜色
+                            if (properties.adcode === 710000 || properties.adcode === 810000 || properties.adcode === 820000) {
+                                return '#2E4E7E30'; // 稍微不透明一些
+                            }
+                            return '#2E4E7E20'; // 其他省份
+                        },
+                        'stroke': function (properties) {
+                            // 台湾、香港、澳门边界线稍微加粗
+                            if (properties.adcode === 710000 || properties.adcode === 810000 || properties.adcode === 820000) {
+                                return {
+                                    color: '#2E4E7E',
+                                    width: 1.5,
+                                    opacity: 0.7
+                                };
+                            }
+                            return {
+                                color: '#2E4E7E', // 边界线颜色
+                                width: 1,         // 边界线宽度
+                                opacity: 0.5      // 边界线透明度
+                            };
+                        }
+                    }
+                });
+
+                // 添加省份图层到地图
+                provinceLayer.setMap(map);
+            });
+
+            // 确保地图显示完整的中国领土
+            map.setLimitBounds(new AMap.Bounds(
+                [73, 18], // 西南角经纬度
+                [135, 53]  // 东北角经纬度
+            ));
+
+            // 定义古代科技成就地点，添加台湾、香港、澳门相关成就
+            var sciencePoints = [
+                { name: '洛阳', location: [112.454, 34.618], achievement: '东汉蔡伦改进造纸术', year: '公元105年' },
+                { name: '西安', location: [108.939, 34.343], achievement: '张衡发明地动仪', year: '公元132年' },
+                { name: '开封', location: [114.307, 34.797], achievement: '北宋活字印刷术', year: '公元1041年' },
+                { name: '杭州', location: [120.155, 30.274], achievement: '沈括《梦溪笔谈》', year: '公元1088年' },
+                { name: '南京', location: [118.796, 32.059], achievement: '郑和下西洋', year: '公元1405年' },
+                { name: '苏州', location: [120.619, 31.299], achievement: '宋应星《天工开物》', year: '公元1637年' },
+                { name: '台北', location: [121.520, 25.030], achievement: '台湾古代农业技术', year: '明清时期' },
+                { name: '香港', location: [114.173, 22.320], achievement: '古代海上贸易中转站', year: '宋元明清时期' },
+                { name: '澳门', location: [113.549, 22.198], achievement: '中西文化交流门户', year: '明清时期' }
+            ];
+
+            // 添加标记点
+            sciencePoints.forEach(function (point) {
+                var marker = new AMap.Marker({
+                    position: point.location,
+                    title: point.name,
+                    // 使用内置图标，不需要外部图片
+                    icon: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+                    animation: 'AMAP_ANIMATION_DROP',
+                    map: map
+                });
+
+                // 创建信息窗体
+                var infoWindow = new AMap.InfoWindow({
+                    isCustom: true,  // 使用自定义窗体
+                    content: createInfoContent(point),
+                    offset: new AMap.Pixel(0, -30)
+                });
+
+                // 绑定点击事件
+                marker.on('click', function () {
+                    infoWindow.open(map, marker.getPosition());
+                });
+            });
+
+            // 创建自定义信息窗体内容
+            function createInfoContent(point) {
+                var content = document.createElement('div');
+                content.className = 'custom-info-window';
+
+                var title = document.createElement('div');
+                title.className = 'info-title';
+                title.innerHTML = point.name;
+                content.appendChild(title);
+
+                var info = document.createElement('div');
+                info.className = 'info-content';
+                info.innerHTML = '<p><b>成就：</b>' + point.achievement + '</p>' +
+                    '<p><b>年代：</b>' + point.year + '</p>';
+                content.appendChild(info);
+
+                return content;
+            }
+        }
+
+        // 页面加载完成后初始化地图
+        document.addEventListener('DOMContentLoaded', initMap);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // 初始化领域分布图表
+            initFieldChart();
+
+            // 初始化地区分布热力图
+            initRegionChart();
+        });
+
+        // 领域分布环状图 - 精致版（无外部标注）
+        function initFieldChart() {
+            var chartDom = document.getElementById('field-chart');
+            var myChart = echarts.init(chartDom);
+
+            // 领域数据
+            var data = [
+                {
+                    value: 25,
+                    name: '天文学',
+                    itemStyle: { color: '#2E4E7E' },
+                    selected: true
+                },
+                {
+                    value: 20,
+                    name: '医学',
+                    itemStyle: { color: '#9A4B2C' }
+                },
+                {
+                    value: 18,
+                    name: '农学',
+                    itemStyle: { color: '#5D8B3E' }
+                },
+                {
+                    value: 15,
+                    name: '数学',
+                    itemStyle: { color: '#A87C4F' }
+                },
+                {
+                    value: 12,
+                    name: '工程学',
+                    itemStyle: { color: '#4C6473' }
+                },
+                {
+                    value: 10,
+                    name: '其他',
+                    itemStyle: { color: '#8E8C7D' }
+                }
+            ];
+
+            // 代表性人物
+            var representatives = {
+                '天文学': '张衡、沈括',
+                '医学': '李时珍、华佗',
+                '农学': '贾思勰、徐光启',
+                '数学': '祖冲之、刘徽',
+                '工程学': '李冰、郭守敬',
+                '其他': '宋应星、徐霞客'
+            };
+
+            // 代表性成就
+            var achievements = {
+                '天文学': '浑天仪、地动仪、《梦溪笔谈》天文篇',
+                '医学': '《本草纲目》、麻沸散、《伤寒杂病论》',
+                '农学': '《齐民要术》、《农政全书》',
+                '数学': '圆周率计算、《九章算术注》',
+                '工程学': '都江堰、简仪、指南针',
+                '其他': '《天工开物》、《徐霞客游记》'
+            };
+
+            // 图表配置
+            var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function (params) {
+                        return '<div style="font-weight:bold;font-size:14px;margin-bottom:5px;color:' +
+                            params.color + '">' + params.name + '</div>' +
+                            '<div style="margin:3px 0">人物数量: <span style="float:right;font-weight:bold">' +
+                            params.value + '</span></div>' +
+                            '<div style="margin:3px 0">占比: <span style="float:right;font-weight:bold">' +
+                            params.percent + '%</span></div>' +
+                            '<div style="margin:3px 0">代表人物: <span style="float:right">' +
+                            representatives[params.name] + '</span></div>' +
+                            '<div style="margin:3px 0">代表成就: <span style="float:right">' +
+                            achievements[params.name] + '</span></div>';
+                    },
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderColor: '#ccc',
+                    borderWidth: 1,
+                    padding: 10,
+                    textStyle: {
+                        color: '#333'
+                    },
+                    extraCssText: 'box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);'
+                },
+                legend: {
+                    orient: 'vertical',
+                    right: '5%',
+                    top: 'center',
+                    itemWidth: 10,
+                    itemHeight: 10,
+                    itemGap: 10,
+                    textStyle: {
+                        fontSize: 12,
+                        color: '#333'
+                    },
+                    formatter: function (name) {
+                        // 查找对应数据项
+                        var item = data.find(function (item) {
+                            return item.name === name;
+                        });
+                        // 计算百分比
+                        var total = data.reduce(function (sum, item) {
+                            return sum + item.value;
+                        }, 0);
+                        var percent = ((item.value / total) * 100).toFixed(1);
+
+                        return name + ' ' + percent + '%';
+                    }
+                },
+                series: [
+                    {
+                        name: '领域分布',
+                        type: 'pie',
+                        radius: ['45%', '70%'],
+                        center: ['40%', '50%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderColor: '#fff',
+                            borderWidth: 2,
+                            borderRadius: 5,
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.2)'
+                        },
+                        label: {
+                            show: false  // 不显示外部标签
+                        },
+                        emphasis: {
+                            label: {
+                                show: false  // 高亮时也不显示标签
+                            },
+                            itemStyle: {
+                                shadowBlur: 20,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+                        labelLine: {
+                            show: false  // 不显示标签连接线
+                        },
+                        data: data,
+                        animationType: 'scale',
+                        animationEasing: 'elasticOut',
+                        animationDelay: function (idx) {
+                            return Math.random() * 200;
+                        }
+                    }
+                ]
+            };
+
+            // 设置图表选项并渲染
+            myChart.setOption(option);
+
+            // 添加点击事件
+            myChart.on('click', function (params) {
+                // 找到当前点击的项
+                var clickedItem = data.find(function (item) {
+                    return item.name === params.name;
+                });
+
+                // 更新所有项的选中状态
+                data.forEach(function (item) {
+                    item.selected = (item.name === clickedItem.name);
+                });
+
+                // 更新图表
+                myChart.setOption({
+                    series: [{
+                        data: data
+                    }]
+                });
+            });
+
+            // 响应窗口大小变化
+            window.addEventListener('resize', function () {
+                myChart.resize();
+            });
+        }
+
+        // 地区分布热力图 - 朝代与地区的交叉分析
+        function initRegionChart() {
+            var chartDom = document.getElementById('region-chart');
+            var myChart = echarts.init(chartDom);
+
+            // 朝代数据
+            var dynasties = ['先秦', '秦汉', '魏晋南北朝', '隋唐', '宋元', '明清'];
+
+            // 地区数据 - 移除广州和成都
+            var regions = ['长安/西安', '洛阳', '开封', '杭州', '南京', '苏州'];
+
+            // 热力图数据 [朝代索引, 地区索引, 数值] - 移除成都相关数据
+            var data = [
+                [0, 0, 15], [0, 1, 20], [0, 2, 5], [0, 3, 3], [0, 4, 2], [0, 5, 1],
+                [1, 0, 30], [1, 1, 25], [1, 2, 10], [1, 3, 5], [1, 4, 8], [1, 5, 6],
+                [2, 0, 20], [2, 1, 30], [2, 2, 15], [2, 3, 8], [2, 4, 10], [2, 5, 5],
+                [3, 0, 25], [3, 1, 20], [3, 2, 30], [3, 3, 15], [3, 4, 12], [3, 5, 10],
+                [4, 0, 15], [4, 1, 10], [4, 2, 25], [4, 3, 30], [4, 4, 20], [4, 5, 15],
+                [5, 0, 10], [5, 1, 5], [5, 2, 15], [5, 3, 20], [5, 4, 30], [5, 5, 25]
+            ];
+
+            // 代表性科学家数据 - 移除成都相关科学家
+            var scientists = {
+                '先秦-长安/西安': '墨子、公输班',
+                '先秦-洛阳': '管仲、商鞅',
+                '秦汉-长安/西安': '张衡、张仲景',
+                '秦汉-洛阳': '蔡伦、华佗',
+                '魏晋南北朝-洛阳': '祖冲之、刘徽',
+                '隋唐-长安/西安': '李淳风、一行',
+                '宋元-开封': '沈括、毕昇',
+                '宋元-杭州': '沈括、朱熹',
+                '明清-南京': '徐光启、宋应星',
+                '明清-苏州': '宋应星、梅文鼎'
+            };
+
+            // 最大值计算
+            var maxValue = Math.max.apply(
+                null,
+                data.map(function (item) {
+                    return item[2];
+                })
+            );
+
+            // 图表配置
+            var option = {
+                tooltip: {
+                    position: 'top',
+                    formatter: function (params) {
+                        var dynasty = dynasties[params.data[0]];
+                        var region = regions[params.data[1]];
+                        var key = dynasty + '-' + region;
+                        var scientistsText = scientists[key] || '暂无记录';
+
+                        return dynasty + ' · ' + region + '<br/>' +
+                            '科学家数量: ' + params.data[2] + '<br/>' +
+                            '代表人物: ' + scientistsText;
+                    },
+                    className: 'echarts-tooltip'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    top: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: regions,
+                    splitArea: {
+                        show: true
+                    },
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 45,
+                        fontSize: 10
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#9A4B2C'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: dynasties,
+                    splitArea: {
+                        show: true
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#9A4B2C'
+                        }
+                    }
+                },
+                visualMap: {
+                    min: 0,
+                    max: maxValue,
+                    calculable: true,
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '0%',
+                    inRange: {
+                        color: ['#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']
+                    },
+                    textStyle: {
+                        color: '#333'
+                    }
+                },
+                series: [{
+                    name: '科学家分布',
+                    type: 'heatmap',
+                    data: data,
+                    label: {
+                        show: true,
+                        color: '#fff',
+                        fontSize: 10
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+
+            // 设置图表选项并渲染
+            myChart.setOption(option);
+
+            // 响应窗口大小变化
+            window.addEventListener('resize', function () {
+                myChart.resize();
+            });
+        }
+
+        // 添加轮播图脚本
+        document.addEventListener('DOMContentLoaded', function () {
+            initScientistCarousel();
+        });
+
+        function initScientistCarousel() {
+            console.log("初始化轮播图");
+            const track = document.querySelector('.carousel-track');
+            const dots = document.querySelectorAll('.carousel-dot');
+            let currentIndex = 0;
+            let interval;
+
+            // 直接设置固定宽度和位置
+            track.style.width = '500%'; // 5个项目，每个20%
+
+            // 移动到指定索引
+            function moveToIndex(index) {
+                if (index < 0) index = 4;
+                if (index >= 5) index = 0;
+
+                currentIndex = index;
+                track.style.transform = `translateX(-${currentIndex * 20}%)`;
+
+                // 更新指示点
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
+                });
             }
 
-        </script>
-    </div>
-    <div class="mainbox">
+            // 自动轮播
+            function startAutoPlay() {
+                interval = setInterval(() => {
+                    moveToIndex(currentIndex + 1);
+                }, 5000); // 5秒切换一次
+            }
 
-        <ul class="clearfix nav1">
-            <li style="width: 28%">  <!-- 从22%增加到28% -->
-                <div class="box">
-                    <div class="tit">中国古代自然科学名著</div>
-                    <div class="boxnav" style="height: 200px; overflow-y: auto;">
-                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; word-break: break-word;">
-                            <tbody>
-                                <tr>
-                                    <th>著作<br>名称</th>
-                                    <th>作者</th>
-                                    <th>年代</th>
-                                    <th>领域</th>
-                                    <th>历史<br>地位</th>
-                                </tr>
-                                <tr>
-                                    <td>本草<br>纲目</td>
-                                    <td>李时珍</td>
-                                    <td>明代</td>
-                                    <td>医药</td>
-                                    <td>东方医药巨著</td>
-                                </tr>
-                                <tr>
-                                    <td>天工<br>开物</td>
-                                    <td>宋应星</td>
-                                    <td>明代</td>
-                                    <td>工艺</td>
-                                    <td>中国科技史明珠</td>
-                                </tr>
-                                <tr>
-                                    <td>农政<br>全书</td>
-                                    <td>徐光启</td>
-                                    <td>明代</td>
-                                    <td>农学</td>
-                                    <td>农学集大成者</td>
-                                </tr>
-                                <tr>
-                                    <td>九章<br>算术</td>
-                                    <td>多人</td>
-                                    <td>汉代</td>
-                                    <td>数学</td>
-                                    <td>东方数学圭臬</td>
-                                </tr>
-                                <tr>
-                                    <td>伤寒论</td>
-                                    <td>张仲景</td>
-                                    <td>汉代</td>
-                                    <td>医学</td>
-                                    <td>医家<br>圣典</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="tit">著作统计</div>
-                    <div class="boxnav" style="height: 250px;">
-                        <ul class="ybp clearfix">
-                            <li id="echart5"></li>
-                            <li id="echart6"></li>
-                            <li id="echart7"></li>
-                            <li id="echart8"></li>
-                        </ul>
-                    </div>
-                </div>
-            </li>
-            <li style="width:44%">
-                <div class="box">
-                    <div class="boxnav mapc" style="height: 550px; position: relative">
-                        <div class="mapnav">
-                            <ul>
-                                <li>
-                                    <div><span>重要成就</span>
-                                        <p>358</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div><span>历史人物</span>
-                                        <p>1452</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div><span>典籍著作</span>
-                                        <p>532</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div><span>科技发明</span>
-                                        <p>711</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div><span>研究领域</span>
-                                        <p>52</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+            // 停止自动轮播
+            function stopAutoPlay() {
+                clearInterval(interval);
+            }
 
-                        <!-- 替换为新的地图容器 -->
-                        <div id="map-container" style="width: 100%; height: 100%;"></div>
-                        
-                        <!-- 添加高德地图相关脚本 -->
-                        <script src="https://webapi.amap.com/maps?v=1.4.15&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
-                        <script>
-                            // 初始化地图
-                            var map = new AMap.Map('map-container', {
-                                resizeEnable: true,
-                                zoom: 5,
-                                center: [112.2, 31.1],  // 中国中部
-                                viewMode: '2D',
-                                showBuildingBlock: false,
-                                showIndoorMap: false
-                            });
-                            
-                            // 添加这一行以确保显示审图号
-                            map.on('complete', function() {
-                                // 确保审图号显示
-                                document.getElementsByClassName('amap-logo')[0].style.display = 'block';
-                                document.getElementsByClassName('amap-copyright')[0].style.display = 'block';
-                            });
-                            
-                            // 设置自定义地图样式，包括海洋颜色
-                            map.setMapStyle({
-                                styleJson: [
+            // 初始化
+            moveToIndex(0); // 确保从第一个开始
+            startAutoPlay();
+
+            // 点击指示点切换
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => {
+                    moveToIndex(i);
+                    stopAutoPlay();
+                    startAutoPlay();
+                });
+            });
+
+            // 触摸事件
+            let startX, moveX;
+            track.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                stopAutoPlay();
+            });
+
+            track.addEventListener('touchmove', (e) => {
+                moveX = e.touches[0].clientX;
+            });
+
+            track.addEventListener('touchend', () => {
+                if (startX - moveX > 50) {
+                    moveToIndex(currentIndex + 1);
+                } else if (moveX - startX > 50) {
+                    moveToIndex(currentIndex - 1);
+                }
+                startAutoPlay();
+            });
+        }
+
+        // 科技成就时间轴折线图
+        function initTimelineChart() {
+            var chartDom = document.getElementById('timeline-chart');
+            var myChart = echarts.init(chartDom);
+
+            // 时间轴数据 - 朝代和年份范围
+            var dynasties = [
+                { name: '先秦', start: -2100, end: -221 },
+                { name: '秦汉', start: -221, end: 220 },
+                { name: '魏晋南北朝', start: 220, end: 581 },
+                { name: '隋唐', start: 581, end: 907 },
+                { name: '宋元', start: 960, end: 1368 },
+                { name: '明清', start: 1368, end: 1912 }
+            ];
+
+            // 生成朝代区间
+            var dynastyRanges = dynasties.map(function (dynasty) {
+                return [{
+                    name: dynasty.name,
+                    xAxis: dynasty.start
+                }, {
+                    xAxis: dynasty.end
+                }];
+            });
+
+            // 各领域成就数据
+            var astronomyData = [
+                { year: -1600, value: 10, name: '甲骨文中的天象记录' },
+                { year: -350, value: 25, name: '甘德、石申星表' },
+                { year: 100, value: 45, name: '张衡浑天仪' },
+                { year: 450, value: 30, name: '祖冲之《大明历》' },
+                { year: 725, value: 55, name: '一行《大衍历》' },
+                { year: 1090, value: 65, name: '沈括《梦溪笔谈》天文篇' },
+                { year: 1280, value: 50, name: '郭守敬《授时历》' },
+                { year: 1580, value: 40, name: '徐光启《崇祯历书》' }
+            ];
+
+            var medicineData = [
+                { year: -200, value: 15, name: '《黄帝内经》' },
+                { year: 220, value: 35, name: '张仲景《伤寒杂病论》' },
+                { year: 450, value: 25, name: '陶弘景《本草经集注》' },
+                { year: 650, value: 45, name: '孙思邈《千金要方》' },
+                { year: 1100, value: 55, name: '《太平惠民和剂局方》' },
+                { year: 1350, value: 40, name: '朱震亨《格致余论》' },
+                { year: 1580, value: 70, name: '李时珍《本草纲目》' },
+                { year: 1800, value: 50, name: '吴谦《医宗金鉴》' }
+            ];
+
+            var agricultureData = [
+                { year: -500, value: 20, name: '《氾胜之书》' },
+                { year: 100, value: 30, name: '《四民月令》' },
+                { year: 530, value: 50, name: '贾思勰《齐民要术》' },
+                { year: 800, value: 35, name: '陆龟蒙《种树书》' },
+                { year: 1150, value: 60, name: '陈敷《农书》' },
+                { year: 1300, value: 45, name: '王祯《农书》' },
+                { year: 1620, value: 65, name: '徐光启《农政全书》' },
+                { year: 1750, value: 40, name: '《授农新书》' }
+            ];
+
+            var mathData = [
+                { year: -100, value: 25, name: '《九章算术》' },
+                { year: 250, value: 40, name: '刘徽《九章算术注》' },
+                { year: 480, value: 60, name: '祖冲之圆周率计算' },
+                { year: 650, value: 35, name: '王孝通《缉古算经》' },
+                { year: 1050, value: 50, name: '贾宪《黄帝九章算法细草》' },
+                { year: 1250, value: 45, name: '秦九韶《数书九章》' },
+                { year: 1450, value: 30, name: '朱世杰《算学启蒙》' },
+                { year: 1700, value: 55, name: '梅文鼎《历算全书》' }
+            ];
+
+            // 转换数据格式
+            function convertData(data) {
+                return data.map(function (item) {
+                    return [item.year, item.value, item.name];
+                });
+            }
+
+            // 图表配置
+            var option = {
+                color: ['#2E4E7E', '#9A4B2C', '#5D8B3E', '#A87C4F'],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var result = params[0].axisValue + '年<br/>';
+                        params.forEach(function (param) {
+                            if (param.data) {
+                                result += param.marker + param.seriesName + ': ' +
+                                    param.data[2] + '<br/>';
+                            }
+                        });
+                        return result;
+                    },
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderColor: '#ccc',
+                    borderWidth: 1,
+                    padding: 10,
+                    textStyle: {
+                        color: '#333'
+                    },
+                    extraCssText: 'box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);'
+                },
+                legend: {
+                    data: ['天文学', '医学', '农学', '数学'],
+                    right: 10,
+                    top: 0,
+                    textStyle: {
+                        color: '#666'
+                    },
+                    itemWidth: 15,
+                    itemHeight: 10,
+                    itemGap: 10
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    top: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    name: '年份',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                    min: -2100,
+                    max: 1912,
+                    axisLabel: {
+                        formatter: function (value) {
+                            if (value < 0) {
+                                return -value + '年前';
+                            } else {
+                                return value + '年';
+                            }
+                        },
+                        color: '#666',
+                        fontSize: 10
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed',
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '成就指数',
+                    nameLocation: 'end',
+                    nameGap: 15,
+                    min: 0,
+                    max: 80,
+                    axisLabel: {
+                        color: '#666',
+                        fontSize: 10
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            type: 'dashed',
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    }
+                },
+                dataZoom: [{
+                    type: 'slider',
+                    xAxisIndex: 0,
+                    filterMode: 'none',
+                    height: 20,
+                    bottom: 0,
+                    start: 0,
+                    end: 100,
+                    borderColor: 'transparent',
+                    backgroundColor: 'rgba(211, 211, 211, 0.3)',
+                    fillerColor: 'rgba(46, 78, 126, 0.2)',
+                    handleIcon: 'path://M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '80%',
+                    handleStyle: {
+                        color: '#2E4E7E',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.3)',
+                        shadowOffsetX: 1,
+                        shadowOffsetY: 1
+                    },
+                    textStyle: {
+                        color: '#666'
+                    }
+                }],
+                series: [
+                    {
+                        name: '天文学',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'emptyCircle',
+                        symbolSize: 8,
+                        data: convertData(astronomyData),
+                        lineStyle: {
+                            width: 3
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderWidth: 3,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(46, 78, 126, 0.5)'
+                            }
+                        },
+                        markPoint: {
+                            symbol: 'pin',
+                            symbolSize: 40,
+                            label: {
+                                show: false
+                            },
+                            data: [
+                                { type: 'max', name: '最高值' },
+                                { type: 'min', name: '最低值' }
+                            ]
+                        }
+                    },
+                    {
+                        name: '医学',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'emptyCircle',
+                        symbolSize: 8,
+                        data: convertData(medicineData),
+                        lineStyle: {
+                            width: 3
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderWidth: 3,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(154, 75, 44, 0.5)'
+                            }
+                        }
+                    },
+                    {
+                        name: '农学',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'emptyCircle',
+                        symbolSize: 8,
+                        data: convertData(agricultureData),
+                        lineStyle: {
+                            width: 3
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderWidth: 3,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(93, 139, 62, 0.5)'
+                            }
+                        }
+                    },
+                    {
+                        name: '数学',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'emptyCircle',
+                        symbolSize: 8,
+                        data: convertData(mathData),
+                        lineStyle: {
+                            width: 3
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderWidth: 3,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(168, 124, 79, 0.5)'
+                            }
+                        }
+                    },
+                    {
+                        name: '朝代区间',
+                        type: 'custom',
+                        renderItem: function (params, api) {
+                            var start = api.coord([api.value(0), 0]);
+                            var end = api.coord([api.value(1), 0]);
+                            var height = 10;
+                            var rectShape = echarts.graphic.clipRectByRect(
+                                {
+                                    x: start[0],
+                                    y: params.coordSys.y + params.coordSys.height - height,
+                                    width: end[0] - start[0],
+                                    height: height
+                                },
+                                {
+                                    x: params.coordSys.x,
+                                    y: params.coordSys.y,
+                                    width: params.coordSys.width,
+                                    height: params.coordSys.height
+                                }
+                            );
+
+                            var textConfig = {
+                                x: start[0] + (end[0] - start[0]) / 2,
+                                y: params.coordSys.y + params.coordSys.height - height / 2,
+                                text: dynasties[params.dataIndex].name,
+                                textFill: '#fff',
+                                fontSize: 9,
+                                textAlign: 'center',
+                                textVerticalAlign: 'middle'
+                            };
+
+                            return rectShape && {
+                                type: 'group',
+                                children: [
                                     {
-                                        "featureType": "water",
-                                        "elementType": "all",
-                                        "stylers": {
-                                            "color": "#c6d4e1"  // 设置海洋为淡灰蓝色，符合复古风格
+                                        type: 'rect',
+                                        shape: rectShape,
+                                        style: {
+                                            fill: 'rgba(46, 78, 126, ' + (0.3 + params.dataIndex * 0.1) + ')'
                                         }
+                                    },
+                                    {
+                                        type: 'text',
+                                        style: textConfig
                                     }
                                 ]
-                            });
-                            
-                            // 定义所有省份的范围
-                            var provinces = {
-                                // 湖北省
-                                hubei: {
-                                    name: "湖北省",
-                                    url: "shengfen/hubei.html",
-                                    range: {
-                                        minLng: 108.4, maxLng: 116.1,
-                                        minLat: 29.1, maxLat: 33.3
-                                    },
-                                    coreRange: {
-                                        minLng: 109.5, maxLng: 115.0,
-                                        minLat: 29.8, maxLat: 32.5
-                                    }
-                                },
-                                // 吉林省
-                                jilin: {
-                                    name: "吉林省",
-                                    url: "shengfen/jilin.html",
-                                    range: {
-                                        minLng: 121.7, maxLng: 131.3,
-                                        minLat: 40.9, maxLat: 46.3
-                                    },
-                                    coreRange: {
-                                        minLng: 123.5, maxLng: 128.5,
-                                        minLat: 42.5, maxLat: 45.0
-                                    }
-                                },
-                                // 四川省
-                                sichuan: {
-                                    name: "四川省",
-                                    url: "shengfen/sichuan.html",
-                                    range: {
-                                        minLng: 97.5, maxLng: 108.5,
-                                        minLat: 26.0, maxLat: 34.3
-                                    },
-                                    coreRange: {
-                                        minLng: 102.0, maxLng: 106.0,
-                                        minLat: 28.5, maxLat: 32.0
-                                    }
-                                },
-                                // 福建省
-                                fujian: {
-                                    name: "福建省",
-                                    url: "shengfen/fujian.html",
-                                    range: {
-                                        minLng: 115.5, maxLng: 120.5,
-                                        minLat: 23.5, maxLat: 28.3
-                                    },
-                                    coreRange: {
-                                        minLng: 117.0, maxLng: 119.0,
-                                        minLat: 24.5, maxLat: 27.0
-                                    }
-                                },
-                                // 山东省
-                                shandong: {
-                                    name: "山东省",
-                                    url: "shengfen/shandong.html",
-                                    range: {
-                                        minLng: 114.5, maxLng: 122.7,
-                                        minLat: 34.3, maxLat: 38.4
-                                    },
-                                    coreRange: {
-                                        minLng: 116.0, maxLng: 120.0,
-                                        minLat: 35.5, maxLat: 37.5
-                                    }
-                                },
-                                // 河北省
-                                hebei: {
-                                    name: "河北省",
-                                    url: "shengfen/hebei.html",
-                                    range: {
-                                        minLng: 113.5, maxLng: 120.0,
-                                        minLat: 36.0, maxLat: 42.7
-                                    },
-                                    coreRange: {
-                                        minLng: 114.5, maxLng: 118.0,
-                                        minLat: 37.5, maxLat: 41.0
-                                    }
-                                },
-                                // 广西省
-                                guangxi: {
-                                    name: "广西省",
-                                    url: "shengfen/guangxi.html",
-                                    range: {
-                                        minLng: 104.5, maxLng: 112.0,
-                                        minLat: 21.5, maxLat: 26.4
-                                    },
-                                    coreRange: {
-                                        minLng: 107.0, maxLng: 110.0,
-                                        minLat: 22.5, maxLat: 25.0
-                                    }
-                                },
-                                // 河南省
-                                henan: {
-                                    name: "河南省",
-                                    url: "shengfen/henan.html",
-                                    range: {
-                                        minLng: 110.3, maxLng: 116.7,
-                                        minLat: 31.2, maxLat: 36.4
-                                    },
-                                    coreRange: {
-                                        minLng: 112.0, maxLng: 115.0,
-                                        minLat: 33.0, maxLat: 35.0
-                                    }
-                                },
-                                // 江苏省
-                                jiangsu: {
-                                    name: "江苏省",
-                                    url: "shengfen/jiangsu.html",
-                                    range: {
-                                        minLng: 116.3, maxLng: 121.9,
-                                        minLat: 30.8, maxLat: 35.1
-                                    },
-                                    coreRange: {
-                                        minLng: 118.0, maxLng: 120.0,
-                                        minLat: 31.5, maxLat: 34.0
-                                    }
-                                },
-                                // 广东省
-                                guangdong: {
-                                    name: "广东省",
-                                    url: "shengfen/guangdong.html",
-                                    range: {
-                                        minLng: 109.7, maxLng: 117.3,
-                                        minLat: 20.2, maxLat: 25.5
-                                    },
-                                    coreRange: {
-                                        minLng: 112.0, maxLng: 115.0,
-                                        minLat: 22.0, maxLat: 24.0
-                                    }
-                                },
-                                // 贵州省
-                                guizhou: {
-                                    name: "贵州省",
-                                    url: "shengfen/guizhou.html",
-                                    range: {
-                                        minLng: 103.6, maxLng: 109.6,
-                                        minLat: 24.6, maxLat: 29.2
-                                    },
-                                    coreRange: {
-                                        minLng: 105.0, maxLng: 108.0,
-                                        minLat: 25.5, maxLat: 28.0
-                                    }
-                                },
-                                // 湖南省
-                                hunan: {
-                                    name: "湖南省",
-                                    url: "shengfen/hunan.html",
-                                    range: {
-                                        minLng: 108.8, maxLng: 114.2,
-                                        minLat: 24.6, maxLat: 30.1
-                                    },
-                                    coreRange: {
-                                        minLng: 110.0, maxLng: 113.0,
-                                        minLat: 26.0, maxLat: 29.0
-                                    }
-                                },
-                                // 江西省
-                                jiangxi: {
-                                    name: "江西省",
-                                    url: "shengfen/jiangxi.html",
-                                    range: {
-                                        minLng: 113.5, maxLng: 118.5,
-                                        minLat: 24.5, maxLat: 30.1
-                                    },
-                                    coreRange: {
-                                        minLng: 114.5, maxLng: 117.0,
-                                        minLat: 26.0, maxLat: 29.0
-                                    }
-                                },
-                                // 浙江省
-                                zhejiang: {
-                                    name: "浙江省",
-                                    url: "shengfen/zhejiang.html",
-                                    range: {
-                                        minLng: 118.0, maxLng: 123.0,
-                                        minLat: 27.0, maxLat: 31.2
-                                    },
-                                    coreRange: {
-                                        minLng: 119.0, maxLng: 121.5,
-                                        minLat: 28.0, maxLat: 30.5
-                                    }
-                                }
                             };
-                            
-                            // 监听地图点击事件
-                            map.on('click', function(e) {
-                                var lng = e.lnglat.getLng();
-                                var lat = e.lnglat.getLat();
-                                
-                                // 检查点击位置是否在任何省份的核心区域内
-                                for (var key in provinces) {
-                                    var province = provinces[key];
-                                    if (isInRange(lng, lat, province.coreRange)) {
-                                        // 核心区域直接跳转
-                                        window.location.href = province.url;
-                                        return;
-                                    }
-                                }
-                                
-                                // 如果不在核心区域，检查是否在大致范围内
-                                var possibleProvinces = [];
-                                for (var key in provinces) {
-                                    var province = provinces[key];
-                                    if (isInRange(lng, lat, province.range)) {
-                                        possibleProvinces.push(province);
-                                    }
-                                }
-                                
-                                // 如果只有一个可能的省份，直接跳转
-                                if (possibleProvinces.length === 1) {
-                                    window.location.href = possibleProvinces[0].url;
-                                    return;
-                                }
-                                
-                                // 如果有多个可能的省份，使用逆地理编码确认
-                                if (possibleProvinces.length > 0) {
-                                    AMap.plugin('AMap.Geocoder', function() {
-                                        var geocoder = new AMap.Geocoder();
-                                        geocoder.getAddress(e.lnglat, function(status, result) {
-                                            if (status === 'complete' && result.regeocode) {
-                                                var address = result.regeocode.addressComponent;
-                                                if (address.province) {
-                                                    // 检查地址是否匹配任何可能的省份
-                                                    for (var i = 0; i < possibleProvinces.length; i++) {
-                                                        var province = possibleProvinces[i];
-                                                        if (address.province.indexOf(province.name.substring(0, 2)) !== -1) {
-                                                            window.location.href = province.url;
-                                                            return;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    });
-                                }
-                            });
-                            
-                            // 辅助函数：判断点是否在范围内
-                            function isInRange(lng, lat, range) {
-                                return lng >= range.minLng && lng <= range.maxLng && 
-                                       lat >= range.minLat && lat <= range.maxLat;
-                            }
-                        </script>
-                    </div>
-                </div>
-            </li>
-            <li style="width: 28%">
+                        },
+                        data: dynastyRanges,
+                        z: -10,
+                        silent: true
+                    }
+                ],
+                animationDuration: 1500,
+                animationEasing: 'cubicInOut'
+            };
 
-                <div class="box">
-                    <div class="tit">中国古代自然科学与社会发展的互动关系</div>
-                    <div class="boxnav" style="height: 200px;">
-                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tbody>
-                                <tr>
-                                    <th>时期</th>
-                                    <th>科技<br>成就</th>
-                                    <th>经济<br>影响</th>
-                                    <th>政治<br>影响</th>
-                                    <th>社会<br>影响</th>
-                                </tr>
-                                <tr>
-                                    <td>先秦</td>
-                                    <td>青铜<br>冶炼</td>
-                                    <td>手工业<br>发展</td>
-                                    <td>军事<br>装备</td>
-                                    <td>礼器<br>文化</td>
-                                </tr>
-                                <tr>
-                                    <td>汉代</td>
-                                    <td>造纸术</td>
-                                    <td>文化<br>传播</td>
-                                    <td>政令<br>推广</td>
-                                    <td>教育<br>普及</td>
-                                </tr>
-                                <tr>
-                                    <td>唐代</td>
-                                    <td>天文<br>历法</td>
-                                    <td>农业<br>生产</td>
-                                    <td>朝贡<br>体系</td>
-                                    <td>文化<br>交流</td>
-                                </tr>
-                                <tr>
-                                    <td>宋代</td>
-                                    <td>指南针</td>
-                                    <td>海上<br>贸易</td>
-                                    <td>航海<br>外交</td>
-                                    <td>商业<br>繁荣</td>
-                                </tr>
-                                <tr>
-                                    <td>明代</td>
-                                    <td>火药<br>技术</td>
-                                    <td>军工<br>产业</td>
-                                    <td>国防<br>建设</td>
-                                    <td>军事<br>变革</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="tit">中国古代思想</div>
-                    <div class="boxnav" style="height: 250px;">
-                        <div class="" style="height: 190px" id="echart1"></div>
-                        <div class="leidanav">
-                            <ul class="clearfix">
-                                <li><span>儒家</span>
-                                    <p>143</p>
-                                </li>
-                                <li><span>道家</span>
-                                    <p>100</p>
-                                </li>
-                                <li><span>法家</span>
-                                    <p>78</p>
-                                </li>
-                                <li><span>墨家</span>
-                                    <p>63</p>
-                                </li>
-                                <li><span>兵家</span>
-                                    <p>50</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            // 设置图表选项并渲染
+            myChart.setOption(option);
 
-            </li>
-        </ul>
-
-        <div class="box" style="padding: 20px 0;">
-            <ul class="clearfix nav2 ">
-                <li style="width:25%">
-                    <div class="tit01">成就统计时间轴</div>
-                    <div class="ftechart" id="echart2"></div>
-                </li>
-                <li style="width:31%">
-                    <div class="tit01">成就统计柱状图</div>
-                    <div class="ftechart" id="echart9"></div>
-                </li>
-                <li style="width:25%">
-                    <div class="tit01">科学家或学者统计时间轴</div>
-                    <div class="ftechart" id="echart3"></div>
-                </li>
-                <li style="width:19%">
-                    <div class="tit01">科学家或学者统计柱状图</div>
-                    <div class="ftechart" id="echart4"></div>
-                </li>
-            </ul>
-        </div>
-
-
-    </div>
-
+            // 响应窗口大小变化
+            window.addEventListener('resize', function () {
+                myChart.resize();
+            });
+        }
+    </script>
 </body>
 
 </html>
