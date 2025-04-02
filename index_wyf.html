@@ -615,6 +615,53 @@
         .carousel-dot.active {
             background-color: #9A4B2C;
         }
+
+        /* 数字统计区域容器 */
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 10px 10px;
+            /* 减小上下内边距 */
+            margin: 12px 0;
+            /* 减小外边距 */
+            box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
+        }
+
+        /* 单个数字统计项 */
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            padding: 0 5px;
+        }
+
+        /* 数字样式 */
+        .stat-number {
+            font-size: 22px;
+            /* 减小字体大小 */
+            font-weight: bold;
+            color: #2E4E7E;
+            margin-bottom: 2px;
+            /* 减小数字和标签之间的间距 */
+            line-height: 1.1;
+            /* 减小行高 */
+        }
+
+        /* 标签样式 */
+        .stat-label {
+            font-size: 11px;
+            /* 减小标签字体大小 */
+            color: #9A4B2C;
+            margin: 0;
+        }
+
+        /* 分隔线 */
+        .stat-divider {
+            width: 1px;
+            background-color: rgba(154, 75, 44, 0.2);
+            margin: 0 5px;
+        }
     </style>
 </head>
 
@@ -760,9 +807,10 @@
                 <div class="map-copyright">GS(2023)3377号 - 甲测资字1100471</div>
             </div>
 
-            <!-- 时间轴 -->
-            <div class="card timeline-container">
-                <h3>科技成就时间轴</h3>
+            <!-- 科技成就时间轴 -->
+            <div class="chart-container">
+                <h4>科技成就时间轴</h4>
+                <div id="timeline-chart" style="width: 100%; height: 280px;"></div>
             </div>
         </div>
 
@@ -774,6 +822,29 @@
             <div class="card">
                 <h3>科技贡献统计</h3>
             </div>
+        </div>
+    </div>
+
+    <!-- 数字统计区域HTML结构 -->
+    <div class="stats-container">
+        <div class="stat-item">
+            <div class="stat-number">358</div>
+            <div class="stat-label">重要成就</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-number">1452</div>
+            <div class="stat-label">历史人物</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-number">532</div>
+            <div class="stat-label">典籍著作</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-number">52</div>
+            <div class="stat-label">研究领域</div>
         </div>
     </div>
 
@@ -1407,6 +1478,354 @@
                     moveToIndex(currentIndex - 1);
                 }
                 startAutoPlay();
+            });
+        }
+
+        // 科技成就时间轴折线图
+        function initTimelineChart() {
+            var chartDom = document.getElementById('timeline-chart');
+            var myChart = echarts.init(chartDom);
+
+            // 时间轴数据 - 朝代和年份范围
+            var dynasties = [
+                { name: '先秦', start: -2100, end: -221 },
+                { name: '秦汉', start: -221, end: 220 },
+                { name: '魏晋南北朝', start: 220, end: 581 },
+                { name: '隋唐', start: 581, end: 907 },
+                { name: '宋元', start: 960, end: 1368 },
+                { name: '明清', start: 1368, end: 1912 }
+            ];
+
+            // 生成朝代区间
+            var dynastyRanges = dynasties.map(function (dynasty) {
+                return [{
+                    name: dynasty.name,
+                    xAxis: dynasty.start
+                }, {
+                    xAxis: dynasty.end
+                }];
+            });
+
+            // 各领域成就数据
+            var astronomyData = [
+                { year: -1600, value: 10, name: '甲骨文中的天象记录' },
+                { year: -350, value: 25, name: '甘德、石申星表' },
+                { year: 100, value: 45, name: '张衡浑天仪' },
+                { year: 450, value: 30, name: '祖冲之《大明历》' },
+                { year: 725, value: 55, name: '一行《大衍历》' },
+                { year: 1090, value: 65, name: '沈括《梦溪笔谈》天文篇' },
+                { year: 1280, value: 50, name: '郭守敬《授时历》' },
+                { year: 1580, value: 40, name: '徐光启《崇祯历书》' }
+            ];
+
+            var medicineData = [
+                { year: -200, value: 15, name: '《黄帝内经》' },
+                { year: 220, value: 35, name: '张仲景《伤寒杂病论》' },
+                { year: 450, value: 25, name: '陶弘景《本草经集注》' },
+                { year: 650, value: 45, name: '孙思邈《千金要方》' },
+                { year: 1100, value: 55, name: '《太平惠民和剂局方》' },
+                { year: 1350, value: 40, name: '朱震亨《格致余论》' },
+                { year: 1580, value: 70, name: '李时珍《本草纲目》' },
+                { year: 1800, value: 50, name: '吴谦《医宗金鉴》' }
+            ];
+
+            var agricultureData = [
+                { year: -500, value: 20, name: '《氾胜之书》' },
+                { year: 100, value: 30, name: '《四民月令》' },
+                { year: 530, value: 50, name: '贾思勰《齐民要术》' },
+                { year: 800, value: 35, name: '陆龟蒙《种树书》' },
+                { year: 1150, value: 60, name: '陈敷《农书》' },
+                { year: 1300, value: 45, name: '王祯《农书》' },
+                { year: 1620, value: 65, name: '徐光启《农政全书》' },
+                { year: 1750, value: 40, name: '《授农新书》' }
+            ];
+
+            var mathData = [
+                { year: -100, value: 25, name: '《九章算术》' },
+                { year: 250, value: 40, name: '刘徽《九章算术注》' },
+                { year: 480, value: 60, name: '祖冲之圆周率计算' },
+                { year: 650, value: 35, name: '王孝通《缉古算经》' },
+                { year: 1050, value: 50, name: '贾宪《黄帝九章算法细草》' },
+                { year: 1250, value: 45, name: '秦九韶《数书九章》' },
+                { year: 1450, value: 30, name: '朱世杰《算学启蒙》' },
+                { year: 1700, value: 55, name: '梅文鼎《历算全书》' }
+            ];
+
+            // 转换数据格式
+            function convertData(data) {
+                return data.map(function (item) {
+                    return [item.year, item.value, item.name];
+                });
+            }
+
+            // 图表配置
+            var option = {
+                color: ['#2E4E7E', '#9A4B2C', '#5D8B3E', '#A87C4F'],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var result = params[0].axisValue + '年<br/>';
+                        params.forEach(function (param) {
+                            if (param.data) {
+                                result += param.marker + param.seriesName + ': ' +
+                                    param.data[2] + '<br/>';
+                            }
+                        });
+                        return result;
+                    },
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderColor: '#ccc',
+                    borderWidth: 1,
+                    padding: 10,
+                    textStyle: {
+                        color: '#333'
+                    },
+                    extraCssText: 'box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);'
+                },
+                legend: {
+                    data: ['天文学', '医学', '农学', '数学'],
+                    right: 10,
+                    top: 0,
+                    textStyle: {
+                        color: '#666'
+                    },
+                    itemWidth: 15,
+                    itemHeight: 10,
+                    itemGap: 10
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    top: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    name: '年份',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                    min: -2100,
+                    max: 1912,
+                    axisLabel: {
+                        formatter: function (value) {
+                            if (value < 0) {
+                                return -value + '年前';
+                            } else {
+                                return value + '年';
+                            }
+                        },
+                        color: '#666',
+                        fontSize: 10
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed',
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '成就指数',
+                    nameLocation: 'end',
+                    nameGap: 15,
+                    min: 0,
+                    max: 80,
+                    axisLabel: {
+                        color: '#666',
+                        fontSize: 10
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            type: 'dashed',
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    }
+                },
+                dataZoom: [{
+                    type: 'slider',
+                    xAxisIndex: 0,
+                    filterMode: 'none',
+                    height: 20,
+                    bottom: 0,
+                    start: 0,
+                    end: 100,
+                    borderColor: 'transparent',
+                    backgroundColor: 'rgba(211, 211, 211, 0.3)',
+                    fillerColor: 'rgba(46, 78, 126, 0.2)',
+                    handleIcon: 'path://M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '80%',
+                    handleStyle: {
+                        color: '#2E4E7E',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.3)',
+                        shadowOffsetX: 1,
+                        shadowOffsetY: 1
+                    },
+                    textStyle: {
+                        color: '#666'
+                    }
+                }],
+                series: [
+                    {
+                        name: '天文学',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'emptyCircle',
+                        symbolSize: 8,
+                        data: convertData(astronomyData),
+                        lineStyle: {
+                            width: 3
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderWidth: 3,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(46, 78, 126, 0.5)'
+                            }
+                        },
+                        markPoint: {
+                            symbol: 'pin',
+                            symbolSize: 40,
+                            label: {
+                                show: false
+                            },
+                            data: [
+                                { type: 'max', name: '最高值' },
+                                { type: 'min', name: '最低值' }
+                            ]
+                        }
+                    },
+                    {
+                        name: '医学',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'emptyCircle',
+                        symbolSize: 8,
+                        data: convertData(medicineData),
+                        lineStyle: {
+                            width: 3
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderWidth: 3,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(154, 75, 44, 0.5)'
+                            }
+                        }
+                    },
+                    {
+                        name: '农学',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'emptyCircle',
+                        symbolSize: 8,
+                        data: convertData(agricultureData),
+                        lineStyle: {
+                            width: 3
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderWidth: 3,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(93, 139, 62, 0.5)'
+                            }
+                        }
+                    },
+                    {
+                        name: '数学',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'emptyCircle',
+                        symbolSize: 8,
+                        data: convertData(mathData),
+                        lineStyle: {
+                            width: 3
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderWidth: 3,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(168, 124, 79, 0.5)'
+                            }
+                        }
+                    },
+                    {
+                        name: '朝代区间',
+                        type: 'custom',
+                        renderItem: function (params, api) {
+                            var start = api.coord([api.value(0), 0]);
+                            var end = api.coord([api.value(1), 0]);
+                            var height = 10;
+                            var rectShape = echarts.graphic.clipRectByRect(
+                                {
+                                    x: start[0],
+                                    y: params.coordSys.y + params.coordSys.height - height,
+                                    width: end[0] - start[0],
+                                    height: height
+                                },
+                                {
+                                    x: params.coordSys.x,
+                                    y: params.coordSys.y,
+                                    width: params.coordSys.width,
+                                    height: params.coordSys.height
+                                }
+                            );
+
+                            var textConfig = {
+                                x: start[0] + (end[0] - start[0]) / 2,
+                                y: params.coordSys.y + params.coordSys.height - height / 2,
+                                text: dynasties[params.dataIndex].name,
+                                textFill: '#fff',
+                                fontSize: 9,
+                                textAlign: 'center',
+                                textVerticalAlign: 'middle'
+                            };
+
+                            return rectShape && {
+                                type: 'group',
+                                children: [
+                                    {
+                                        type: 'rect',
+                                        shape: rectShape,
+                                        style: {
+                                            fill: 'rgba(46, 78, 126, ' + (0.3 + params.dataIndex * 0.1) + ')'
+                                        }
+                                    },
+                                    {
+                                        type: 'text',
+                                        style: textConfig
+                                    }
+                                ]
+                            };
+                        },
+                        data: dynastyRanges,
+                        z: -10,
+                        silent: true
+                    }
+                ],
+                animationDuration: 1500,
+                animationEasing: 'cubicInOut'
+            };
+
+            // 设置图表选项并渲染
+            myChart.setOption(option);
+
+            // 响应窗口大小变化
+            window.addEventListener('resize', function () {
+                myChart.resize();
             });
         }
     </script>
