@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古代医学家的智慧与成就</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #8b2a2a;
+            --secondary: #d4a76a;
+            --dark: #5c2018;
+            --light: #f9f5e9;
+        }
+        body {
+            font-family: "Microsoft YaHei", serif;
+            background-color: var(--light);
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(135deg, var(--dark), var(--primary));
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 60px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--secondary), var(--primary));
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -48px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 4px solid var(--secondary);
+            z-index: 1;
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        .timeline-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+        .timeline-content {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        .highlight {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .chart-container {
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .timeline {
+                padding-left: 40px;
+            }
+            .timeline-item::before {
+                left: -32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>古代医学家的智慧与成就</h1>
+            <p class="subtitle">从四诊法到本草纲目的医学传承</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 时间轴部分 -->
+        <section class="chart-card">
+            <h2>医学家历史脉络</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">春秋战国 (约前5世纪)</div>
+                    <h3 class="timeline-title">扁鹊 - 四诊法奠基人</h3>
+                    <div class="timeline-content">
+                        <p>创立<span class="highlight">"望、闻、问、切"</span>四诊法，奠定中医诊断学基础。</p>
+                        <p>被《史记》记载治愈虢太子"尸厥"症，医术高超被尊为<span class="highlight">"医祖"</span>。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">东汉 (约150-219年)</div>
+                    <h3 class="timeline-title">张仲景 - 辨证论治开创者</h3>
+                    <div class="timeline-content">
+                        <p>著《伤寒杂病论》，创立<span class="highlight">六经辨证</span>体系，载方269首。</p>
+                        <p>提出<span class="highlight">"辨证施治"</span>原则，被誉为<span class="highlight">"医圣"</span>，其方剂至今仍在临床广泛应用。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">明代 (1518-1593年)</div>
+                    <h3 class="timeline-title">李时珍 - 药物学集大成者</h3>
+                    <div class="timeline-content">
+                        <p>历时27年编撰《本草纲目》，收录药物<span class="highlight">1892种</span>，附图1109幅。</p>
+                        <p>首创<span class="highlight">药物分类系统</span>（16部60类），被达尔文称为"中国古代百科全书"。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid">
+            <!-- 雷达图 -->
+            <section class="chart-card">
+                <h2>医学贡献对比</h2>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </section>
+
+            <!-- 右侧图表组 -->
+            <section class="chart-card">
+                <h2>主要著作影响力</h2>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>数据来源：《中国医学史》《中医各家学说》《本草纲目研究》</p>
+            <p>© 2023 中国古代医学成就可视化</p>
+        </div>
+    </footer>
+
+    <script>
+        // 雷达图 - 医学贡献对比
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['诊断方法', '理论体系', '临床实践', '药物研究', '教育传承', '国际影响'],
+                datasets: [
+                    {
+                        label: '扁鹊',
+                        data: [5, 3, 4, 2, 3, 3],
+                        backgroundColor: 'rgba(139, 42, 42, 0.2)',
+                        borderColor: 'rgba(139, 42, 42, 1)',
+                        pointBackgroundColor: 'rgba(139, 42, 42, 1)'
+                    },
+                    {
+                        label: '张仲景',
+                        data: [4, 5, 5, 3, 4, 4],
+                        backgroundColor: 'rgba(212, 167, 106, 0.2)',
+                        borderColor: 'rgba(212, 167, 106, 1)',
+                        pointBackgroundColor: 'rgba(212, 167, 106, 1)'
+                    },
+                    {
+                        label: '李时珍',
+                        data: [3, 4, 4, 5, 4, 5],
+                        backgroundColor: 'rgba(92, 32, 24, 0.2)',
+                        borderColor: 'rgba(92, 32, 24, 1)',
+                        pointBackgroundColor: 'rgba(92, 32, 24, 1)'
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+        // 条形图 - 著作影响力
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['四诊法', '伤寒杂病论', '本草纲目'],
+                datasets: [{
+                    label: '影响指数 (10分制)',
+                    data: [8, 9, 10],
+                    backgroundColor: [
+                        'rgba(139, 42, 42, 0.7)',
+                        'rgba(212, 167, 106, 0.7)',
+                        'rgba(92, 32, 24, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(139, 42, 42, 1)',
+                        'rgba(212, 167, 106, 1)',
+                        'rgba(92, 32, 24, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: { stepSize: 2 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 新增的折线图 - 著作历史影响力变化
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['古代', '中世纪', '近代', '现代'],
+                datasets: [
+                    {
+                        label: '四诊法',
+                        data: [8, 7, 7, 8],
+                        borderColor: 'rgba(139, 42, 42, 1)',
+                        backgroundColor: 'rgba(139, 42, 42, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: '伤寒杂病论',
+                        data: [7, 8, 8, 9],
+                        borderColor: 'rgba(212, 167, 106, 1)',
+                        backgroundColor: 'rgba(212, 167, 106, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: '本草纲目',
+                        data: [6, 7, 9, 10],
+                        borderColor: 'rgba(92, 32, 24, 1)',
+                        backgroundColor: 'rgba(92, 32, 24, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: { stepSize: 2 }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: '著作历史影响力变化 (10分制)'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

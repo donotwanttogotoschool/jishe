@@ -382,7 +382,7 @@
                             <div class="service-box-style4 mb-28"> 
                                 <div class="content">
                                     <h5 class="title"><a href="#">扁鹊——望闻问切的奠基人</a></h5>
-                                    <p>扁鹊是春秋战国时期的著名医学家，他创立了“望、闻、问、切”四诊法，为中医诊断学的发展作出了重要贡献。他的医术高超，被后人尊为“医祖”。</p>
+                                    <p>扁鹊是春秋战国时期的著名医学家，他创立了"望、闻、问、切"四诊法，为中医诊断学的发展作出了重要贡献。他的医术高超，被后人尊为"医祖"。</p>
                                 </div>
                                 <div class="icon">
                                     <a href="#">
@@ -398,7 +398,7 @@
                             <div class="service-box-style4 mb-28"> 
                                 <div class="content">
                                     <h5 class="title"><a href="#">张仲景——辨证论治的开创者</a></h5>
-                                    <p>张仲景是东汉时期的医学家，他所著的《伤寒杂病论》系统总结了外感疾病和内科杂病的治疗方法，提出了“六经辨证”的理论，对后世临床医学产生了深远影响。</p>
+                                    <p>张仲景是东汉时期的医学家，他所著的《伤寒杂病论》系统总结了外感疾病和内科杂病的治疗方法，提出了"六经辨证"的理论，对后世临床医学产生了深远影响。</p>
                                 </div>
                                 <div class="icon">
                                     <a href="#">
@@ -425,6 +425,36 @@
                                     </a>
                                 </div>
                             </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-5">
+                    <div class="chart-section wow fadeInUp" data-wow-delay=".2s">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="chart-card mb-4">
+                                    <h4 class="chart-title">医学贡献对比</h4>
+                                    <div class="chart-container">
+                                        <canvas id="radarChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-card mb-4">
+                                    <h4 class="chart-title">主要著作影响力</h4>
+                                    <div class="chart-container">
+                                        <canvas id="barChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="chart-card">
+                                    <h4 class="chart-title">著作历史影响力变化</h4>
+                                    <div class="chart-container">
+                                        <canvas id="lineChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -549,7 +579,7 @@
                         <div class="content">
                             <div class="tf-title-style4 mb-40">
                                 <p class="sub-title">Need A Designer?</p>
-                                <h3 class="title mb-20">Let’s Create An Amazing Project Together!</h3>
+                                <h3 class="title mb-20">Let's Create An Amazing Project Together!</h3>
                                 <p class="color1">Please contact me if you have interesting projects</p>
                             </div> 
                             <div class="btn-wrapper flex">
@@ -667,7 +697,7 @@
                         <img src="./assets/images/post/post_15.jpg" alt="">
                     </div> 
                     <p class="txt mb-20">
-                        We are opening up our platform and inviting all builders to create the first plugins and widgets for FigJam. Check out our documentation to start building new plugins or republishing your existing Figma plugins for FigJam. 
+                        We are opening up our platform and inviting all builders to create the first plugins and widgets for FigJam. Check out our documentation to start building new plugins or republishing your existing Figma plugins for FigJam. 
                     </p>  
                     <p class="txt mb-32">
                         These are just a handful of examples—we have 35 builders who have FigJam plugins already in the works, and we are so excited for you to join them.
@@ -822,6 +852,176 @@
         }; 
         link.forEach(b => b.addEventListener('mousemove', animateit));
         link.forEach(b => b.addEventListener('mouseleave', animateit)); 
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // 添加Chart.js相关的CSS样式
+    document.head.insertAdjacentHTML('beforeend', `
+        <style>
+            .chart-section {
+                margin-top: 40px;
+            }
+            .chart-card {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                padding: 1.5rem;
+                height: 100%;
+            }
+            .chart-title {
+                color: #8b2a2a;
+                border-bottom: 2px solid #d4a76a;
+                padding-bottom: 0.5rem;
+                margin-top: 0;
+                margin-bottom: 1rem;
+            }
+            .chart-container {
+                position: relative;
+                height: 300px;
+            }
+        </style>
+    `);
+
+    // 页面加载完成后初始化图表
+    document.addEventListener('DOMContentLoaded', function() {
+        // 雷达图 - 医学贡献对比
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['诊断方法', '理论体系', '临床实践', '药物研究', '教育传承', '国际影响'],
+                datasets: [
+                    {
+                        label: '扁鹊',
+                        data: [5, 3, 4, 2, 3, 3],
+                        backgroundColor: 'rgba(139, 42, 42, 0.2)',
+                        borderColor: 'rgba(139, 42, 42, 1)',
+                        pointBackgroundColor: 'rgba(139, 42, 42, 1)'
+                    },
+                    {
+                        label: '张仲景',
+                        data: [4, 5, 5, 3, 4, 4],
+                        backgroundColor: 'rgba(212, 167, 106, 0.2)',
+                        borderColor: 'rgba(212, 167, 106, 1)',
+                        pointBackgroundColor: 'rgba(212, 167, 106, 1)'
+                    },
+                    {
+                        label: '李时珍',
+                        data: [3, 4, 4, 5, 4, 5],
+                        backgroundColor: 'rgba(92, 32, 24, 0.2)',
+                        borderColor: 'rgba(92, 32, 24, 1)',
+                        pointBackgroundColor: 'rgba(92, 32, 24, 1)'
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                maintainAspectRatio: false
+            }
+        });
+
+        // 条形图 - 著作影响力
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['四诊法', '伤寒杂病论', '本草纲目'],
+                datasets: [{
+                    label: '影响指数 (10分制)',
+                    data: [8, 9, 10],
+                    backgroundColor: [
+                        'rgba(139, 42, 42, 0.7)',
+                        'rgba(212, 167, 106, 0.7)',
+                        'rgba(92, 32, 24, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(139, 42, 42, 1)',
+                        'rgba(212, 167, 106, 1)',
+                        'rgba(92, 32, 24, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: { stepSize: 2 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                },
+                maintainAspectRatio: false
+            }
+        });
+
+        // 折线图 - 著作历史影响力变化
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['古代', '中世纪', '近代', '现代'],
+                datasets: [
+                    {
+                        label: '四诊法',
+                        data: [8, 7, 7, 8],
+                        borderColor: 'rgba(139, 42, 42, 1)',
+                        backgroundColor: 'rgba(139, 42, 42, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: '伤寒杂病论',
+                        data: [7, 8, 8, 9],
+                        borderColor: 'rgba(212, 167, 106, 1)',
+                        backgroundColor: 'rgba(212, 167, 106, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: '本草纲目',
+                        data: [6, 7, 9, 10],
+                        borderColor: 'rgba(92, 32, 24, 1)',
+                        backgroundColor: 'rgba(92, 32, 24, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: { stepSize: 2 }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false
+                    }
+                },
+                maintainAspectRatio: false
+            }
+        });
+    });
     </script>
 </body>
 </html>
