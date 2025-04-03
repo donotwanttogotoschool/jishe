@@ -608,17 +608,13 @@
                         <div class="service-box-style2 wow fadeIn" data-wow-delay=".3s">
                             <h4 class="title"><a href="Home-Designer.html">天文历法</a></h4>
                             <p>中国古代天文学发展悠久，创制了世界上最早的农历系统。张衡发明浑天仪，测定二十四节气；僧一行主持测量子午线，编制《大衍历》，在世界天文史上留下了光辉的一页。</p>
-                            
-                            <div class="chart-container" style="background-color: #f1f0ee; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 15px; margin: -5px 0 20px 0; width: 125%; margin-left: -12.5%; height: 400px;">
-                                <div class="timeline-container" style="overflow-x: auto; margin: 10px 0; height: 370px;">
-                                    <div class="timeline-wave">
-                                        <div class="timeline-line"></div>
-                                        <!-- 节点将通过JS动态加载 -->
-                                    </div>
+                            <div class="timeline-container" style="overflow-x: auto; margin: 50px 0;">
+                                <div class="timeline-wave">
+                                    <div class="timeline-line"></div>
+                                    <!-- 节点将通过JS动态加载 -->
                                 </div>
                             </div>
-                            
-                            <a href="Home-Designer.html" class="button-style style2" style="margin-top: -10px; position: relative; z-index: 1;">
+                            <a href="Home-Designer.html" class="button-style style2" style="margin-top: 40px; display: inline-block;">
                                 <span class="btn-main">了解更多</span>
                                 <span class="btn-absolute"></span>
                             </a>
@@ -628,12 +624,8 @@
                         <div class="service-box-style2 wow fadeIn" data-wow-delay=".5s">
                             <h4 class="title"><a href="Home-Designer1.html">数学成就</a></h4>
                             <p>《九章算术》开创了中国古代算学的先河，祖冲之将圆周率精确推算至小数点后七位，比西方早近千年。刘徽的割圆术、贾宪的杨辉三角，都展现了中国古代数学的非凡成就。</p>
-                            
-                            <div class="chart-container" style="background-color: #f1f0ee; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 15px; margin: -5px 0 20px 0; width: 125%; margin-left: -12.5%; height: 400px;">
-                                <div id="math-radar" style="width: 100%; height: 370px;"></div>
-                            </div>
-                            
-                            <a href="Home-Designer1.html" class="button-style style2" style="margin-top: -10px; position: relative; z-index: 1;">
+                            <div id="math-radar" style="width: 125%; height: 400px; margin: -5px 0; margin-left: -40px;"></div>
+                            <a href="Home-Designer1.html" class="button-style style2">
                                 <span class="btn-main">了解更多</span>
                                 <span class="btn-absolute"></span>
                             </a>
@@ -643,18 +635,7 @@
                         <div class="service-box-style2 boder-r-none wow fadeIn" data-wow-delay=".8s">
                             <h4 class="title"><a href="Home-Designer2.html">医学典籍</a></h4>
                             <p>中医药学历史悠久，《黄帝内经》奠定理论基础，《伤寒杂病论》开创临床治疗，《本草纲目》集药物学大成，展现了中国古代医学的卓越成就。</p>
-                            
-                            <div class="chart-container" style="background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 15px; margin: -5px 0 20px 0; width: 125%; height:400px; margin-left: -10%;">
-                                <div class="tabs" style="display: flex; justify-content: center; margin-bottom: 15px;">
-                                    <button class="tab-button active" style="padding: 6px 12px; margin: 0 5px; background: #e8d5b5; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;" onclick="updateMedicalChart('medicine')">药物数量</button>
-                                    <button class="tab-button" style="padding: 6px 12px; margin: 0 5px; background: #e8d5b5; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;" onclick="updateMedicalChart('prescription')">药方数量</button>
-                                </div>
-                                <div style="height: 320px;">
-                                    <canvas id="medicalComparisonChart"></canvas>
-                                </div>
-                            </div>
-                            
-                            <a href="Home-Designer2.html" class="button-style style2" style="margin-top: -10px; position: relative; z-index: 1;">
+                            <a href="Home-Designer2.html" class="button-style style2">
                                 <span class="btn-main">了解更多</span>
                                 <span class="btn-absolute"></span>
                             </a>
@@ -1829,151 +1810,6 @@
                 });
             }
         });
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 数据集
-            const medicalDataSets = {
-                medicine: {
-                    label: '收录药物数量（种）',
-                    data: [60, 365, 260, 374, 1892, 921],
-                    backgroundColor: '#8b2a2a',
-                    borderColor: '#5c2018'
-                },
-                prescription: {
-                    label: '记载药方数量（首）',
-                    data: [13, 170, 269, 317, 11096, 2000],
-                    backgroundColor: '#d4a76a',
-                    borderColor: '#a37840'
-                }
-            };
-
-            const chartLabels = [
-                '《黄帝内经》', 
-                '《神农本草经》', 
-                '《伤寒论》', 
-                '《金匮要略》', 
-                '《本草纲目》', 
-                '《证类本草》'
-            ];
-
-            // 初始化图表配置
-            const medicalChartConfig = {
-                type: 'bar',
-                data: {
-                    labels: chartLabels,
-                    datasets: [medicalDataSets.medicine]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
-                            title: { display: true, text: '数量', color: '#666', font: { size: 11 } },
-                            ticks: { font: { size: 11 } }
-                        },
-                        y: { 
-                            grid: { display: false },
-                            ticks: { font: { size: 11 } }
-                        }
-                    },
-                    plugins: {
-                        legend: { 
-                            position: 'top',
-                            labels: { font: { size: 11 } }
-                        },
-                        tooltip: {
-                            titleFont: { size: 11 },
-                            bodyFont: { size: 11 },
-                            callbacks: {
-                                label: (ctx) => {
-                                    const dataset = ctx.dataset;
-                                    return ` ${dataset.label}：${ctx.parsed.x}`;
-                                }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: '《本草纲目》药物收录量是《黄帝内经》的31.5倍',
-                            font: { size: 12, weight: 'bold' },
-                            color: '#8b2a2a',
-                            padding: { bottom: 10 }
-                        }
-                    },
-                    animation: { duration: 1500 }
-                }
-            };
-
-            // 初始化图表
-            const ctx = document.getElementById('medicalComparisonChart');
-            if (ctx) {
-                window.medicalComparisonChart = new Chart(ctx, medicalChartConfig);
-            }
-        });
-
-        // 切换标签页
-        function updateMedicalChart(type) {
-            if (!window.medicalComparisonChart) return;
-            
-            const chart = window.medicalComparisonChart;
-            const chartLabels = [
-                '《黄帝内经》', 
-                '《神农本草经》', 
-                '《伤寒论》', 
-                '《金匮要略》', 
-                '《本草纲目》', 
-                '《证类本草》'
-            ];
-            
-            // 数据集
-            const medicalDataSets = {
-                medicine: {
-                    label: '收录药物数量（种）',
-                    data: [60, 365, 260, 374, 1892, 921],
-                    backgroundColor: '#8b2a2a',
-                    borderColor: '#5c2018'
-                },
-                prescription: {
-                    label: '记载药方数量（首）',
-                    data: [13, 170, 269, 317, 11096, 2000],
-                    backgroundColor: '#d4a76a',
-                    borderColor: '#a37840'
-                }
-            };
-            
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.includes(type === 'medicine' ? '药物' : '药方'));
-                if (btn.classList.contains('active')) {
-                    btn.style.background = '#d4a76a';
-                    btn.style.color = 'white';
-                } else {
-                    btn.style.background = '#e8d5b5';
-                    btn.style.color = 'black';
-                }
-            });
-
-            chart.data.datasets[0] = medicalDataSets[type];
-            chart.options.plugins.title.text = getChartTitle(type, chartLabels, medicalDataSets[type].data);
-            chart.update();
-        }
-
-        // 动态生成标题
-        function getChartTitle(type, labels, data) {
-            const maxVal = Math.max(...data);
-            const minVal = Math.min(...data.filter(v => v > 0));
-            const maxIndex = data.indexOf(maxVal);
-            const minIndex = data.indexOf(minVal);
-            const ratio = (maxVal / minVal).toFixed(1);
-
-            return type === 'medicine' 
-                ? `《${labels[maxIndex]}》药物数量是《${labels[minIndex]}》的${ratio}倍`
-                : `《${labels[maxIndex]}》载方量达${maxVal}首，为中医方剂之冠`;
-        }
     </script>
 
 </body>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中医典籍药物与药方数量对比</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Microsoft YaHei', sans-serif;
+      background-color: #f9f5e9;
+      color: #333;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #8b2a2a;
+      text-align: center;
+      border-bottom: 2px solid #d4a76a;
+      padding-bottom: 10px;
+    }
+    .chart-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-top: 30px;
+    }
+    .footnote {
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tab-button {
+      padding: 8px 16px;
+      margin: 0 5px;
+      background: #e8d5b5;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .tab-button.active {
+      background: #d4a76a;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>中医经典典籍内容对比</h1>
+  
+  <div class="tabs">
+    <button class="tab-button active" onclick="updateChart('medicine')">药物数量</button>
+    <button class="tab-button" onclick="updateChart('prescription')">药方数量</button>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="medicalChart"></canvas>
+  </div>
+  <p class="footnote">数据来源：各典籍历史记载（药物统计含主条目与附方）</p>
+
+  <script>
+    // 数据集
+    const dataSets = {
+      medicine: {
+        label: '收录药物数量（种）',
+        data: [60, 365, 260, 374, 1892, 921],
+        backgroundColor: '#8b2a2a',
+        borderColor: '#5c2018'
+      },
+      prescription: {
+        label: '记载药方数量（首）',
+        data: [13, 170, 269, 317, 11096, 2000],
+        backgroundColor: '#d4a76a',
+        borderColor: '#a37840'
+      }
+    };
+
+    const config = {
+      type: 'bar',
+      data: {
+        labels: [
+          '《黄帝内经》', 
+          '《神农本草经》', 
+          '《伤寒论》', 
+          '《金匮要略》', 
+          '《本草纲目》', 
+          '《证类本草》'
+        ],
+        datasets: [dataSets.medicine]
+      },
+      options: {
+        responsive: true,
+        indexAxis: 'y',
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+            title: { display: true, text: '数量', color: '#666' }
+          },
+          y: { grid: { display: false } }
+        },
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const dataset = ctx.dataset;
+                return ` ${dataset.label.split(')')[0]}：${ctx.parsed.x}${dataset.label.match(/\((.+)\)/)[1]}`;
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: '《本草纲目》药物收录量是《黄帝内经》的31.5倍',
+            font: { size: 16, weight: 'bold' },
+            color: '#8b2a2a'
+          }
+        },
+        animation: { duration: 1500 }
+      }
+    };
+
+    // 初始化图表
+    const ctx = document.getElementById('medicalChart').getContext('2d');
+    const medicalChart = new Chart(ctx, config);
+
+    // 切换标签页
+    function updateChart(type) {
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.includes(type === 'medicine' ? '药物' : '药方'));
+      });
+
+      medicalChart.data.datasets[0] = dataSets[type];
+      medicalChart.options.plugins.title.text = getTitle(type);
+      medicalChart.update();
+    }
+
+    // 动态生成标题
+    function getTitle(type) {
+      const maxVal = Math.max(...dataSets[type].data);
+      const minVal = Math.min(...dataSets[type].data.filter(v => v > 0));
+      const maxIndex = dataSets[type].data.indexOf(maxVal);
+      const minIndex = dataSets[type].data.indexOf(minVal);
+      const ratio = (maxVal / minVal).toFixed(1);
+
+      return type === 'medicine' 
+        ? `《${config.data.labels[maxIndex]}》药物数量是《${config.data.labels[minIndex]}》的${ratio}倍`
+        : `《${config.data.labels[maxIndex]}》载方量达${maxVal}首，为中医方剂之冠`;
+    }
+  </script>
+</body>
+</html>
