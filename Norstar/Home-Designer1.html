@@ -297,7 +297,7 @@
                             <h5>
                                 《孙子算经》——实用数学的代表之作
                             </h5>
-                            <p>《孙子算经》是中国古代实用数学的代表作，其中记载了许多实际问题的解决方法，如“物不知数”问题，为后世数论研究提供了重要启示。</p>
+                            <p>《孙子算经》是中国古代实用数学的代表作，其中记载了许多实际问题的解决方法，如"物不知数"问题，为后世数论研究提供了重要启示。</p>
                         </div>
                     </div>
                 </div>
@@ -382,7 +382,7 @@
                             <div class="service-box-style4 mb-28"> 
                                 <div class="content">
                                     <h5 class="title"><a href="#">祖冲之——圆周率的精确计算</a></h5>
-                                    <p>祖冲之是南北朝时期的著名数学家，他首次将圆周率推算至小数点后七位（3.1415926到3.1415927之间），这一成就领先世界近千年。他还提出了“祖率”的概念，为后世数学研究奠定了基础。</p>
+                                    <p>祖冲之是南北朝时期的著名数学家，他首次将圆周率推算至小数点后七位（3.1415926到3.1415927之间），这一成就领先世界近千年。他还提出了"祖率"的概念，为后世数学研究奠定了基础。</p>
                                 </div>
                                 <div class="icon">
                                     <a href="#">
@@ -414,7 +414,7 @@
                             <div class="service-box-style4"> 
                                 <div class="content">
                                     <h5 class="title"><a href="#">贾宪——杨辉三角的奠基人</a></h5>
-                                    <p>贾宪是北宋时期的数学家，他提出的“贾宪三角”（后称杨辉三角）是二项式系数的重要表现形式。这一成果不仅在中国数学史上具有重要意义，还为后世组合数学的发展提供了重要工具。</p>
+                                    <p>贾宪是北宋时期的数学家，他提出的"贾宪三角"（后称杨辉三角）是二项式系数的重要表现形式。这一成果不仅在中国数学史上具有重要意义，还为后世组合数学的发展提供了重要工具。</p>
                                 </div>
                                 <div class="icon">
                                     <a href="#">
@@ -427,6 +427,197 @@
                             </div> 
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- 添加数学可视化部分 -->
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <style>
+                        :root {
+                          --primary: #5c2018;
+                          --secondary: #d4a76a;
+                          --light: #f9f5e9;
+                        }
+                        .chart-card {
+                          background: white;
+                          border-radius: 8px;
+                          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                          padding: 1.5rem;
+                          margin-bottom: 2rem;
+                        }
+                        .math-grid {
+                          display: grid;
+                          grid-template-columns: 1fr 1fr;
+                          gap: 2rem;
+                        }
+                        .math-demo {
+                          background: #fff9e6;
+                          padding: 1rem;
+                          border-left: 4px solid var(--secondary);
+                          font-family: "Cambria Math", serif;
+                        }
+                        @media (max-width: 768px) {
+                          .math-grid { grid-template-columns: 1fr; }
+                        }
+                        .smaller-title {
+                          font-size: 1.3rem;
+                          margin-bottom: 1rem;
+                        }
+                    </style>
+                    
+                    <!-- 时间轴 -->
+                    <section class="chart-card">
+                      <h2>数学家成就时间轴</h2>
+                      <canvas id="timelineChart"></canvas>
+                    </section>
+
+                    <div class="math-grid">
+                      <!-- 圆周率精度对比 -->
+                      <section class="chart-card">
+                        <h2 class="smaller-title">圆周率计算精度演进</h2>
+                        <canvas id="piChart"></canvas>
+                        <div class="math-demo">
+                          <p>刘徽割圆术公式：</p>
+                          $$ \pi \approx \frac{n \cdot s}{r} \quad (n \to \infty) $$
+                          <p>其中 \( n \) 为多边形边数，\( s \) 为边长，\( r \) 为半径</p>
+                        </div>
+                      </section>
+
+                      <!-- 杨辉三角可视化 -->
+                      <section class="chart-card">
+                        <h2 class="smaller-title">贾宪三角（杨辉三角）</h2>
+                        <div id="pascalTriangle"></div>
+                        <div class="math-demo">
+                          <p>第\( n \)行第\( k \)项表示组合数 \( C(n,k) \)，计算公式为：</p>
+                          $$ C(n,k) = \frac{n!}{k!(n-k)!} $$
+                          <p>三角性质：</p>
+                          <ul>
+                            <li>每行首末项为1</li>
+                            <li>任意数等于肩上两数之和 \( C(n,k) = C(n-1,k-1) + C(n-1,k) \)</li>
+                            <li>第\( n \)行和为 \( 2^n \)</li>
+                          </ul>
+                        </div>
+                      </section>
+                    </div>
+
+                    <!-- 引入MathJax库 -->
+                    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+                    <!-- 引入Chart.js库 -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    
+                    <script>
+                      // 时间轴（柱状图形式）
+                      const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+                      new Chart(timelineCtx, {
+                        type: 'bar',
+                        data: {
+                          labels: ['刘徽（三国）', '祖冲之（南朝）', '贾宪（北宋）'],
+                          datasets: [{
+                            label: '主要成就年代（公元）',
+                            data: [263, 480, 1050],
+                            backgroundColor: [
+                              'rgba(212, 167, 106, 0.7)',
+                              'rgba(139, 42, 42, 0.7)',
+                              'rgba(92, 32, 24, 0.7)'
+                            ],
+                            borderColor: [
+                              'rgba(212, 167, 106, 1)',
+                              'rgba(139, 42, 42, 1)',
+                              'rgba(92, 32, 24, 1)'
+                            ],
+                            borderWidth: 1
+                          }]
+                        },
+                        options: {
+                          responsive: true,
+                          scales: {
+                            y: {
+                              beginAtZero: false,
+                              min: 200,
+                              max: 1100,
+                              title: { display: true, text: '公元年份' }
+                            }
+                          }
+                        }
+                      });
+
+                      // 圆周率精度对比
+                      const piCtx = document.getElementById('piChart').getContext('2d');
+                      new Chart(piCtx, {
+                        type: 'line',
+                        data: {
+                          labels: ['古埃及', '阿基米德', '刘徽', '祖冲之', '阿拉伯数学家', '现代值'],
+                          datasets: [{
+                            label: '圆周率计算值',
+                            data: [3.1605, 3.1418, 3.1416, 3.1415926, 3.14159265, 3.1415926535],
+                            borderColor: 'rgba(139, 42, 42, 1)',
+                            backgroundColor: 'rgba(139, 42, 42, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                          }]
+                        },
+                        options: {
+                          scales: {
+                            y: {
+                              min: 3.14,
+                              max: 3.17,
+                              ticks: {
+                                callback: value => value.toFixed(5)
+                              }
+                            }
+                          },
+                          plugins: {
+                            tooltip: {
+                              callbacks: {
+                                label: ctx => {
+                                  const diff = Math.abs(ctx.raw - Math.PI);
+                                  return `${ctx.dataset.label}: ${ctx.raw} (误差: ${diff.toFixed(8)})`;
+                                }
+                              }
+                            }
+                          }
+                        }
+                      });
+
+                      // 杨辉三角可视化
+                      function displayPascalTriangle(rows) {
+                        const container = document.getElementById('pascalTriangle');
+                        container.innerHTML = '';
+                        
+                        for (let n = 0; n < rows; n++) {
+                          const row = document.createElement('div');
+                          row.className = 'triangle-row';
+                          row.style.textAlign = 'center';
+                          
+                          for (let k = 0; k <= n; k++) {
+                            const cell = document.createElement('span');
+                            cell.textContent = combination(n, k);
+                            cell.style.display = 'inline-block';
+                            cell.style.width = '40px';
+                            cell.style.margin = '5px';
+                            cell.style.color = 'var(--primary)';
+                            cell.style.fontWeight = 'bold';
+                            row.appendChild(cell);
+                          }
+                          
+                          container.appendChild(row);
+                        }
+                      }
+                      
+                      // 计算组合数 C(n,k)
+                      function combination(n, k) {
+                        if (k < 0 || k > n) return 0;
+                        let result = 1;
+                        for (let i = 1; i <= k; i++) {
+                          result = result * (n - k + i) / i;
+                        }
+                        return result;
+                      }
+                      
+                      // 显示杨辉三角
+                      displayPascalTriangle(5);
+                    </script>
                 </div>
             </div>
         </div>
@@ -447,28 +638,28 @@
                         <div class="project-box-style2 wow fadeIn" data-wow-delay=".2s">
                             <h4 class="title js-project"><a href="#">割圆术——极限思想的早期体现</a></h4>
                             <a href="#" class="image js-project">
-                                <img src="./assets/images/common/割圆术.png" alt="">
+                                <img src="./assets/images/common/割圆术.png" alt="" width=100% height=20px>
                                 <!--<span class="button style-2 center hover-circle"><span  class="text">View Project</span></span>-->
                             </a>
                         </div>
                         <div class="project-box-style2 active wow fadeIn" data-wow-delay=".4s">
                             <h4 class="title js-project"><a href="#">方程术——代数学的开端</a></h4>
                             <a href="#" class="image js-project">
-                                <img src="./assets/images/common/方程术.jpg" alt="">
+                                <img src="./assets/images/common/方程术.jpg" alt="" width=100% height=20px>
                                 <!--<span class="button style-2 center hover-circle"><span  class="text">View Project</span></span>-->
                             </a>
                         </div>
                         <div class="project-box-style2 wow fadeIn" data-wow-delay=".6s">
                             <h4 class="title js-project"><a href="#">天元术——代数方程的创新解法</a></h4>
                             <a href="#" class="image js-project">
-                                <img src="./assets/images/common/天元术.jpg" alt="">
+                                <img src="./assets/images/common/天元术.jpg" alt="" width=100% height=20px>
                                 <!--<span class="button style-2 center hover-circle"><span  class="text">View Project</span></span>-->
                             </a>
                         </div>
                         <div class="project-box-style2 wow fadeIn" data-wow-delay=".8s">
                             <h4 class="title js-project"><a href="#">大衍求一术——数论中的重要方法</a></h4>
                             <a href="#" class="image js-project">
-                                <img src="./assets/images/common/大衍求一术.jpg" alt="">
+                                <img src="./assets/images/common/大衍求一术.jpg" alt="" width=100% height=20px>
                                 <!--<span class="button style-2 center hover-circle"><span  class="text">View Project</span></span>-->
                             </a>
                         </div>
@@ -549,7 +740,7 @@
                         <div class="content">
                             <div class="tf-title-style4 mb-40">
                                 <p class="sub-title">Need A Designer?</p>
-                                <h3 class="title mb-20">Let’s Create An Amazing Project Together!</h3>
+                                <h3 class="title mb-20">Let's Create An Amazing Project Together!</h3>
                                 <p class="color1">Please contact me if you have interesting projects</p>
                             </div> 
                             <div class="btn-wrapper flex">
@@ -667,7 +858,7 @@
                         <img src="./assets/images/post/post_15.jpg" alt="">
                     </div> 
                     <p class="txt mb-20">
-                        We are opening up our platform and inviting all builders to create the first plugins and widgets for FigJam. Check out our documentation to start building new plugins or republishing your existing Figma plugins for FigJam. 
+                        We are opening up our platform and inviting all builders to create the first plugins and widgets for FigJam. Check out our documentation to start building new plugins or republishing your existing Figma plugins for FigJam. 
                     </p>  
                     <p class="txt mb-32">
                         These are just a handful of examples—we have 35 builders who have FigJam plugins already in the works, and we are so excited for you to join them.

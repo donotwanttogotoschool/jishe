@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>古代数学家的智慧与成就</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #5c2018;
+      --secondary: #d4a76a;
+      --light: #f9f5e9;
+    }
+    body {
+      font-family: "Microsoft YaHei", serif;
+      background-color: var(--light);
+      color: #333;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(135deg, var(--primary), #8b2a2a);
+      color: white;
+      text-align: center;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .chart-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h2 {
+      color: var(--primary);
+      border-bottom: 2px solid var(--secondary);
+      padding-bottom: 0.5rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .math-demo {
+      background: #fff9e6;
+      padding: 1rem;
+      border-left: 4px solid var(--secondary);
+      font-family: "Cambria Math", serif;
+    }
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>古代数学家的智慧与成就</h1>
+      <p>从割圆术到杨辉三角的数学革命</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 时间轴 -->
+    <section class="chart-card">
+      <h2>数学家成就时间轴</h2>
+      <canvas id="timelineChart"></canvas>
+    </section>
+
+    <div class="grid">
+      <!-- 圆周率精度对比 -->
+      <section class="chart-card">
+        <h2>圆周率计算精度演进</h2>
+        <canvas id="piChart"></canvas>
+        <div class="math-demo">
+          <p>刘徽割圆术公式：</p>
+          $$ \pi \approx \frac{n \cdot s}{r} \quad (n \to \infty) $$
+          <p>其中 \( n \) 为多边形边数，\( s \) 为边长，\( r \) 为半径</p>
+        </div>
+      </section>
+
+      <!-- 杨辉三角可视化 -->
+      <section class="chart-card">
+        <h2>贾宪三角（杨辉三角）</h2>
+        <div id="pascalTriangle"></div>
+        <div class="math-demo">
+          <p>第\( n \)行第\( k \)项表示组合数 \( C(n,k) \)，计算公式为：</p>
+          $$ C(n,k) = \frac{n!}{k!(n-k)!} $$
+          <p>三角性质：</p>
+          <ul>
+            <li>每行首末项为1</li>
+            <li>任意数等于肩上两数之和 \( C(n,k) = C(n-1,k-1) + C(n-1,k) \)</li>
+            <li>第\( n \)行和为 \( 2^n \)</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+
+  <script>
+    // 时间轴（柱状图形式）
+    const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+    new Chart(timelineCtx, {
+      type: 'bar',
+      data: {
+        labels: ['刘徽（三国）', '祖冲之（南朝）', '贾宪（北宋）'],
+        datasets: [{
+          label: '主要成就年代（公元）',
+          data: [263, 480, 1050],
+          backgroundColor: [
+            'rgba(212, 167, 106, 0.7)',
+            'rgba(139, 42, 42, 0.7)',
+            'rgba(92, 32, 24, 0.7)'
+          ],
+          borderColor: [
+            'rgba(212, 167, 106, 1)',
+            'rgba(139, 42, 42, 1)',
+            'rgba(92, 32, 24, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: false,
+            min: 200,
+            max: 1100,
+            title: { display: true, text: '公元年份' }
+          }
+        }
+      }
+    });
+
+    // 圆周率精度对比
+    const piCtx = document.getElementById('piChart').getContext('2d');
+    new Chart(piCtx, {
+      type: 'line',
+      data: {
+        labels: ['古埃及', '阿基米德', '刘徽', '祖冲之', '阿拉伯数学家', '现代值'],
+        datasets: [{
+          label: '圆周率计算值',
+          data: [3.1605, 3.1418, 3.1416, 3.1415926, 3.14159265, 3.1415926535],
+          borderColor: 'rgba(139, 42, 42, 1)',
+          backgroundColor: 'rgba(139, 42, 42, 0.1)',
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            min: 3.14,
+            max: 3.17,
+            ticks: {
+              callback: value => value.toFixed(5)
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const diff = Math.abs(ctx.raw - Math.PI);
+                return `${ctx.dataset.label}: ${ctx.raw} (误差: ${diff.toFixed(8)})`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 杨辉三角可视化 - 替换原来的triangleChart代码
+    function displayPascalTriangle(rows) {
+      const container = document.getElementById('pascalTriangle');
+      container.innerHTML = '';
+      
+      for (let n = 0; n < rows; n++) {
+        const row = document.createElement('div');
+        row.className = 'triangle-row';
+        row.style.textAlign = 'center';
+        
+        for (let k = 0; k <= n; k++) {
+          const cell = document.createElement('span');
+          cell.textContent = combination(n, k);
+          cell.style.display = 'inline-block';
+          cell.style.width = '40px';
+          cell.style.margin = '5px';
+          cell.style.color = 'var(--primary)';
+          cell.style.fontWeight = 'bold';
+          row.appendChild(cell);
+        }
+        
+        container.appendChild(row);
+      }
+    }
+    
+    // 计算组合数 C(n,k)
+    function combination(n, k) {
+      if (k < 0 || k > n) return 0;
+      let result = 1;
+      for (let i = 1; i <= k; i++) {
+        result = result * (n - k + i) / i;
+      }
+      return result;
+    }
+    
+    // 在脚本最后添加调用
+    displayPascalTriangle(5); // 显示5行杨辉三角
+
+  </script>
+</body>
+</html>

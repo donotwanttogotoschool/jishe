@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国古代历法发展时间轴</title>
+  <style>
+    :root {
+      --primary: #8b2a2a;
+      --secondary: #d4a76a;
+      --dark: #5c2018;
+      --light: #f9f5e9;
+    }
+    body {
+      font-family: "Microsoft YaHei", serif;
+      background-color: var(--light);
+      color: #333;
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+    header {
+      background: linear-gradient(135deg, var(--dark), var(--primary));
+      color: white;
+      text-align: center;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 60px;
+      margin: 3rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--secondary), var(--primary));
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .timeline-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -48px;
+      top: 24px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 4px solid var(--secondary);
+      z-index: 1;
+    }
+    .timeline-date {
+      font-weight: bold;
+      color: var(--dark);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .timeline-title {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin: 0.5rem 0;
+      border-bottom: 2px dashed var(--secondary);
+      padding-bottom: 0.5rem;
+    }
+    .timeline-content {
+      color: #555;
+    }
+    .timeline-highlight {
+      color: var(--primary);
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+      .timeline {
+        padding-left: 40px;
+      }
+      .timeline-item::before {
+        left: -32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>中国古代历法发展时间轴</h1>
+      <p>从远古观测到精密计算的天文智慧</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="timeline">
+      <!-- 1. 远古历法 -->
+      <div class="timeline-item">
+        <div class="timeline-date">约公元前24世纪（五帝时期）</div>
+        <h3 class="timeline-title">《黄帝历》</h3>
+        <div class="timeline-content">
+          <p>传说中中国最早的历法，<span class="timeline-highlight">以365.25日为一年</span>，分一年为四季，已出现闰月概念。虽无实物证据，但《汉书·律历志》有相关记载。</p>
+        </div>
+      </div>
+
+      <!-- 2. 夏历 -->
+      <div class="timeline-item">
+        <div class="timeline-date">约公元前21世纪（夏朝）</div>
+        <h3 class="timeline-title">夏历（夏小正）</h3>
+        <div class="timeline-content">
+          <p>中国现存最早的阴阳合历体系，<span class="timeline-highlight">以月相周期（朔望月）为主，结合太阳年长度</span>。《夏小正》记载了物候、天象与农事活动的关系，形成"十九年七闰"的置闰方法。</p>
+        </div>
+      </div>
+
+      <!-- 3. 殷历 -->
+      <div class="timeline-item">
+        <div class="timeline-date">约公元前14世纪（商朝）</div>
+        <h3 class="timeline-title">殷历</h3>
+        <div class="timeline-content">
+          <p>甲骨文记载的历法系统，<span class="timeline-highlight">首次明确使用干支记日</span>，一个月分"初吉""既生霸""既望""既死霸"四期，年首多设在一月（相当于今农历十一月）。</p>
+        </div>
+      </div>
+
+      <!-- 4. 太初历 -->
+      <div class="timeline-item">
+        <div class="timeline-date">公元前104年（汉武帝时期）</div>
+        <h3 class="timeline-title">太初历</h3>
+        <div class="timeline-content">
+          <p>中国第一部完整历法，<span class="timeline-highlight">首次将二十四节气纳入历法体系</span>，确立"无中气之月为闰月"的原则。由邓平、落下闳等人编制，测得朔望月为29.530864日（误差仅+0.00027日）。</p>
+        </div>
+      </div>
+
+      <!-- 5. 大明历 -->
+      <div class="timeline-item">
+        <div class="timeline-date">510年（南朝梁）</div>
+        <h3 class="timeline-title">大明历</h3>
+        <div class="timeline-content">
+          <p>祖冲之编制，<span class="timeline-highlight">首次将岁差引入历法计算</span>（45年11个月差1度），测得回归年365.2428天（误差仅+0.0006天），提出391年144闰的置闰周期。</p>
+        </div>
+      </div>
+
+      <!-- 6. 大衍历 -->
+      <div class="timeline-item">
+        <div class="timeline-date">727年（唐玄宗时期）</div>
+        <h3 class="timeline-title">大衍历</h3>
+        <div class="timeline-content">
+          <p>僧一行主持编制，<span class="timeline-highlight">创不等间距二次差内插法</span>，计算日月运行误差&lt;1分钟/天。首次提出"日行盈缩"概念（太阳视运动不均匀性），测得黄赤交角为23°40'（与现代值差24'）。</p>
+        </div>
+      </div>
+
+      <!-- 7. 应天历 -->
+      <div class="timeline-item">
+        <div class="timeline-date">961年（北宋）</div>
+        <h3 class="timeline-title">应天历</h3>
+        <div class="timeline-content">
+          <p>王朴编制，<span class="timeline-highlight">首创"调日法"分数近似算法</span>，测得朔望月29.530594日（误差-0.000002日）。历法结构严谨，成为宋金时期历法范本，朝鲜《宣明历》即基于此历修订。</p>
+        </div>
+      </div>
+
+      <!-- 8. 授时历 -->
+      <div class="timeline-item">
+        <div class="timeline-date">1281年（元世祖时期）</div>
+        <h3 class="timeline-title">授时历</h3>
+        <div class="timeline-content">
+          <p>郭守敬集大成之作，<span class="timeline-highlight">测得回归年365.2425天（误差仅+0.0003天）</span>，废除上元积年，直接以实测为计算起点。创"弧矢割圆术"处理球面三角问题，精度保持达364年之久。</p>
+        </div>
+      </div>
+
+      <!-- 9. 时宪历 -->
+      <div class="timeline-item">
+        <div class="timeline-date">1645年（清顺治时期）</div>
+        <h3 class="timeline-title">时宪历</h3>
+        <div class="timeline-content">
+          <p>汤若望根据《崇祯历书》改编，<span class="timeline-highlight">中国首部采用西方天文学理论的历法</span>，使用第谷宇宙体系和开普勒椭圆轨道理论，引入"定气注历"法，奠定现代农历基础。</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>数据来源：《中国科学技术史·天文卷》《中国古代历法》《汉书·律历志》等</p>
+      <p>© 2023 中国古代历法可视化</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -237,6 +237,7 @@
                         </div>
                     </div>
                     
+                
                 </div>
                 <div class="col-md-7">
                     <div class="pl-90" id="tab--container">
@@ -287,6 +288,166 @@
                                     </a>
                                 </div>-->
                             </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中国古代历法发展时间轴 - 新增在整个row之后 -->
+            <div class="row mt-50">
+                <div class="col-md-12">
+                    <div class="timeline-wrapper">
+                        <style>
+                            .timeline {
+                                position: relative;
+                                padding-left: 60px;
+                                margin: 2rem 0;
+                            }
+                            .timeline::before {
+                                content: '';
+                                position: absolute;
+                                left: 20px;
+                                top: 0;
+                                bottom: 0;
+                                width: 4px;
+                                background: linear-gradient(to bottom, #d4a76a, #8b2a2a);
+                            }
+                            .timeline-item {
+                                position: relative;
+                                margin-bottom: 2rem;
+                                padding: 1.5rem;
+                                background: white;
+                                border-radius: 8px;
+                                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+                                transition: transform 0.3s;
+                            }
+                            .timeline-item:hover {
+                                transform: translateY(-5px);
+                                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                            }
+                            .timeline-item::before {
+                                content: '';
+                                position: absolute;
+                                left: -48px;
+                                top: 24px;
+                                width: 16px;
+                                height: 16px;
+                                border-radius: 50%;
+                                background: #8b2a2a;
+                                border: 4px solid #d4a76a;
+                                z-index: 1;
+                            }
+                            .timeline-date {
+                                font-weight: bold;
+                                color: #5c2018;
+                                font-size: 1.1rem;
+                                margin-bottom: 0.5rem;
+                            }
+                            .timeline-title {
+                                font-size: 1.3rem;
+                                color: #8b2a2a;
+                                margin: 0.5rem 0;
+                                border-bottom: 2px dashed #d4a76a;
+                                padding-bottom: 0.5rem;
+                            }
+                            .timeline-content {
+                                color: #555;
+                            }
+                            .timeline-highlight {
+                                color: #8b2a2a;
+                                font-weight: bold;
+                            }
+                            @media (max-width: 600px) {
+                                .timeline {
+                                    padding-left: 40px;
+                                }
+                                .timeline-item::before {
+                                    left: -32px;
+                                }
+                            }
+                        </style>
+                        
+                        <div class="timeline">
+                            <!-- 1. 远古历法 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">约公元前24世纪（五帝时期）</div>
+                                <h3 class="timeline-title">《黄帝历》</h3>
+                                <div class="timeline-content">
+                                    <p>传说中中国最早的历法，<span class="timeline-highlight">以365.25日为一年</span>，分一年为四季，已出现闰月概念。虽无实物证据，但《汉书·律历志》有相关记载。</p>
+                                </div>
+                            </div>
+
+                            <!-- 2. 夏历 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">约公元前21世纪（夏朝）</div>
+                                <h3 class="timeline-title">夏历（夏小正）</h3>
+                                <div class="timeline-content">
+                                    <p>中国现存最早的阴阳合历体系，<span class="timeline-highlight">以月相周期（朔望月）为主，结合太阳年长度</span>。《夏小正》记载了物候、天象与农事活动的关系，形成"十九年七闰"的置闰方法。</p>
+                                </div>
+                            </div>
+
+                            <!-- 3. 殷历 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">约公元前14世纪（商朝）</div>
+                                <h3 class="timeline-title">殷历</h3>
+                                <div class="timeline-content">
+                                    <p>甲骨文记载的历法系统，<span class="timeline-highlight">首次明确使用干支记日</span>，一个月分"初吉""既生霸""既望""既死霸"四期，年首多设在一月（相当于今农历十一月）。</p>
+                                </div>
+                            </div>
+
+                            <!-- 4. 太初历 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">公元前104年（汉武帝时期）</div>
+                                <h3 class="timeline-title">太初历</h3>
+                                <div class="timeline-content">
+                                    <p>中国第一部完整历法，<span class="timeline-highlight">首次将二十四节气纳入历法体系</span>，确立"无中气之月为闰月"的原则。由邓平、落下闳等人编制，测得朔望月为29.530864日（误差仅+0.00027日）。</p>
+                                </div>
+                            </div>
+
+                            <!-- 5. 大明历 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">510年（南朝梁）</div>
+                                <h3 class="timeline-title">大明历</h3>
+                                <div class="timeline-content">
+                                    <p>祖冲之编制，<span class="timeline-highlight">首次将岁差引入历法计算</span>（45年11个月差1度），测得回归年365.2428天（误差仅+0.0006天），提出391年144闰的置闰周期。</p>
+                                </div>
+                            </div>
+
+                            <!-- 6. 大衍历 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">727年（唐玄宗时期）</div>
+                                <h3 class="timeline-title">大衍历</h3>
+                                <div class="timeline-content">
+                                    <p>僧一行主持编制，<span class="timeline-highlight">创不等间距二次差内插法</span>，计算日月运行误差&lt;1分钟/天。首次提出"日行盈缩"概念（太阳视运动不均匀性），测得黄赤交角为23°40'（与现代值差24'）。</p>
+                                </div>
+                            </div>
+
+                            <!-- 7. 应天历 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">961年（北宋）</div>
+                                <h3 class="timeline-title">应天历</h3>
+                                <div class="timeline-content">
+                                    <p>王朴编制，<span class="timeline-highlight">首创"调日法"分数近似算法</span>，测得朔望月29.530594日（误差-0.000002日）。历法结构严谨，成为宋金时期历法范本，朝鲜《宣明历》即基于此历修订。</p>
+                                </div>
+                            </div>
+
+                            <!-- 8. 授时历 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">1281年（元世祖时期）</div>
+                                <h3 class="timeline-title">授时历</h3>
+                                <div class="timeline-content">
+                                    <p>郭守敬集大成之作，<span class="timeline-highlight">测得回归年365.2425天（误差仅+0.0003天）</span>，废除上元积年，直接以实测为计算起点。创"弧矢割圆术"处理球面三角问题，精度保持达364年之久。</p>
+                                </div>
+                            </div>
+
+                            <!-- 9. 时宪历 -->
+                            <div class="timeline-item">
+                                <div class="timeline-date">1645年（清顺治时期）</div>
+                                <h3 class="timeline-title">时宪历</h3>
+                                <div class="timeline-content">
+                                    <p>汤若望根据《崇祯历书》改编，<span class="timeline-highlight">中国首部采用西方天文学理论的历法</span>，使用第谷宇宙体系和开普勒椭圆轨道理论，引入"定气注历"法，奠定现代农历基础。</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -357,42 +518,42 @@
                                 <div class="testimonials-box-style2">
                                     <p class="desc">中国古代的农历系统传播到东亚各国，成为这些地区农业生产和社会生活的重要依据。</p>
                                     <h4 class="title"><a href="#">农历系统的传播</a></h4>
-                                    <p class="name">Creative Director</p>
+                                    <p class="name">the Lunar Calendar System</p>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="testimonials-box-style2">
                                     <p class="desc">浑天仪、圭表等天文仪器通过丝绸之路传入西方，影响了欧洲天文学的发展。</p>
                                     <h4 class="title"><a href="#">天文仪器的西传</a></h4>
-                                    <p class="name">CEO Avitex</p>
+                                    <p class="name">Astronomical Instruments</p>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="testimonials-box-style2">
                                     <p class="desc">中国古代历法的精确计算方法和理论体系为世界历法的发展提供了重要参考。</p>
                                     <h4 class="title"><a href="#">历法对世界的影响</a></h4>
-                                    <p class="name">Project Manager</p>
+                                    <p class="name">Calendar</p>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="testimonials-box-style2">
                                     <p class="desc">中国古代天文学家记录的天文现象（如彗星、日食等）为现代天文学研究提供了宝贵的历史资料。</p>
                                     <h4 class="title"><a href="#">天文观测数据的贡献</a></h4>
-                                    <p class="name">Creative Director</p>
+                                    <p class="name">Astronomical observation data</p>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="testimonials-box-style2">
                                     <p class="desc">中国古代天文学与哲学、艺术、宗教等紧密结合，形成了独特的文化传统。</p>
                                     <h4 class="title"><a href="#">天文学与文化的融合</a></h4>
-                                    <p class="name">CEO Avitex</p>
+                                    <p class="name">Astronomy and culture</p>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="testimonials-box-style2">
                                     <p class="desc">中国古代天文学家的智慧和方法对现代天文学研究仍具有重要的启示意义。</p>
                                     <h4 class="title"><a href="#">对现代天文学的启示</a></h4>
-                                    <p class="name">Project Manager</p>
+                                    <p class="name">Modern Astronomy</p>
                                 </div>
                             </div>
                         </div>
@@ -411,7 +572,7 @@
                         <div class="content">
                             <div class="tf-title-style4 mb-40">
                                 <p class="sub-title">Need A Designer?</p>
-                                <h3 class="title mb-20">Let’s Create An Amazing Project Together!</h3>
+                                <h3 class="title mb-20">Let's Create An Amazing Project Together!</h3>
                                 <p class="color1">Please contact me if you have interesting projects</p>
                             </div> 
                             <div class="btn-wrapper flex">
@@ -529,7 +690,7 @@
                         <img src="./assets/images/post/post_15.jpg" alt="">
                     </div> 
                     <p class="txt mb-20">
-                        We are opening up our platform and inviting all builders to create the first plugins and widgets for FigJam. Check out our documentation to start building new plugins or republishing your existing Figma plugins for FigJam. 
+                        We are opening up our platform and inviting all builders to create the first plugins and widgets for FigJam. Check out our documentation to start building new plugins or republishing your existing Figma plugins for FigJam. 
                     </p>  
                     <p class="txt mb-32">
                         These are just a handful of examples—we have 35 builders who have FigJam plugins already in the works, and we are so excited for you to join them.

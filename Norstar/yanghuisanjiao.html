@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贾宪三角可视化</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.1.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", serif;
+      background-color: #f9f5e9;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .chart-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #5c2018;
+      text-align: center;
+      border-bottom: 2px solid #d4a76a;
+      padding-bottom: 10px;
+    }
+    .math {
+      background: #fff9e6;
+      padding: 15px;
+      border-left: 4px solid #d4a76a;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>贾宪三角（杨辉三角）</h1>
+  
+  <div class="chart-container">
+    <div id="pascalTriangle"></div>
+  </div>
+
+  <div class="math">
+    <h3>数学原理：</h3>
+    <p>第\( n \)行第\( k \)项表示组合数 \( C(n,k) \)，计算公式为：</p>
+    $$ C(n,k) = \frac{n!}{k!(n-k)!} $$
+    <p>三角性质：</p>
+    <ul>
+      <li>每行首末项为1</li>
+      <li>任意数等于肩上两数之和 \( C(n,k) = C(n-1,k-1) + C(n-1,k) \)</li>
+      <li>第\( n \)行和为 \( 2^n \)</li>
+    </ul>
+  </div>
+
+  <script>
+    function displayPascalTriangle(rows) {
+      const container = document.getElementById('pascalTriangle');
+      container.innerHTML = '';
+      
+      for (let n = 0; n < rows; n++) {
+        const row = document.createElement('div');
+        row.className = 'triangle-row';
+        row.style.textAlign = 'center';
+        
+        for (let k = 0; k <= n; k++) {
+          const cell = document.createElement('span');
+          cell.textContent = combination(n, k);
+          cell.style.display = 'inline-block';
+          cell.style.width = '40px';
+          cell.style.margin = '5px';
+          cell.style.color = '#5c2018';
+          cell.style.fontWeight = 'bold';
+          row.appendChild(cell);
+        }
+        
+        container.appendChild(row);
+      }
+    }
+    
+    // 计算组合数 C(n,k)
+    function combination(n, k) {
+      if (k < 0 || k > n) return 0;
+      let result = 1;
+      for (let i = 1; i <= k; i++) {
+        result = result * (n - k + i) / i;
+      }
+      return result;
+    }
+    
+    displayPascalTriangle(5); // 显示10行
+  </script>
+</body>
+</html>
