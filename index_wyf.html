@@ -683,12 +683,12 @@
         }
 
         /* 科技贡献卡片样式 */
-        .contribution-card {
+        /*.contribution-card {
             padding: 15px !important;
             display: flex;
             flex-direction: column;
             height: auto;
-        }
+        }*/
 
         /* 词云容器 */
         #wordcloud-container {
@@ -699,126 +699,103 @@
 
         /* 排行榜容器 */
         .ranking-container {
+            height: 280px;
             display: flex;
             flex-direction: column;
-            height: 350px;
         }
 
         /* 排行榜头部 */
         .ranking-header {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(154, 75, 44, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         /* 标签样式 */
-        .ranking-tabs .tab {
-            display: inline-block;
-            padding: 3px 8px;
-            margin-left: 5px;
-            border-radius: 12px;
-            font-size: 12px;
-            cursor: pointer;
-            background-color: rgba(46, 78, 126, 0.1);
-            transition: all 0.3s ease;
+        .ranking-tabs {
+            display: flex;
+            gap: 4px;
         }
 
-        .ranking-tabs .tab.active {
-            background-color: rgba(46, 78, 126, 0.8);
+        .tab {
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: rgba(46, 78, 126, 0.1);
+            color: #2E4E7E;
+        }
+
+        .tab.active {
+            background: #2E4E7E;
             color: #fff;
         }
 
         /* 排行榜主体 */
         .ranking-body {
-            flex-grow: 1;
+            flex: 1;
             overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        /* 自定义滚动条 */
-        .ranking-body::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .ranking-body::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 2px;
-        }
-
-        .ranking-body::-webkit-scrollbar-thumb {
-            background: rgba(154, 75, 44, 0.3);
-            border-radius: 2px;
         }
 
         /* 排行项 */
         .ranking-item {
             display: flex;
             align-items: center;
-            padding: 8px 0;
+            padding: 6px;
             border-bottom: 1px solid rgba(154, 75, 44, 0.05);
-            transition: all 0.3s ease;
         }
 
-        .ranking-item:hover {
-            background-color: rgba(154, 75, 44, 0.05);
-        }
-
-        /* 排名 */
-        .ranking-item .rank {
-            width: 30px;
-            height: 30px;
+        .rank {
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background-color: #f0f0f0;
-            color: #666;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            font-size: 11px;
             font-weight: bold;
-            margin-right: 10px;
-        }
-
-        /* 前三名特殊样式 */
-        .ranking-item.top-1 .rank {
-            background-color: #FFD700;
-            color: #fff;
-        }
-
-        .ranking-item.top-2 .rank {
-            background-color: #C0C0C0;
-            color: #fff;
-        }
-
-        .ranking-item.top-3 .rank {
-            background-color: #CD7F32;
-            color: #fff;
-        }
-
-        /* 内容 */
-        .ranking-item .content {
-            flex-grow: 1;
-        }
-
-        .ranking-item .title {
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-
-        .ranking-item .info {
-            font-size: 12px;
+            margin-right: 6px;
+            background: #f0f0f0;
             color: #666;
         }
 
-        .ranking-item .info span {
-            margin-right: 10px;
+        .top-1 .rank {
+            background: #FFD700;
+            color: #fff;
         }
 
-        /* 分数 */
-        .ranking-item .score {
+        .top-2 .rank {
+            background: #C0C0C0;
+            color: #fff;
+        }
+
+        .top-3 .rank {
+            background: #CD7F32;
+            color: #fff;
+        }
+
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .title {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .info {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .info span {
+            margin-right: 6px;
+        }
+
+        .score {
             font-weight: bold;
             color: #9A4B2C;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -974,6 +951,7 @@
             </div>
             <div class="card">
                 <h3>科技贡献统计</h3>
+                <div id="new-ranking-card"></div>
             </div>
         </div>
     </div>
@@ -1001,137 +979,6 @@
         </div>
     </div>
 
-    <!-- 科技贡献统计区域 - 仅保留排行榜 -->
-    <div class="card contribution-card">
-        <h3>科技贡献统计</h3>
-
-        <!-- 排行榜容器 -->
-        <div class="ranking-container">
-            <div class="ranking-header">
-                <span>重要科技成就排行</span>
-                <div class="ranking-tabs">
-                    <span class="tab active" data-field="all">全部</span>
-                    <span class="tab" data-field="astronomy">天文</span>
-                    <span class="tab" data-field="medicine">医学</span>
-                    <span class="tab" data-field="engineering">工程</span>
-                </div>
-            </div>
-            <div class="ranking-body" id="ranking-list">
-                <!-- 排行榜内容将通过JavaScript动态生成 -->
-            </div>
-        </div>
-    </div>
-
-    <!-- 排行榜初始化脚本 -->
-    <script>
-        // 初始化排行榜
-        function initRankingList() {
-            // 排行榜数据
-            var rankingData = [
-                { id: 1, title: "指南针", dynasty: "北宋", field: "engineering", score: 98 },
-                { id: 2, title: "活字印刷", dynasty: "北宋", field: "engineering", score: 95 },
-                { id: 3, title: "《本草纲目》", dynasty: "明朝", field: "medicine", score: 92 },
-                { id: 4, title: "地动仪", dynasty: "东汉", field: "astronomy", score: 90 },
-                { id: 5, title: "《天工开物》", dynasty: "明朝", field: "engineering", score: 88 },
-                { id: 6, title: "《齐民要术》", dynasty: "北魏", field: "agriculture", score: 87 },
-                { id: 7, title: "祖冲之圆周率", dynasty: "南北朝", field: "mathematics", score: 86 },
-                { id: 8, title: "火药", dynasty: "唐朝", field: "engineering", score: 85 },
-                { id: 9, title: "《梦溪笔谈》", dynasty: "北宋", field: "multiple", score: 84 },
-                { id: 10, title: "水运仪象台", dynasty: "北宋", field: "astronomy", score: 83 }
-            ];
-
-            // 获取排行榜容器
-            var rankingList = document.getElementById('ranking-list');
-            if (!rankingList) {
-                console.error('Ranking list container not found');
-                return;
-            }
-
-            // 清空容器
-            rankingList.innerHTML = '';
-
-            // 生成排行榜项目
-            rankingData.forEach(function (item, index) {
-                var rankingItem = document.createElement('div');
-                rankingItem.className = 'ranking-item';
-                if (index < 3) {
-                    rankingItem.className += ' top-' + (index + 1);
-                }
-                rankingItem.setAttribute('data-id', item.id);
-                rankingItem.setAttribute('data-field', item.field);
-
-                // 设置HTML内容
-                rankingItem.innerHTML = `
-                    <div class="rank">${index + 1}</div>
-                    <div class="content">
-                        <div class="title">${item.title}</div>
-                        <div class="info">
-                            <span class="dynasty">${item.dynasty}</span>
-                            <span class="field">${getFieldName(item.field)}</span>
-                        </div>
-                    </div>
-                    <div class="score">${item.score}</div>
-                `;
-
-                rankingList.appendChild(rankingItem);
-            });
-
-            // 添加标签点击事件
-            var tabs = document.querySelectorAll('.ranking-tabs .tab');
-            tabs.forEach(function (tab) {
-                tab.addEventListener('click', function () {
-                    // 移除所有active类
-                    tabs.forEach(function (t) {
-                        t.classList.remove('active');
-                    });
-
-                    // 添加active类到当前标签
-                    this.classList.add('active');
-
-                    // 过滤排行榜
-                    var field = this.getAttribute('data-field');
-                    filterRankingByField(field);
-                });
-            });
-        }
-
-        // 根据领域过滤排行榜
-        function filterRankingByField(field) {
-            var items = document.querySelectorAll('.ranking-item');
-            items.forEach(function (item) {
-                var itemField = item.getAttribute('data-field');
-                if (field === 'all' || field === itemField) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        // 获取领域名称
-        function getFieldName(field) {
-            var names = {
-                'astronomy': '天文学',
-                'medicine': '医学',
-                'agriculture': '农学',
-                'mathematics': '数学',
-                'engineering': '工程学',
-                'multiple': '多领域'
-            };
-            return names[field] || '其他';
-        }
-
-        // 确保在DOM加载完成后执行
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function () {
-                initRankingList();
-            });
-        } else {
-            // 如果DOM已经加载完成，立即执行
-            initRankingList();
-        }
-    </script>
-
     <!-- 引入必要的JavaScript库 -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
     <script>
@@ -1143,7 +990,7 @@
                 initRegionChart();
                 initScientistCarousel();
                 initScientistsChart();
-                initContributionCharts();
+                //  initContributionCharts();
             });
         } else {
             // 如果DOM已经加载完成，立即执行
@@ -1151,7 +998,7 @@
             initRegionChart();
             initScientistCarousel();
             initScientistsChart();
-            initContributionCharts();
+            //  initContributionCharts();
         }
 
         // 添加页面载入动画
@@ -1882,166 +1729,222 @@
             });
         }
 
-        // 初始化科技贡献词云和排行榜
-        function initContributionCharts() {
-            // 初始化排行榜数据
-            initRankingList();
+        // 添加DOM加载完成后执行的函数
+        document.addEventListener('DOMContentLoaded', function () {
+            // 为科技贡献统计创建动态排行榜
+            createContributionRanking();
+        });
 
-            // 尝试初始化词云
-            try {
-                initWordCloud();
-            } catch (e) {
-                console.error('Word cloud initialization error:', e);
-                showWordCloudFallback();
-            }
-        }
-
-        // 初始化词云
-        function initWordCloud() {
-            // 检查echarts是否可用
-            if (typeof echarts === 'undefined') {
-                console.warn('ECharts is not loaded');
-                showWordCloudFallback();
+        // 创建科技贡献排行榜的函数
+        function createContributionRanking() {
+            // 查找排行榜容器
+            const container = document.getElementById('new-ranking-card');
+            if (!container) {
+                console.error('找不到排行榜容器元素');
                 return;
             }
 
-            var chartDom = document.getElementById('wordcloud-chart');
-            if (!chartDom) {
-                console.warn('Word cloud container not found');
-                return;
-            }
-
-            var myChart = echarts.init(chartDom);
-
-            // 词云数据
-            var data = [
-                { name: '指南针', value: 98, field: 'engineering', dynasty: '北宋' },
-                { name: '活字印刷', value: 95, field: 'engineering', dynasty: '北宋' },
-                { name: '本草纲目', value: 92, field: 'medicine', dynasty: '明朝' },
-                { name: '地动仪', value: 90, field: 'astronomy', dynasty: '东汉' },
-                { name: '天工开物', value: 88, field: 'engineering', dynasty: '明朝' },
-                { name: '齐民要术', value: 85, field: 'agriculture', dynasty: '北魏' },
-                { name: '祖冲之圆周率', value: 83, field: 'mathematics', dynasty: '南北朝' },
-                { name: '水运仪象台', value: 80, field: 'astronomy', dynasty: '北宋' },
-                { name: '九章算术', value: 78, field: 'mathematics', dynasty: '汉代' },
-                { name: '伤寒杂病论', value: 76, field: 'medicine', dynasty: '东汉' },
-                { name: '梦溪笔谈', value: 75, field: 'multiple', dynasty: '北宋' },
-                { name: '火药', value: 74, field: 'engineering', dynasty: '唐朝' },
-                { name: '针灸铜人', value: 72, field: 'medicine', dynasty: '北宋' },
-                { name: '授时历', value: 70, field: 'astronomy', dynasty: '元朝' }
+            // 排行榜数据
+            const rankingData = [
+                { id: 1, title: "指南针", dynasty: "北宋", field: "engineering", fieldName: "工程学", score: 98 },
+                { id: 2, title: "活字印刷", dynasty: "北宋", field: "engineering", fieldName: "工程学", score: 95 },
+                { id: 3, title: "《本草纲目》", dynasty: "明朝", field: "medicine", fieldName: "医学", score: 92 },
+                { id: 4, title: "地动仪", dynasty: "东汉", field: "astronomy", fieldName: "天文学", score: 90 },
+                { id: 5, title: "《天工开物》", dynasty: "明朝", field: "engineering", fieldName: "工程学", score: 88 },
+                { id: 6, title: "《齐民要术》", dynasty: "北魏", field: "agriculture", fieldName: "农学", score: 87 },
+                { id: 7, title: "祖冲之圆周率", dynasty: "南北朝", field: "mathematics", fieldName: "数学", score: 86 },
+                { id: 8, title: "火药", dynasty: "唐朝", field: "engineering", fieldName: "工程学", score: 85 }
             ];
 
-            // 设置颜色
-            var fieldColors = {
-                'astronomy': '#2E4E7E',
-                'medicine': '#9A4B2C',
-                'agriculture': '#5D8B3E',
-                'mathematics': '#A87C4F',
-                'engineering': '#4C6473',
-                'multiple': '#8E8C7D'
-            };
+            // 清空容器
+            container.innerHTML = '';
 
-            // 为每个数据项添加颜色
-            data.forEach(function (item) {
-                item.textStyle = {
-                    color: fieldColors[item.field] || '#8E8C7D'
-                };
-            });
+            // 设置容器样式
+            container.style.width = '100%';
+            container.style.height = '300px';
+            container.style.background = 'white';
+            container.style.borderRadius = '8px';
+            container.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            container.style.overflow = 'hidden';
+            container.style.fontFamily = 'Microsoft YaHei, sans-serif';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
 
-            // 词云配置
-            var option = {
-                tooltip: {
-                    show: true,
-                    formatter: function (params) {
-                        return '<div style="font-weight:bold;font-size:14px;margin-bottom:5px;">' +
-                            params.name + '</div>' +
-                            '<div>重要性: ' + params.value + '</div>' +
-                            '<div>领域: ' + getFieldName(params.data.field) + '</div>' +
-                            '<div>朝代: ' + params.data.dynasty + '</div>';
-                    },
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    borderColor: '#ccc',
-                    borderWidth: 1,
-                    textStyle: {
-                        color: '#333'
-                    }
-                },
-                series: [{
-                    type: 'wordCloud',
-                    shape: 'circle',
-                    left: 'center',
-                    top: 'center',
-                    width: '90%',
-                    height: '90%',
-                    right: null,
-                    bottom: null,
-                    sizeRange: [12, 30],
-                    rotationRange: [-30, 30],
-                    rotationStep: 15,
-                    gridSize: 8,
-                    drawOutOfBound: false,
-                    textStyle: {
-                        fontFamily: '"Hiragino Sans GB", "Microsoft YaHei", sans-serif',
-                        fontWeight: 'normal'
-                    },
-                    emphasis: {
-                        textStyle: {
-                            fontWeight: 'bold',
-                            shadowBlur: 10,
-                            shadowColor: 'rgba(0, 0, 0, 0.3)'
-                        }
-                    },
-                    data: data
-                }]
-            };
+            // 创建标题和标签区域
+            const header = document.createElement('div');
+            header.style.padding = '12px';
+            header.style.borderBottom = '1px solid #eee';
 
-            myChart.setOption(option);
+            // 添加标题
+            const title = document.createElement('div');
+            title.style.fontSize = '14px';
+            title.style.fontWeight = 'bold';
+            title.style.color = '#2E4E7E';
+            title.style.marginBottom = '8px';
+            header.appendChild(title);
 
-            // 响应窗口大小变化
-            window.addEventListener('resize', function () {
-                if (myChart) {
-                    myChart.resize();
+            // 添加标签
+            const tabs = document.createElement('div');
+            tabs.style.display = 'flex';
+            tabs.style.gap = '5px';
+            tabs.style.flexWrap = 'wrap';
+
+            // 定义标签数据
+            const fields = [
+                { id: 'all', name: '全部' },
+                { id: 'astronomy', name: '天文' },
+                { id: 'medicine', name: '医学' },
+                { id: 'engineering', name: '工程' },
+                { id: 'mathematics', name: '数学' }
+            ];
+
+            // 添加标签元素
+            fields.forEach((field, index) => {
+                const tab = document.createElement('span');
+                tab.textContent = field.name;
+                tab.setAttribute('data-field', field.id);
+                tab.style.padding = '3px 8px';
+                tab.style.borderRadius = '12px';
+                tab.style.fontSize = '12px';
+                tab.style.cursor = 'pointer';
+
+                // 第一个标签默认激活
+                if (index === 0) {
+                    tab.style.background = '#2E4E7E';
+                    tab.style.color = 'white';
+                    tab.classList.add('active');
+                } else {
+                    tab.style.background = 'rgba(46,78,126,0.1)';
+                    tab.style.color = '#2E4E7E';
                 }
+
+                // 添加点击事件
+                tab.addEventListener('click', function () {
+                    // 更新标签样式
+                    document.querySelectorAll('#new-ranking-card [data-field]').forEach(t => {
+                        t.style.background = 'rgba(46,78,126,0.1)';
+                        t.style.color = '#2E4E7E';
+                        t.classList.remove('active');
+                    });
+
+                    this.style.background = '#2E4E7E';
+                    this.style.color = 'white';
+                    this.classList.add('active');
+
+                    // 过滤排行榜
+                    filterRanking(this.getAttribute('data-field'));
+                });
+
+                tabs.appendChild(tab);
             });
-        }
 
-        // 显示词云备用方案
-        function showWordCloudFallback() {
-            var fallback = document.getElementById('wordcloud-fallback');
-            var chart = document.getElementById('wordcloud-chart');
+            header.appendChild(tabs);
+            container.appendChild(header);
 
-            if (fallback && chart) {
-                chart.style.display = 'none';
-                fallback.style.display = 'block';
+            // 创建排行榜主体
+            const rankingBody = document.createElement('div');
+            rankingBody.style.flex = '1';
+            rankingBody.style.overflowY = 'auto';
+            rankingBody.style.padding = '0 12px';
+            rankingBody.id = 'ranking-body';
+            container.appendChild(rankingBody);
 
-                // 创建静态词云备用方案
-                fallback.innerHTML = `
-                    <div style="padding:20px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;height:100%;">
-                        <span style="font-size:24px;color:#2E4E7E;margin:8px;">指南针</span>
-                        <span style="font-size:22px;color:#9A4B2C;margin:8px;">本草纲目</span>
-                        <span style="font-size:20px;color:#5D8B3E;margin:8px;">齐民要术</span>
-                        <span style="font-size:21px;color:#4C6473;margin:8px;">活字印刷</span>
-                        <span style="font-size:19px;color:#2E4E7E;margin:8px;">地动仪</span>
-                        <span style="font-size:18px;color:#A87C4F;margin:8px;">祖冲之圆周率</span>
-                        <span style="font-size:20px;color:#4C6473;margin:8px;">天工开物</span>
-                        <span style="font-size:17px;color:#8E8C7D;margin:8px;">梦溪笔谈</span>
-                        <span style="font-size:16px;color:#2E4E7E;margin:8px;">水运仪象台</span>
-                    </div>
-                `;
+            // 填充排行榜项目
+            populateRankingItems(rankingData);
+
+            // 过滤排行榜的函数
+            function filterRanking(field) {
+                if (field === 'all') {
+                    populateRankingItems(rankingData);
+                } else {
+                    const filteredData = rankingData.filter(item => item.field === field);
+                    populateRankingItems(filteredData);
+                }
             }
-        }
 
-        // 获取领域名称
-        function getFieldName(field) {
-            var names = {
-                'astronomy': '天文学',
-                'medicine': '医学',
-                'agriculture': '农学',
-                'mathematics': '数学',
-                'engineering': '工程学',
-                'multiple': '多领域'
-            };
-            return names[field] || '其他';
+            // 填充排行榜项目的函数
+            function populateRankingItems(data) {
+                const body = document.getElementById('ranking-body');
+                body.innerHTML = '';
+
+                data.forEach((item, index) => {
+                    // 创建排行项
+                    const rankItem = document.createElement('div');
+                    rankItem.style.display = 'flex';
+                    rankItem.style.alignItems = 'center';
+                    rankItem.style.padding = '8px 0';
+                    rankItem.style.borderBottom = '1px solid #eee';
+
+                    // 排名圆圈
+                    const rankCircle = document.createElement('div');
+                    rankCircle.textContent = index + 1;
+                    rankCircle.style.width = '22px';
+                    rankCircle.style.height = '22px';
+                    rankCircle.style.borderRadius = '50%';
+                    rankCircle.style.display = 'flex';
+                    rankCircle.style.alignItems = 'center';
+                    rankCircle.style.justifyContent = 'center';
+                    rankCircle.style.marginRight = '10px';
+                    rankCircle.style.fontWeight = 'bold';
+                    rankCircle.style.fontSize = '12px';
+
+                    // 前三名特殊颜色
+                    if (index === 0) {
+                        rankCircle.style.background = '#FFD700';
+                        rankCircle.style.color = 'white';
+                    } else if (index === 1) {
+                        rankCircle.style.background = '#C0C0C0';
+                        rankCircle.style.color = 'white';
+                    } else if (index === 2) {
+                        rankCircle.style.background = '#CD7F32';
+                        rankCircle.style.color = 'white';
+                    } else {
+                        rankCircle.style.background = '#eee';
+                        rankCircle.style.color = '#666';
+                    }
+
+                    rankItem.appendChild(rankCircle);
+
+                    // 内容区域
+                    const content = document.createElement('div');
+                    content.style.flex = '1';
+
+                    const title = document.createElement('div');
+                    title.textContent = item.title;
+                    title.style.fontWeight = 'bold';
+                    title.style.fontSize = '13px';
+
+                    const info = document.createElement('div');
+                    info.textContent = `${item.dynasty} · ${item.fieldName}`;
+                    info.style.fontSize = '12px';
+                    info.style.color = '#666';
+
+                    content.appendChild(title);
+                    content.appendChild(info);
+                    rankItem.appendChild(content);
+
+                    // 分数
+                    const score = document.createElement('div');
+                    score.textContent = item.score;
+                    score.style.fontWeight = 'bold';
+                    score.style.color = '#9A4B2C';
+                    score.style.fontSize = '14px';
+                    rankItem.appendChild(score);
+
+                    // 添加到排行榜主体
+                    body.appendChild(rankItem);
+                });
+
+                // 如果没有数据，显示提示
+                if (data.length === 0) {
+                    const noData = document.createElement('div');
+                    noData.textContent = '没有相关数据';
+                    noData.style.textAlign = 'center';
+                    noData.style.padding = '20px';
+                    noData.style.color = '#999';
+                    body.appendChild(noData);
+                }
+            }
         }
     </script>
 </body>
