@@ -8,7 +8,7 @@
 
     <!-- 引入所需字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://webapi.amap.com/maps?v=1.4.15&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
     <script src="https://webapi.amap.com/ui/1.1/main.js"></script>
 
@@ -34,9 +34,9 @@
             color: var(--text-brown);
             font-family: 'Noto Serif SC', serif;
             overflow: hidden;
-            background-image:
+            /*background-image:
                 linear-gradient(rgba(245, 241, 230, 0.97), rgba(245, 241, 230, 0.97)),
-                url('path/to/chinese-pattern.png');
+                url('path/to/chinese-pattern.png');*/
             padding-top: 60px;
             /* 为固定导航栏留出空间 */
         }
@@ -1109,19 +1109,27 @@
             <a href="/" class="nav-item home-icon">
                 <i class="fas fa-home"></i> 首页
             </a>
-            <a href="Norstar/ai.html" class="nav-item">灵枢AI</a>
-            <a href="templates/index.html" class="nav-item">坤舆智库</a>
+            <a href="Norstar/ai.html" class="nav-item">
+                <i class="fas fa-robot"></i> 灵枢AI
+            </a>
+            <a href="templates/index.html" class="nav-item">
+                <i class="fas fa-book"></i> 坤舆智库
+            </a>
         </div>
 
         <!-- 中间标题 -->
-        <div class="nav-center">
+        <div class="nav-center" style="font-family: 'XingShu', cursive;">
             千载格物：中国古代自然科技的可视化探索
         </div>
 
         <!-- 右侧导航 -->
         <div class="nav-right">
-            <a href="Norstar/index.html" class="nav-item">专题探索</a>
-            <a href="Terris/index.html" class="nav-item">文明解码</a>
+            <a href="Norstar/index.html" class="nav-item">
+                <i class="fas fa-search"></i> 专题探索
+            </a>
+            <a href="Terris/index.html" class="nav-item">
+                <i class="fas fa-code"></i> 文明解码
+            </a>
             <span class="datetime">2025/3/31 22:31:48</span>
         </div>
     </nav>
