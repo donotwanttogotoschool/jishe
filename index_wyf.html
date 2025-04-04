@@ -951,7 +951,7 @@
             </div>
             <div class="card">
                 <h3>科技贡献统计</h3>
-                <div id="new-ranking-card"></div>
+                <div id="ranking-card"></div>
             </div>
         </div>
     </div>
@@ -1738,7 +1738,7 @@
         // 创建科技贡献排行榜的函数
         function createContributionRanking() {
             // 查找排行榜容器
-            const container = document.getElementById('new-ranking-card');
+            const container = document.getElementById('ranking-card');
             if (!container) {
                 console.error('找不到排行榜容器元素');
                 return;
@@ -1756,37 +1756,49 @@
                 { id: 8, title: "火药", dynasty: "唐朝", field: "engineering", fieldName: "工程学", score: 85 }
             ];
 
-            // 清空容器
-            container.innerHTML = '';
-
-            // 设置容器样式
-            container.style.width = '100%';
-            container.style.height = '300px';
-            container.style.background = 'white';
-            container.style.borderRadius = '8px';
-            container.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-            container.style.overflow = 'hidden';
-            container.style.fontFamily = 'Microsoft YaHei, sans-serif';
-            container.style.display = 'flex';
-            container.style.flexDirection = 'column';
+            // 创建排行榜内容容器
+            const rankingContent = document.createElement('div');
+            rankingContent.style.padding = '0 15px 15px 15px';
+            rankingContent.style.height = '280px';
+            rankingContent.style.display = 'flex';
+            rankingContent.style.flexDirection = 'column';
+            rankingContent.style.background = 'linear-gradient(to bottom, #f9f9f9, #ffffff)'; // 渐变背景
+            rankingContent.style.border = 'none'; // 移除边框
+            rankingContent.style.boxShadow = 'none'; // 移除阴影
 
             // 创建标题和标签区域
             const header = document.createElement('div');
-            header.style.padding = '12px';
-            header.style.borderBottom = '1px solid #eee';
+            header.style.marginBottom = '15px';
+            header.style.position = 'relative';
+            header.style.paddingBottom = '12px';
+
+            // 添加一个装饰线
+            const decorLine = document.createElement('div');
+            decorLine.style.position = 'absolute';
+            decorLine.style.bottom = '0';
+            decorLine.style.left = '0';
+            decorLine.style.width = '100%';
+            decorLine.style.height = '1px';
+            decorLine.style.background = 'linear-gradient(to right, rgba(46,78,126,0.05), rgba(46,78,126,0.2), rgba(46,78,126,0.05))';
+            header.appendChild(decorLine);
 
             // 添加标题
             const title = document.createElement('div');
-            title.style.fontSize = '14px';
+            //title.textContent = '重要科技成就排行';
+            title.style.fontSize = '0px';
             title.style.fontWeight = 'bold';
             title.style.color = '#2E4E7E';
-            title.style.marginBottom = '8px';
-            header.appendChild(title);
+            title.style.marginBottom = '10px';
+            title.style.borderLeft = '3px solid #9A4B2C'; // 左侧边框装饰
+            //title.style.paddingLeft = '8px';
+            title.style.display = 'flex';
+            title.style.alignItems = 'center';
+            //header.appendChild(title);
 
             // 添加标签
             const tabs = document.createElement('div');
             tabs.style.display = 'flex';
-            tabs.style.gap = '5px';
+            tabs.style.gap = '6px';
             tabs.style.flexWrap = 'wrap';
 
             // 定义标签数据
@@ -1803,15 +1815,17 @@
                 const tab = document.createElement('span');
                 tab.textContent = field.name;
                 tab.setAttribute('data-field', field.id);
-                tab.style.padding = '3px 8px';
-                tab.style.borderRadius = '12px';
+                tab.style.padding = '4px 10px';
+                tab.style.borderRadius = '14px';
                 tab.style.fontSize = '12px';
                 tab.style.cursor = 'pointer';
+                tab.style.transition = 'all 0.3s ease'; // 添加过渡效果
 
                 // 第一个标签默认激活
                 if (index === 0) {
                     tab.style.background = '#2E4E7E';
                     tab.style.color = 'white';
+                    tab.style.boxShadow = '0 2px 4px rgba(46,78,126,0.3)'; // 给激活的标签添加阴影
                     tab.classList.add('active');
                 } else {
                     tab.style.background = 'rgba(46,78,126,0.1)';
@@ -1821,14 +1835,16 @@
                 // 添加点击事件
                 tab.addEventListener('click', function () {
                     // 更新标签样式
-                    document.querySelectorAll('#new-ranking-card [data-field]').forEach(t => {
+                    document.querySelectorAll('#ranking-card [data-field]').forEach(t => {
                         t.style.background = 'rgba(46,78,126,0.1)';
                         t.style.color = '#2E4E7E';
+                        t.style.boxShadow = 'none';
                         t.classList.remove('active');
                     });
 
                     this.style.background = '#2E4E7E';
                     this.style.color = 'white';
+                    this.style.boxShadow = '0 2px 4px rgba(46,78,126,0.3)';
                     this.classList.add('active');
 
                     // 过滤排行榜
@@ -1839,15 +1855,40 @@
             });
 
             header.appendChild(tabs);
-            container.appendChild(header);
+            rankingContent.appendChild(header);
 
             // 创建排行榜主体
             const rankingBody = document.createElement('div');
             rankingBody.style.flex = '1';
             rankingBody.style.overflowY = 'auto';
-            rankingBody.style.padding = '0 12px';
+            rankingBody.style.paddingRight = '5px'; // 添加一些右侧间距，避免滚动条贴边
             rankingBody.id = 'ranking-body';
-            container.appendChild(rankingBody);
+
+            // 自定义滚动条样式
+            rankingBody.style.scrollbarWidth = 'thin';
+            rankingBody.style.scrollbarColor = '#d1d5db #f3f4f6';
+
+            // Webkit浏览器滚动条样式
+            const scrollbarStyle = document.createElement('style');
+            scrollbarStyle.textContent = `
+                #ranking-body::-webkit-scrollbar {
+                    width: 6px;
+                }
+                #ranking-body::-webkit-scrollbar-track {
+                    background: #f3f4f6;
+                    border-radius: 3px;
+                }
+                #ranking-body::-webkit-scrollbar-thumb {
+                    background-color: #d1d5db;
+                    border-radius: 3px;
+                }
+            `;
+            document.head.appendChild(scrollbarStyle);
+
+            rankingContent.appendChild(rankingBody);
+
+            // 将内容添加到卡片中
+            container.appendChild(rankingContent);
 
             // 填充排行榜项目
             populateRankingItems(rankingData);
@@ -1872,34 +1913,46 @@
                     const rankItem = document.createElement('div');
                     rankItem.style.display = 'flex';
                     rankItem.style.alignItems = 'center';
-                    rankItem.style.padding = '8px 0';
-                    rankItem.style.borderBottom = '1px solid #eee';
+                    rankItem.style.padding = '10px 0';
+                    rankItem.style.borderBottom = '1px solid rgba(0,0,0,0.06)';
+                    rankItem.style.transition = 'transform 0.2s ease';
+
+                    // 添加悬停效果
+                    rankItem.addEventListener('mouseenter', function () {
+                        this.style.transform = 'translateX(5px)';
+                        this.style.background = 'rgba(0,0,0,0.01)';
+                    });
+                    rankItem.addEventListener('mouseleave', function () {
+                        this.style.transform = 'translateX(0)';
+                        this.style.background = 'transparent';
+                    });
 
                     // 排名圆圈
                     const rankCircle = document.createElement('div');
                     rankCircle.textContent = index + 1;
-                    rankCircle.style.width = '22px';
-                    rankCircle.style.height = '22px';
+                    rankCircle.style.width = '24px';
+                    rankCircle.style.height = '24px';
                     rankCircle.style.borderRadius = '50%';
                     rankCircle.style.display = 'flex';
                     rankCircle.style.alignItems = 'center';
                     rankCircle.style.justifyContent = 'center';
-                    rankCircle.style.marginRight = '10px';
+                    rankCircle.style.marginRight = '12px';
                     rankCircle.style.fontWeight = 'bold';
                     rankCircle.style.fontSize = '12px';
+                    rankCircle.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'; // 添加阴影
 
-                    // 前三名特殊颜色
+                    // 前三名特殊颜色和效果
                     if (index === 0) {
-                        rankCircle.style.background = '#FFD700';
+                        rankCircle.style.background = 'linear-gradient(135deg, #FFD700, #e6c400)';
                         rankCircle.style.color = 'white';
                     } else if (index === 1) {
-                        rankCircle.style.background = '#C0C0C0';
+                        rankCircle.style.background = 'linear-gradient(135deg, #C0C0C0, #a8a8a8)';
                         rankCircle.style.color = 'white';
                     } else if (index === 2) {
-                        rankCircle.style.background = '#CD7F32';
+                        rankCircle.style.background = 'linear-gradient(135deg, #CD7F32, #b06a29)';
                         rankCircle.style.color = 'white';
                     } else {
-                        rankCircle.style.background = '#eee';
+                        rankCircle.style.background = '#f0f0f0';
                         rankCircle.style.color = '#666';
                     }
 
@@ -1912,12 +1965,31 @@
                     const title = document.createElement('div');
                     title.textContent = item.title;
                     title.style.fontWeight = 'bold';
-                    title.style.fontSize = '13px';
+                    title.style.fontSize = '14px';
+                    title.style.color = '#333';
 
                     const info = document.createElement('div');
-                    info.textContent = `${item.dynasty} · ${item.fieldName}`;
                     info.style.fontSize = '12px';
                     info.style.color = '#666';
+                    info.style.marginTop = '2px';
+
+                    // 朝代和领域分开显示，更精致
+                    const dynastySpan = document.createElement('span');
+                    dynastySpan.textContent = item.dynasty;
+                    dynastySpan.style.color = '#9A4B2C';
+                    dynastySpan.style.marginRight = '5px';
+
+                    const separator = document.createElement('span');
+                    separator.textContent = '·';
+                    separator.style.marginRight = '5px';
+                    separator.style.opacity = '0.5';
+
+                    const fieldSpan = document.createElement('span');
+                    fieldSpan.textContent = item.fieldName;
+
+                    info.appendChild(dynastySpan);
+                    info.appendChild(separator);
+                    info.appendChild(fieldSpan);
 
                     content.appendChild(title);
                     content.appendChild(info);
@@ -1928,7 +2000,10 @@
                     score.textContent = item.score;
                     score.style.fontWeight = 'bold';
                     score.style.color = '#9A4B2C';
-                    score.style.fontSize = '14px';
+                    score.style.fontSize = '16px';
+                    score.style.background = 'rgba(154, 75, 44, 0.08)';
+                    score.style.padding = '3px 8px';
+                    score.style.borderRadius = '10px';
                     rankItem.appendChild(score);
 
                     // 添加到排行榜主体
@@ -1940,8 +2015,9 @@
                     const noData = document.createElement('div');
                     noData.textContent = '没有相关数据';
                     noData.style.textAlign = 'center';
-                    noData.style.padding = '20px';
+                    noData.style.padding = '30px 0';
                     noData.style.color = '#999';
+                    noData.style.fontSize = '14px';
                     body.appendChild(noData);
                 }
             }
