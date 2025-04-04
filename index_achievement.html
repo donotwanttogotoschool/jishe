@@ -91,23 +91,118 @@
 
         /* 调整统计数字展示区样式 */
         .stats-header {
+            max-height: 100px;
+            /* 限制最大高度为100px */
+            overflow: hidden;
+            /* 防止内容溢出 */
             display: flex;
+            align-items: center;
             justify-content: space-around;
-            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 0;
+            position: relative;
+            border: 1px solid rgba(154, 75, 44, 0.1);
             border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
-            height: 25%;
-            min-height: 80px;
-            box-sizing: border-box;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+        }
+
+        /* 统一使用单独的元素来实现角落装饰 */
+        .corner-decoration {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-style: solid;
+            border-color: rgba(154, 75, 44, 0.4);
+            border-width: 2px;
+            z-index: 1;
+        }
+
+        /* 左上角 */
+        .corner-tl {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        /* 右上角 */
+        .corner-tr {
+            top: -2px;
+            right: -2px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        /* 左下角 */
+        .corner-bl {
+            bottom: -2px;
+            left: -2px;
+            border-right: none;
+            border-top: none;
+        }
+
+        /* 右下角 */
+        .corner-br {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* 数据项之间的分隔线保持不变 */
+        .stats-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -1px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 70%;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(46, 78, 126, 0.2), transparent);
+        }
+
+        .stats-num {
+            font-size: calc(16px + 1vw);
+            /* 响应式字体大小 */
+            line-height: 1.2;
+            margin-bottom: 2px;
+            position: relative;
+        }
+
+        .stats-num::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 25%;
+            width: 50%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(154, 75, 44, 0.3), transparent);
+        }
+
+        .stats-text {
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* 如果还有其他数据区域也需要限制 */
+        .stats-container {
+            max-height: 100px;
+            overflow: hidden;
+        }
+
+        /* 确保地图区域的相对大小正确 */
+        .map-container {
+            height: calc(100% - 120px);
+            /* 减去数据区高度及间距 */
+            min-height: 300px;
         }
 
         /* 地图容器 */
         .map-container {
             flex-grow: 1;
-            height: 75%;
-            min-height: 300px;
+            height: 65%;
+            /* 从原来的75%降低到65% */
+            min-height: 250px;
+            /* 最小高度也相应降低 */
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
@@ -501,6 +596,8 @@
             background: rgba(255, 255, 255, 0.8);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
+            height: 250px;
+            /* 从原来的300px降低到250px */
         }
 
         .chart-container h4 {
@@ -668,16 +765,16 @@
         .right-panel .card {
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
+            padding: 5px;
+            margin-bottom: 5px;
             box-shadow: 0 2px 8px rgba(46, 78, 126, 0.1);
         }
 
         .right-panel .card h3 {
             color: #2E4E7E;
             font-size: 16px;
-            margin-top: 0;
-            margin-bottom: 15px;
+            margin-top: 10px;
+            margin-bottom: 5px;
             padding-bottom: 8px;
             border-bottom: 1px solid rgba(46, 78, 126, 0.2);
         }
@@ -697,105 +794,298 @@
             padding-bottom: 10px;
         }
 
-        /* 排行榜容器 */
+        /* 排行榜容器 - 设置基本布局结构和尺寸 */
         .ranking-container {
-            height: 280px;
+            height: 240px;
+            /* 排行榜整体高度，控制可见内容量 */
             display: flex;
+            /* 使用弹性布局 */
             flex-direction: column;
+            /* 子元素垂直排列 */
+            /* 此高度设置造成了红框中的空白区域，可以改为height: auto或减小高度值 */
         }
 
-        /* 排行榜头部 */
+        /* 排行榜头部 - 包含标题和标签栏 */
         .ranking-header {
             margin-bottom: 8px;
+            /* 与下方排行榜内容的间距 */
         }
 
-        /* 标签样式 */
+        /* 标签栏样式 - 用于切换不同分类的排行 */
         .ranking-tabs {
             display: flex;
+            /* 水平排列各个标签 */
             gap: 4px;
+            /* 标签之间的间距 */
         }
 
+        /* 单个标签样式 */
         .tab {
             padding: 2px 6px;
+            /* 标签内部填充，影响点击区域大小 */
             border-radius: 8px;
+            /* 圆角边框效果 */
             font-size: 11px;
+            /* 标签字体大小 */
             cursor: pointer;
+            /* 鼠标悬停时显示手型指针 */
             background: rgba(46, 78, 126, 0.1);
+            /* 浅蓝色半透明背景 */
             color: #2E4E7E;
+            /* 标签文字颜色 - 蓝色 */
         }
 
+        /* 激活状态的标签样式 */
         .tab.active {
             background: #2E4E7E;
+            /* 深蓝色背景 */
             color: #fff;
+            /* 白色文字，提高对比度 */
         }
 
-        /* 排行榜主体 */
+        /* 排行榜主体 - 包含所有排行项 */
         .ranking-body {
             flex: 1;
+            /* 占用剩余所有垂直空间 */
             overflow-y: auto;
+            /* 内容过多时显示垂直滚动条 */
         }
 
-        /* 排行项 */
+        /* 排行项 - 单个排名条目的布局 */
         .ranking-item {
             display: flex;
+            /* 横向弹性布局 */
             align-items: center;
+            /* 垂直居中排列 */
             padding: 6px;
+            /* 内部填充，使条目有一定高度 */
             border-bottom: 1px solid rgba(154, 75, 44, 0.05);
+            /* 底部细线分隔各条目 */
         }
 
+        /* 排名数字样式 */
         .rank {
             width: 18px;
+            /* 排名数字容器的宽度 */
             height: 18px;
+            /* 排名数字容器的高度 */
             border-radius: 50%;
+            /* 圆形效果 */
             display: flex;
+            /* 弹性布局使数字居中 */
             align-items: center;
+            /* 垂直居中 */
             justify-content: center;
+            /* 水平居中 */
             font-size: 11px;
+            /* 数字字体大小 */
             font-weight: bold;
+            /* 数字加粗显示 */
             margin-right: 6px;
+            /* 与右侧内容的间距 */
             background: #f0f0f0;
+            /* 默认浅灰色背景 */
             color: #666;
+            /* 默认深灰色文字 */
         }
 
+        /* 第一名特殊样式 - 金色 */
         .top-1 .rank {
             background: #FFD700;
+            /* 金色背景 */
             color: #fff;
+            /* 白色文字 */
         }
 
+        /* 第二名特殊样式 - 银色 */
         .top-2 .rank {
             background: #C0C0C0;
+            /* 银色背景 */
             color: #fff;
+            /* 白色文字 */
         }
 
+        /* 第三名特殊样式 - 铜色 */
         .top-3 .rank {
             background: #CD7F32;
+            /* 铜色背景 */
             color: #fff;
+            /* 白色文字 */
         }
 
+        /* 内容区域 - 包含标题和信息 */
         .content {
             flex: 1;
+            /* 占用排行项中的剩余空间 */
             min-width: 0;
+            /* 确保内容可以被压缩，防止溢出 */
         }
 
+        /* 标题样式 - 显示排行项的主要内容 */
         .title {
             font-size: 12px;
+            /* 标题字体大小 */
             font-weight: bold;
+            /* 标题加粗 */
             margin-bottom: 2px;
+            /* 与下方信息的间距 */
         }
 
+        /* 信息样式 - 显示排行项的次要信息 */
         .info {
             font-size: 10px;
+            /* 信息文字大小 */
             color: #666;
+            /* 信息文字颜色 - 深灰 */
         }
 
+        /* 信息中的各项目间隔 */
         .info span {
             margin-right: 6px;
+            /* 信息项之间的间距 */
         }
 
+        /* 分数样式 - 排行榜右侧的数值 */
         .score {
             font-weight: bold;
+            /* 分数加粗显示 */
             color: #9A4B2C;
+            /* 棕红色，突出显示 */
             font-size: 12px;
+            /* 分数字体大小 */
+        }
+
+        /* 在数据区下面添加简单的链接区域 */
+        .simple-nav-links {
+            text-align: center;
+            padding: 8px 0;
+            margin: 5px 0 10px;
+            border-bottom: 1px solid rgba(154, 75, 44, 0.1);
+        }
+
+        .simple-nav-links a {
+            color: var(--text-brown);
+            text-decoration: none;
+            padding: 0 5px;
+            font-size: 14px;
+        }
+
+        .simple-nav-links a:hover {
+            color: var(--primary-blue);
+            text-decoration: underline;
+        }
+
+        .nav-dot {
+            color: var(--text-brown);
+            opacity: 0.6;
+        }
+
+        /* 在数据区下面添加简单的链接区域 */
+        .elegant-nav-links {
+            text-align: center;
+            padding: 10px 0;
+            margin: 8px 0 15px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+            position: relative;
+        }
+
+        .elegant-nav-links::before,
+        .elegant-nav-links::after {
+            content: '';
+            position: absolute;
+            height: 1px;
+            left: 20%;
+            right: 20%;
+            background: linear-gradient(to right, transparent, rgba(154, 75, 44, 0.3), transparent);
+        }
+
+        .elegant-nav-links::before {
+            top: 0;
+        }
+
+        .elegant-nav-links::after {
+            bottom: 0;
+        }
+
+        .elegant-link {
+            color: #2E4E7E;
+            text-decoration: none;
+            padding: 0 8px;
+            font-size: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .elegant-link:hover {
+            color: #9A4B2C;
+        }
+
+        .elegant-link:hover::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background: #9A4B2C;
+            border-radius: 1px;
+        }
+
+        .elegant-dot {
+            color: #9A4B2C;
+            opacity: 0.7;
+            margin: 0 3px;
+            font-weight: bold;
+        }
+
+        /* 标题文本样式 */
+        .title-text {
+            color: #2E4E7E;
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 15px;
+            position: relative;
+        }
+
+        /* 标题文本后的装饰 */
+        .title-text::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: rgba(154, 75, 44, 0.3);
+            transform: translateY(-50%);
+        }
+
+        /* 特殊链接样式 */
+        .highlight-link {
+            position: relative;
+            padding: 3px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background-color: rgba(154, 75, 44, 0.1);
+            transition: height 0.3s ease;
+            z-index: -1;
+            border-radius: 3px;
+        }
+
+        .highlight-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .highlight-link:hover::before {
+            height: 100%;
         }
     </style>
 </head>
@@ -811,8 +1101,8 @@
             <a href="/" class="nav-item home-icon">
                 <i class="fas fa-home"></i> 首页
             </a>
-            <a href="#" class="nav-item">灵枢AI</a>
-            <a href="#" class="nav-item">坤舆智库</a>
+            <a href="Norstar/ai.html" class="nav-item">灵枢AI</a>
+            <a href="templates/index.html" class="nav-item">坤舆智库</a>
         </div>
 
         <!-- 中间标题 -->
@@ -822,8 +1112,8 @@
 
         <!-- 右侧导航 -->
         <div class="nav-right">
-            <a href="#" class="nav-item">专题探索</a>
-            <a href="#" class="nav-item">文明解码</a>
+            <a href="Norstar/index.html" class="nav-item">专题探索</a>
+            <a href="Terris/index.html" class="nav-item">文明解码</a>
             <span class="datetime">2025/3/31 22:31:48</span>
         </div>
     </nav>
@@ -935,6 +1225,15 @@
                 </div>
             </div>
 
+            <!-- 在数据区下面添加简单的链接区域 -->
+            <div class="elegant-nav-links">
+                <span class="title-text">中国古代自然科学</span>
+                <a href="achievements.html" class="elegant-link highlight-link">成就</a>
+                <span class="elegant-dot">·</span>
+                <a href="figures.html" class="elegant-link highlight-link">人物</a>
+                <span class="elegant-dot">·</span>
+                <a href="books.html" class="elegant-link highlight-link">著作</a>
+            </div>
             <!-- 地图 -->
             <div class="card map-container">
                 <h3>九州科技发展地图</h3>
@@ -978,6 +1277,8 @@
             <div class="stat-label">研究领域</div>
         </div>
     </div>
+
+
 
     <!-- 引入必要的JavaScript库 -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
@@ -2022,6 +2323,29 @@
                 }
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // 查找所有图表容器并调整高度
+            const chartContainers = document.querySelectorAll('.chart-container, .data-area');
+            chartContainers.forEach(container => {
+                container.style.height = '250px'; // 设置为250px
+            });
+
+            // 如果有echarts实例，需要重新调整尺寸
+            if (window.echarts) {
+                setTimeout(() => {
+                    const charts = document.querySelectorAll('[_echarts_instance_]');
+                    charts.forEach(chart => {
+                        const instance = echarts.getInstanceByDom(chart);
+                        if (instance) {
+                            instance.resize();
+                        }
+                    });
+                }, 100);
+            }
+        });
+
+
     </script>
 </body>
 
