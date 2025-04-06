@@ -371,12 +371,12 @@
             height: 60px;
             /* 使用更优雅的渐变背景 */
             background: linear-gradient(to right,
-                    #2E4E7E,
-                    /* 靛青色 */
-                    #2b4570,
-                    /* 深蓝色 */
-                    #2E4E7E
-                    /* 靛青色 */
+                    #966F33,
+                    /* 古铜金 */
+                    #C5A572,
+                    /* 香槟金 */
+                    #966F33
+                    /* 古铜金 */
                 );
             display: flex;
             align-items: center;
@@ -1137,61 +1137,60 @@
     <div class="container">
         <!-- 左侧面板 -->
         <div class="left-panel">
-            <h3>历史人物画像</h3>
+            <h3>著作滚动图鉴</h3>
 
             <!-- 轮播图放在最上方 -->
             <div class="scientist-carousel">
                 <div class="carousel-container">
                     <div class="carousel-track">
-                        <!-- 轮播项 -->
                         <div class="carousel-item">
                             <div class="scientist-portrait">
-                                <img src="static/images/scientists/zhang_heng.jpg" alt="张衡"
-                                    onerror="this.src='images/default_portrait.jpg'">
+                                <img src="static/images/timeline/bencao.jpg" alt="本草纲目"
+                                    onerror="this.src='images/default_book.jpg'">
                             </div>
                             <div class="scientist-brief">
-                                <h4>张衡 (78-139)</h4>
-                                <p>东汉天文学家，发明地动仪，著《灵宪》</p>
+                                <h4>《本草纲目》</h4>
+                                <p>明代李时珍撰，收录药物1892种，被誉为"东方医药巨典"</p>
                             </div>
                         </div>
                         <div class="carousel-item">
                             <div class="scientist-portrait">
-                                <img src="static/images/scientists/shen_kuo.jpg" alt="沈括"
-                                    onerror="this.src='images/default_portrait.jpg'">
+                                <img src="static/images/timeline/tiangong.jpg" alt="天工开物"
+                                    onerror="this.src='images/default_book.jpg'">
                             </div>
                             <div class="scientist-brief">
-                                <h4>沈括 (1031-1095)</h4>
-                                <p>北宋科学家，著《梦溪笔谈》，多领域贡献</p>
+                                <h4>《天工开物》</h4>
+                                <p>明代宋应星著，详述古代工农业技术，堪称"中国17世纪工艺百科全书"</p>
                             </div>
                         </div>
                         <div class="carousel-item">
                             <div class="scientist-portrait">
-                                <img src="static/images/scientists/li_shizhen.jpg" alt="李时珍"
-                                    onerror="this.src='images/default_portrait.jpg'">
+                                <img src="static/images/timeline/mengxi_bitan.png" alt="梦溪笔谈"
+                                    onerror="this.src='images/default_book.jpg'">
                             </div>
                             <div class="scientist-brief">
-                                <h4>李时珍 (1518-1593)</h4>
-                                <p>明代医学家，著《本草纲目》，收录药物1892种</p>
+                                <h4>《梦溪笔谈》</h4>
+                                <p>北宋沈括撰，涉及天文、地理、数学等多个领域的科学著作</p>
                             </div>
                         </div>
                         <div class="carousel-item">
                             <div class="scientist-portrait">
-                                <img src="static/images/scientists/zu_chongzhi.jpg" alt="祖冲之"
-                                    onerror="this.src='images/default_portrait.jpg'">
+                                <img src="static/images/timeline/qimingyaoshu.png" alt="齐民要术"
+                                    onerror="this.src='images/default_book.jpg'">
                             </div>
                             <div class="scientist-brief">
-                                <h4>祖冲之 (429-500)</h4>
-                                <p>南北朝数学家，圆周率精确至小数点后7位</p>
+                                <h4>《齐民要术》</h4>
+                                <p>北魏贾思勰撰，我国现存最完整的一部农书，总结了古代农业技术</p>
                             </div>
                         </div>
                         <div class="carousel-item">
                             <div class="scientist-portrait">
-                                <img src="static/images/scientists/song_yingxing.jpg" alt="宋应星"
-                                    onerror="this.src='images/default_portrait.jpg'">
+                                <img src="static/images/timeline/huangdineijing.jpg" alt="黄帝内经"
+                                    onerror="this.src='images/default_book.jpg'">
                             </div>
                             <div class="scientist-brief">
-                                <h4>宋应星 (1587-1666)</h4>
-                                <p>明代科学家，著《天工开物》，中国古代"工艺百科全书"</p>
+                                <h4>《黄帝内经》</h4>
+                                <p>战国秦汉时期医学经典，奠定了中医理论体系的基础</p>
                             </div>
                         </div>
                     </div>
@@ -1261,7 +1260,7 @@
         <!-- 右侧面板 -->
         <div class="right-panel">
             <div class="card">
-                <h3>古都科学人物分布</h3>
+                <h3>古都科学著作分布</h3>
                 <div id="scientists-chart" style="width: 100%; height: 320px;"></div>
             </div>
             <div class="card">
@@ -1270,28 +1269,6 @@
             </div>
         </div>
 
-        <!-- 数字统计区域HTML结构 -->
-        <div class="stats-container">
-            <div class="stat-item">
-                <div class="stat-number">358</div>
-                <div class="stat-label">重要成就</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <div class="stat-number">1452</div>
-                <div class="stat-label">历史人物</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <div class="stat-number">532</div>
-                <div class="stat-label">典籍著作</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <div class="stat-number">52</div>
-                <div class="stat-label">研究领域</div>
-            </div>
-        </div>
 
 
 
@@ -2014,14 +1991,14 @@
 
                 // 排行榜数据
                 const rankingData = [
-                    { id: 1, title: "指南针", dynasty: "北宋", field: "engineering", fieldName: "工程学", score: 98 },
-                    { id: 2, title: "活字印刷", dynasty: "北宋", field: "engineering", fieldName: "工程学", score: 95 },
-                    { id: 3, title: "《本草纲目》", dynasty: "明朝", field: "medicine", fieldName: "医学", score: 92 },
-                    { id: 4, title: "地动仪", dynasty: "东汉", field: "astronomy", fieldName: "天文学", score: 90 },
-                    { id: 5, title: "《天工开物》", dynasty: "明朝", field: "engineering", fieldName: "工程学", score: 88 },
+                    { id: 1, title: "《本草纲目》", dynasty: "明朝", field: "medicine", fieldName: "医学", score: 98 },
+                    { id: 2, title: "《天工开物》", dynasty: "明朝", field: "engineering", fieldName: "工程学", score: 95 },
+                    { id: 3, title: "《农政全书》", dynasty: "明朝", field: "agriculture", fieldName: "农学", score: 92 },
+                    { id: 4, title: "《梦溪笔谈》", dynasty: "北宋", field: "science", fieldName: "综合科学", score: 90 },
+                    { id: 5, title: "《九章算术》", dynasty: "汉朝", field: "mathematics", fieldName: "数学", score: 88 },
                     { id: 6, title: "《齐民要术》", dynasty: "北魏", field: "agriculture", fieldName: "农学", score: 87 },
-                    { id: 7, title: "祖冲之圆周率", dynasty: "南北朝", field: "mathematics", fieldName: "数学", score: 86 },
-                    { id: 8, title: "火药", dynasty: "唐朝", field: "engineering", fieldName: "工程学", score: 85 }
+                    { id: 7, title: "《黄帝内经》", dynasty: "战国秦汉", field: "medicine", fieldName: "医学", score: 86 },
+                    { id: 8, title: "《灵枢》", dynasty: "东汉", field: "astronomy", fieldName: "天文学", score: 85 }
                 ];
 
                 // 创建排行榜内容容器
