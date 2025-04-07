@@ -1376,67 +1376,110 @@
             // 页面加载时启动动画
             document.addEventListener('DOMContentLoaded', animateNumbers);
 
-            // 地图初始化函数
             function initMap() {
                 try {
-                    // 检查地图容器是否存在
-                    var mapContainer = document.getElementById('map-container');
+                    const mapContainer = document.getElementById('map-container');
                     if (!mapContainer) {
-                        console.warn('Map container not found');
+                        console.warn('找不到地图容器');
                         return;
                     }
 
-                    // 显示加载中状态
-                    mapContainer.innerHTML = '<div style="text-align:center;padding:20px;">地图加载中...</div>';
-
-                    // 检查AMap是否可用，如果不可用则使用备用方案
-                    if (typeof AMap === 'undefined') {
-                        console.warn('AMap is not loaded, using fallback');
-                        mapContainer.innerHTML = `
-                        <div style="text-align:center;padding:20px;">
-                            <img src="https://gw.alipayobjects.com/zos/antfincdn/Y%24wzh%24iiS/ancient-map.jpg" 
-                                 alt="中国古代地图" style="max-width:100%;max-height:300px;border-radius:4px;">
-                            <p style="margin-top:10px;color:#666;">古代科技发展地图</p>
-                        </div>
-                    `;
-                        return;
-                    }
-
-                    // 正常初始化地图
-                    var map = new AMap.Map(mapContainer, {
+                    // 创建地图实例
+                    const map = new AMap.Map(mapContainer, {
                         zoom: 5,
-                        center: [108.953, 34.265],
-                        viewMode: '2D',
-                        mapStyle: 'amap://styles/normal'  // 使用普通样式代替vintage样式
+                        center: [112.29, 31.20], // 中国中部
+                        viewMode: '2D'
                     });
 
-                    // 添加地图控件
-                    map.plugin(['AMap.ToolBar', 'AMap.Scale'], function () {
-                        map.addControl(new AMap.ToolBar());
-                        map.addControl(new AMap.Scale());
-                    });
+                    // 定义各省份的经纬度边界及对应的跳转链接
+                    const provinces = {
+                        '福建省': { 
+                            bounds: { minLng: 115.85, maxLng: 120.52, minLat: 23.54, maxLat: 28.22 },
+                            url: 'shengfen/fujian.html' 
+                        },
+                        '广东省': { 
+                            bounds: { minLng: 109.66, maxLng: 117.28, minLat: 20.13, maxLat: 25.31 },
+                            url: 'shengfen/guangdong.html' 
+                        },
+                        '广西省': { 
+                            bounds: { minLng: 104.26, maxLng: 112.04, minLat: 20.54, maxLat: 26.24 },
+                            url: 'shengfen/guangxi.html' 
+                        },
+                        '贵州省': { 
+                            bounds: { minLng: 103.36, maxLng: 109.35, minLat: 24.37, maxLat: 29.13 },
+                            url: 'shengfen/guizhou.html' 
+                        },
+                        '河北省': { 
+                            bounds: { minLng: 113.46, maxLng: 119.85, minLat: 36.01, maxLat: 42.37 },
+                            url: 'shengfen/hebei.html' 
+                        },
+                        '河南省': { 
+                            bounds: { minLng: 110.36, maxLng: 116.65, minLat: 31.23, maxLat: 36.22 },
+                            url: 'shengfen/henan.html' 
+                        },
+                        '湖南省': { 
+                            bounds: { minLng: 108.47, maxLng: 114.15, minLat: 24.38, maxLat: 30.08 },
+                            url: 'shengfen/hunan.html' 
+                        },
+                        '江苏省': { 
+                            bounds: { minLng: 116.18, maxLng: 121.57, minLat: 30.46, maxLat: 35.20 },
+                            url: 'shengfen/jiangsu.html' 
+                        },
+                        '江西省': { 
+                            bounds: { minLng: 113.34, maxLng: 118.29, minLat: 24.29, maxLat: 30.05 },
+                            url: 'shengfen/jiangxi.html' 
+                        },
+                        '吉林省': { 
+                            bounds: { minLng: 121.38, maxLng: 131.19, minLat: 40.52, maxLat: 46.18 },
+                            url: 'shengfen/jilin.html' 
+                        },
+                        '山东省': { 
+                            bounds: { minLng: 114.47, maxLng: 122.43, minLat: 34.22, maxLat: 38.23 },
+                            url: 'shengfen/shandong.html' 
+                        },
+                        '四川省': { 
+                            bounds: { minLng: 97.34,  maxLng: 108.55, minLat: 26.03, maxLat: 34.19 },
+                            url: 'shengfen/sichuan.html' 
+                        },
+                        '浙江省': { 
+                            bounds: { minLng: 118.01, maxLng: 123.10, minLat: 27.12, maxLat: 31.11 },
+                            url: 'shengfen/zhejiang.html' 
+                        },
+                        '湖北省': { 
+                            bounds: { minLng: 108.21, maxLng: 116.07, minLat: 29.02, maxLat: 33.20 },
+                            url: 'shengfen/hubei.html' 
+                        }
+                    };
 
-                    // 使用setFitView而不是resize
-                    window.addEventListener('resize', function () {
-                        if (map && typeof map.setFitView === 'function') {
-                            map.setFitView();
+                    // 点击地图时，判断省份并跳转
+                    map.on('click', function(ev) {
+                        const lng = ev.lnglat.getLng();
+                        const lat = ev.lnglat.getLat();
+                        
+                        // 遍历所有省份，检查点击位置
+                        for (const [name, data] of Object.entries(provinces)) {
+                            const { bounds, url } = data;
+                            if (
+                                lng >= bounds.minLng &&
+                                lng <= bounds.maxLng &&
+                                lat >= bounds.minLat &&
+                                lat <= bounds.maxLat
+                            ) {
+                                window.location.href = url; // 跳转到对应省份页面
+                                return;
+                            }
                         }
                     });
+
                 } catch (e) {
-                    console.error('Map initialization error:', e);
+                    console.error('地图初始化错误:', e);
                     if (mapContainer) {
-                        mapContainer.innerHTML = `
-                        <div style="text-align:center;padding:20px;">
-                            <img src="https://gw.alipayobjects.com/zos/antfincdn/Y%24wzh%24iiS/ancient-map.jpg" 
-                                 alt="中国古代地图" style="max-width:100%;max-height:300px;border-radius:4px;">
-                            <p style="margin-top:10px;color:#666;">古代科技发展地图</p>
-                        </div>
-                    `;
+                        mapContainer.innerHTML = '<div style="text-align:center;padding:20px;">地图加载失败</div>';
                     }
                 }
             }
 
-            // 页面加载完成后初始化地图
+            // 初始化地图
             document.addEventListener('DOMContentLoaded', initMap);
 
             document.addEventListener('DOMContentLoaded', function () {
