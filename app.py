@@ -231,6 +231,10 @@ def mathematics():
 def physics():
     return render_template('category/physics.html')
 
+@app.route('/templates/index.html')
+def templates_index():
+    return render_template('index.html')
+
 if __name__ == '__main__':
     load_all_data()
     app.run(debug=True, port=8080) 

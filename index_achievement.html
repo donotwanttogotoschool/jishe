@@ -1106,7 +1106,7 @@
             <a href="Norstar/ai.html" class="nav-item">
                 <i class="fas fa-robot"></i> 灵枢AI
             </a>
-            <a href="templates/index.html" class="nav-item">
+            <a href="http://127.0.0.1:8080" class="nav-item">
                 <i class="fas fa-book"></i> 坤舆智库
             </a>
         </div>
@@ -1393,69 +1393,69 @@
 
                     // 定义各省份的经纬度边界及对应的跳转链接
                     const provinces = {
-                        '福建省': { 
+                        '福建省': {
                             bounds: { minLng: 115.85, maxLng: 120.52, minLat: 23.54, maxLat: 28.22 },
-                            url: 'shengfen/fujian.html' 
+                            url: 'shengfen/fujian.html'
                         },
-                        '广东省': { 
+                        '广东省': {
                             bounds: { minLng: 109.66, maxLng: 117.28, minLat: 20.13, maxLat: 25.31 },
-                            url: 'shengfen/guangdong.html' 
+                            url: 'shengfen/guangdong.html'
                         },
-                        '广西省': { 
+                        '广西省': {
                             bounds: { minLng: 104.26, maxLng: 112.04, minLat: 20.54, maxLat: 26.24 },
-                            url: 'shengfen/guangxi.html' 
+                            url: 'shengfen/guangxi.html'
                         },
-                        '贵州省': { 
+                        '贵州省': {
                             bounds: { minLng: 103.36, maxLng: 109.35, minLat: 24.37, maxLat: 29.13 },
-                            url: 'shengfen/guizhou.html' 
+                            url: 'shengfen/guizhou.html'
                         },
-                        '河北省': { 
+                        '河北省': {
                             bounds: { minLng: 113.46, maxLng: 119.85, minLat: 36.01, maxLat: 42.37 },
-                            url: 'shengfen/hebei.html' 
+                            url: 'shengfen/hebei.html'
                         },
-                        '河南省': { 
+                        '河南省': {
                             bounds: { minLng: 110.36, maxLng: 116.65, minLat: 31.23, maxLat: 36.22 },
-                            url: 'shengfen/henan.html' 
+                            url: 'shengfen/henan.html'
                         },
-                        '湖南省': { 
+                        '湖南省': {
                             bounds: { minLng: 108.47, maxLng: 114.15, minLat: 24.38, maxLat: 30.08 },
-                            url: 'shengfen/hunan.html' 
+                            url: 'shengfen/hunan.html'
                         },
-                        '江苏省': { 
+                        '江苏省': {
                             bounds: { minLng: 116.18, maxLng: 121.57, minLat: 30.46, maxLat: 35.20 },
-                            url: 'shengfen/jiangsu.html' 
+                            url: 'shengfen/jiangsu.html'
                         },
-                        '江西省': { 
+                        '江西省': {
                             bounds: { minLng: 113.34, maxLng: 118.29, minLat: 24.29, maxLat: 30.05 },
-                            url: 'shengfen/jiangxi.html' 
+                            url: 'shengfen/jiangxi.html'
                         },
-                        '吉林省': { 
+                        '吉林省': {
                             bounds: { minLng: 121.38, maxLng: 131.19, minLat: 40.52, maxLat: 46.18 },
-                            url: 'shengfen/jilin.html' 
+                            url: 'shengfen/jilin.html'
                         },
-                        '山东省': { 
+                        '山东省': {
                             bounds: { minLng: 114.47, maxLng: 122.43, minLat: 34.22, maxLat: 38.23 },
-                            url: 'shengfen/shandong.html' 
+                            url: 'shengfen/shandong.html'
                         },
-                        '四川省': { 
-                            bounds: { minLng: 97.34,  maxLng: 108.55, minLat: 26.03, maxLat: 34.19 },
-                            url: 'shengfen/sichuan.html' 
+                        '四川省': {
+                            bounds: { minLng: 97.34, maxLng: 108.55, minLat: 26.03, maxLat: 34.19 },
+                            url: 'shengfen/sichuan.html'
                         },
-                        '浙江省': { 
+                        '浙江省': {
                             bounds: { minLng: 118.01, maxLng: 123.10, minLat: 27.12, maxLat: 31.11 },
-                            url: 'shengfen/zhejiang.html' 
+                            url: 'shengfen/zhejiang.html'
                         },
-                        '湖北省': { 
+                        '湖北省': {
                             bounds: { minLng: 108.21, maxLng: 116.07, minLat: 29.02, maxLat: 33.20 },
-                            url: 'shengfen/hubei.html' 
+                            url: 'shengfen/hubei.html'
                         }
                     };
 
                     // 点击地图时，判断省份并跳转
-                    map.on('click', function(ev) {
+                    map.on('click', function (ev) {
                         const lng = ev.lnglat.getLng();
                         const lat = ev.lnglat.getLat();
-                        
+
                         // 遍历所有省份，检查点击位置
                         for (const [name, data] of Object.entries(provinces)) {
                             const { bounds, url } = data;
