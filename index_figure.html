@@ -30,53 +30,52 @@
         }
 
         body {
-            background-color: var(--bg-cream);
-            color: var(--text-brown);
-            font-family: 'Noto Serif SC', serif;
-            overflow: hidden;
-            /*background-image:
-                linear-gradient(rgba(245, 241, 230, 0.97), rgba(245, 241, 230, 0.97)),
-                url('path/to/chinese-pattern.png');*/
-            padding-top: 60px;
-            /* 为固定导航栏留出空间 */
-        }
+                background-color: var(--bg-cream);
+                color: var(--text-brown);
+                font-family: 'Noto Serif SC', serif;
+                padding-top: 60px;
+            }
 
-        /* 调整容器布局 */
-        .container {
-            display: grid;
-            grid-template-columns: 27% 46% 27%;
-            /* 按照 28:44:28 的比例分配 */
-            gap: 20px;
-            padding: 20px;
-            max-width: 100%;
-            margin: 0 auto;
-            height: calc(100vh - 60px);
-            /* 减去导航栏高度 */
-        }
+            /* 调整容器布局 */
+            .container {
+                display: grid;
+                grid-template-columns: 27% 46% 27%;
+                gap: 20px;
+                padding: 20px;
+                max-width: 100%;
+                margin: 0 auto;
+                min-height: calc(100vh - 60px);
+            }
 
-        /* 左侧面板 */
-        .left-panel {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
-        }
+            /* 左侧面板 */
+            .left-panel {
+                width: 100%;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 2px 10px rgba(46, 78, 126, 0.1);
+                height: auto;
+                min-height: 100%;
+            }
 
-        /* 中间面板 */
-        .center-panel {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
+            /* 中间面板 */
+            .center-panel {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                height: auto;
+                min-height: 100%;
+            }
 
-        /* 右侧面板 */
-        .right-panel {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+            /* 右侧面板 */
+            .right-panel {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                height: auto;
+                min-height: 100%;
+            }
 
         .card {
             background: rgba(255, 255, 255, 0.9);
