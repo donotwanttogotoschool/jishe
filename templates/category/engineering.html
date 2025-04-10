@@ -34,6 +34,52 @@
         .menu-open>.nav-treeview {
             display: block;
         }
+
+        .dougong-card .card-body {
+            height: 40vh;
+            overflow-y: auto;
+        }
+
+        .dougong-card .card-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .dougong-card .card-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .dougong-card .card-body::-webkit-scrollbar-thumb {
+            background: #8D6E63;
+            border-radius: 4px;
+        }
+
+        .dougong-card .card-body::-webkit-scrollbar-thumb:hover {
+            background: #6D4C41;
+        }
+
+        .bridge-card .card-body {
+            height: 45vh;
+            overflow-y: auto;
+        }
+
+        .bridge-card .card-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .bridge-card .card-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .bridge-card .card-body::-webkit-scrollbar-thumb {
+            background: #8D6E63;
+            border-radius: 4px;
+        }
+
+        .bridge-card .card-body::-webkit-scrollbar-thumb:hover {
+            background: #6D4C41;
+        }
     </style>
 </head>
 
@@ -237,34 +283,36 @@
 
                     <!-- 第二行:构件词云和结构演变 -->
                     <div class="row mt-4">
-                        <!-- 构件词云 -->
+                        <!-- 斗拱构件系统 -->
                         <div class="col-lg-4">
-                            <div class="card">
+                            <div class="card dougong-card">
                                 <div class="card-header">
                                     <h3 class="card-title">斗拱构件系统</h3>
                                 </div>
                                 <div class="card-body">
                                     <img src="{{ url_for('static', filename='images/engineers/dougong.png') }}"
-                                        class="material-image mb-3" alt="斗拱构件">
-                                    <h5>主要构件</h5>
-                                    <ul>
-                                        <li><strong>昂</strong>：斜向上翘的构件,用于承托檐角</li>
-                                        <li><strong>栌斗</strong>：承托华栱的方形构件</li>
-                                        <li><strong>华栱</strong>：横向承重构件,连接柱与梁</li>
-                                        <li><strong>令栱</strong>：最下层的横向构件</li>
-                                    </ul>
+                                        class="material-image mb-3" alt="斗拱构件" style="width: 100%; height: 50%;">
+                                    <div style="height: 50%;">
+                                        <h5>主要构件</h5>
+                                        <ul>
+                                            <li><strong>昂</strong>：斜向上翘的构件,用于承托檐角</li>
+                                            <li><strong>栌斗</strong>：承托华栱的方形构件</li>
+                                            <li><strong>华栱</strong>：横向承重构件,连接柱与梁</li>
+                                            <li><strong>令栱</strong>：最下层的横向构件</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 结构演变甘特图 -->
+                        <!-- 斗拱结构演变历程 -->
                         <div class="col-lg-8">
-                            <div class="card">
+                            <div class="card dougong-card">
                                 <div class="card-header">
                                     <h3 class="card-title">斗拱结构演变历程</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div id="structureEvolutionChart" style="height: 400px;"></div>
+                                    <div id="structureEvolutionChart" style="height: 100%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -272,29 +320,31 @@
 
                     <!-- 第三行:潮汐影响和应力分析 -->
                     <div class="row mt-4">
-                        <!-- 潮汐影响曲线 -->
+                        <!-- 洛阳桥基础沉降分析 -->
                         <div class="col-lg-6">
-                            <div class="card">
+                            <div class="card bridge-card">
                                 <div class="card-header">
                                     <h3 class="card-title">洛阳桥基础沉降分析</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div id="tidalEffectChart" style="height: 400px;"></div>
+                                    <div id="tidalEffectChart" style="height: 100%;"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 应力云图 -->
+                        <!-- 赵州桥应力分析 -->
                         <div class="col-lg-6">
-                            <div class="card">
+                            <div class="card bridge-card">
                                 <div class="card-header">
                                     <h3 class="card-title">赵州桥应力分析</h3>
-                                </div>s
+                                </div>
                                 <div class="card-body">
                                     <img src="{{ url_for('static', filename='images/engineers/zhaozhouqiao.jpg') }}"
-                                        class="material-image mb-3" alt="桥梁应力分析">
-                                    <p>赵州桥在最大荷载作用下的应力分布云图，展示了其卓越的力学性能。
-                                        最大应力集中在拱顶和拱脚处，应力分布均匀，充分体现了李春采用的"敞肩式"设计的优越性。</p>
+                                        class="material-image mb-3" alt="桥梁应力分析" style="height: 70%;">
+                                    <div style="height: 30%;">
+                                        <p>赵州桥在最大荷载作用下的应力分布云图，展示了其卓越的力学性能。
+                                            最大应力集中在拱顶和拱脚处，应力分布均匀，充分体现了李春采用的"敞肩式"设计的优越性。</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

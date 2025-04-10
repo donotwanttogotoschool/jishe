@@ -29,6 +29,29 @@
         .menu-open .nav-treeview {
             display: block;
         }
+
+        .meridian-card .card-body {
+            height: 60vh;
+            overflow-y: auto;
+        }
+
+        .meridian-card .card-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .meridian-card .card-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .meridian-card .card-body::-webkit-scrollbar-thumb {
+            background: #8D6E63;
+            border-radius: 4px;
+        }
+
+        .meridian-card .card-body::-webkit-scrollbar-thumb:hover {
+            background: #6D4C41;
+        }
     </style>
 </head>
 
@@ -200,25 +223,25 @@
                     <div class="row">
                         <!-- 十二经脉循行图 -->
                         <div class="col-lg-8">
-                            <div class="card">
+                            <div class="card meridian-card">
                                 <div class="card-header">
                                     <h5>十二经脉循行图</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div id="meridianChart" style="height: 500px;"></div>
+                                    <div id="meridianChart" style="height: 100%;"></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- 子午流注时钟 -->
                         <div class="col-lg-4">
-                            <div class="card">
+                            <div class="card meridian-card">
                                 <div class="card-header">
                                     <h5>子午流注时钟</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div id="flowingPointClock" style="height: 300px;"></div>
-                                    <div class="current-meridian-info text-center mt-3">
+                                    <div id="flowingPointClock" style="height: 70%;"></div>
+                                    <div class="current-meridian-info text-center mt-3" style="height: 30%;">
                                         <p>当前值班经络</p>
                                         <p class="text-muted">根据《灵枢》记载的气血流注规律</p>
                                         <h4 id="currentMeridian" class="text-primary"></h4>
