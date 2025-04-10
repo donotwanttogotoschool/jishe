@@ -621,6 +621,27 @@
                         radius: 20
                     }
                 }, {
+                    id: 'chemistry',
+                    name: '化学',
+                    color: '#FFB6B9',
+                    marker: {
+                        radius: 20
+                    }
+                }, {
+                    id: 'physics',
+                    name: '物理学',
+                    color: '#E8B7D4',
+                    marker: {
+                        radius: 20
+                    }
+                }, {
+                    id: 'engineering',
+                    name: '工程学',
+                    color: '#A5DEE5',
+                    marker: {
+                        radius: 20
+                    }
+                }, {
                     id: 'calendar',
                     name: '历法',
                     color: '#B6D5E1',
@@ -634,14 +655,132 @@
                     marker: {
                         radius: 15
                     }
+                }, {
+                    id: 'metallurgy',
+                    name: '冶金术',
+                    color: '#FFB6B9',
+                    marker: {
+                        radius: 15
+                    }
+                }, {
+                    id: 'mechanics',
+                    name: '机械',
+                    color: '#E8B7D4',
+                    marker: {
+                        radius: 15
+                    }
+                }, {
+                    id: 'geography',
+                    name: '地理',
+                    color: '#B6D5E1',
+                    marker: {
+                        radius: 15
+                    }
+                }, {
+                    id: 'architecture',
+                    name: '建筑',
+                    color: '#A5DEE5',
+                    marker: { radius: 15 }
+                }, {
+                    id: 'ceramics',
+                    name: '制瓷',
+                    color: '#FFB6B9',
+                    marker: { radius: 15 }
+                }, {
+                    id: 'weaponry',
+                    name: '兵器',
+                    color: '#FFB6B9',
+                    marker: { radius: 15 }
+                }, {
+                    id: 'textile',
+                    name: '纺织',
+                    color: '#FFB6B9',
+                    marker: { radius: 15 }
+                }, {
+                    id: 'hydraulic',
+                    name: '水利',
+                    color: '#A5DEE5',
+                    marker: { radius: 15 }
                 }],
                 data: [
-                    // 主要关联
+                    // 天文相关
                     ['mathematics', 'astronomy', '天文计算', 8],
                     ['astronomy', 'calendar', '历法制定', 9],
+                    ['astronomy', 'geography', '天文测绘', 7],
+                    ['astronomy', 'physics', '天体运动', 6],
+
+                    // 农业相关
                     ['calendar', 'agriculture', '农时指导', 7],
+                    ['agriculture', 'geography', '地理环境', 6],
+                    ['agriculture', 'engineering', '水利工程', 8],
+                    ['agriculture', 'chemistry', '土壤改良', 5],
+
+                    // 医药相关
                     ['medicine', 'herb', '药物研究', 8],
-                    ['herb', 'agriculture', '药材种植', 6]
+                    ['herb', 'agriculture', '药材种植', 6],
+                    ['medicine', 'chemistry', '药物炮制', 7],
+                    ['medicine', 'mathematics', '方剂比例', 5],
+
+                    // 工程相关
+                    ['engineering', 'mathematics', '工程计算', 8],
+                    ['engineering', 'physics', '力学应用', 7],
+                    ['engineering', 'mechanics', '机械设计', 9],
+                    ['engineering', 'metallurgy', '材料应用', 8],
+
+                    // 化学相关
+                    ['chemistry', 'metallurgy', '金属冶炼', 9],
+                    ['chemistry', 'physics', '物质变化', 6],
+                    ['chemistry', 'herb', '药物提取', 7],
+
+                    // 物理相关
+                    ['physics', 'mechanics', '机械原理', 8],
+                    ['physics', 'mathematics', '物理计算', 7],
+
+                    // 地理相关
+                    ['geography', 'mathematics', '测量计算', 7],
+                    ['geography', 'engineering', '地形工程', 6],
+
+                    // 补充工程建筑相关连接
+                    ['engineering', 'architecture', '建筑设计', 9],
+                    ['architecture', 'mathematics', '建筑计算', 8],
+                    ['architecture', 'physics', '力学平衡', 7],
+                    ['engineering', 'hydraulic', '水利工程', 9],
+                    ['hydraulic', 'agriculture', '灌溉系统', 8],
+                    ['architecture', 'geography', '选址规划', 7],
+
+                    // 补充化学相关连接
+                    ['chemistry', 'ceramics', '陶瓷工艺', 9],
+                    ['ceramics', 'engineering', '窑炉建造', 7],
+                    ['chemistry', 'weaponry', '火药冶炼', 8],
+                    ['weaponry', 'engineering', '兵器制造', 7],
+                    ['chemistry', 'textile', '染料制作', 7],
+                    ['textile', 'agriculture', '纤维作物', 6],
+
+                    // 补充冶金相关连接
+                    ['metallurgy', 'ceramics', '窑炉技术', 7],
+                    ['metallurgy', 'weaponry', '金属兵器', 8],
+                    ['metallurgy', 'architecture', '金属构件', 7],
+
+                    // 补充机械相关连接
+                    ['mechanics', 'weaponry', '机械原理', 8],
+                    ['mechanics', 'hydraulic', '水力机械', 8],
+                    ['mechanics', 'textile', '纺织机械', 7],
+
+                    // 补充地理相关连接
+                    ['geography', 'hydraulic', '水文地理', 7],
+                    ['geography', 'agriculture', '农业地理', 6],
+
+                    // 补充医学相关连接
+                    ['medicine', 'textile', '医用纺织', 5],
+                    ['medicine', 'ceramics', '医器制作', 6],
+
+                    // 补充历法相关连接
+                    ['calendar', 'mechanics', '天文仪器', 7],
+                    ['calendar', 'physics', '时间测量', 6],
+
+                    // 补充本草学相关连接
+                    ['herb', 'textile', '药用纤维', 5],
+                    ['herb', 'ceramics', '药物容器', 6]
                 ]
             }],
             tooltip: {
