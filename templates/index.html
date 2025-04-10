@@ -45,7 +45,7 @@
                         <a href="/index.html" class="nav-link">首页</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">关于</a>
+                        <a href="#" class="nav-link" onclick="openAboutModal(); return false;">关于</a>
                     </li>
                 </ul>
 
@@ -215,11 +215,41 @@
         </footer>
     </div>
 
+    <!-- 关于弹窗 -->
+    <div id="aboutModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+        <div
+            style="position: relative; background-color: #faf6f1; width: 80%; max-width: 500px; margin: 100px auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
+            <h3 style="color: #6b4423; margin-bottom: 15px;">关于中国古代自然科学知识库</h3>
+            <p style="color: #54433a; line-height: 1.6;">本知识库致力于展示和传承中国古代自然科学的智慧与成就，涵盖农业、化学、医学、天文、工程、数学等多个领域的历史发展与科技成果。
+            </p>
+            <button onclick="closeAboutModal()"
+                style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #8b7355; cursor: pointer; font-size: 20px;">&times;</button>
+        </div>
+    </div>
+
     <!-- 修改静态文件引用路径 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+
+    <script>
+        function openAboutModal() {
+            document.getElementById('aboutModal').style.display = 'block';
+        }
+
+        function closeAboutModal() {
+            document.getElementById('aboutModal').style.display = 'none';
+        }
+
+        // 点击弹窗外部区域关闭弹窗
+        document.getElementById('aboutModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeAboutModal();
+            }
+        });
+    </script>
 
 </body>
 

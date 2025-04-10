@@ -21,7 +21,7 @@
             padding: 0;
             position: relative;
         }
-        
+
         body::before {
             content: "";
             position: absolute;
@@ -29,16 +29,17 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(245, 245, 240, 0.7); /* 半透明覆盖层，确保文字可读性 */
+            background-color: rgba(245, 245, 240, 0.7);
+            /* 半透明覆盖层，确保文字可读性 */
             z-index: -1;
         }
-        
+
         .head {
             background-color: #8B4513;
             color: #FFEBCD;
             padding: 15px 20px;
             border-bottom: 3px solid #5D2906;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 100;
             display: flex;
@@ -46,10 +47,10 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        
+
         .head h1 {
             font-family: 'SimSun', serif;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             letter-spacing: 1px;
             margin: 0 20px;
             font-size: 24px;
@@ -57,30 +58,32 @@
             text-align: center;
             margin-left: 190px;
         }
-        
-        .home a, .menu a {
+
+        .home a,
+        .menu a {
             color: #FFEBCD;
             text-decoration: none;
             transition: all 0.3s;
         }
-        
-        .home a:hover, .menu a:hover {
+
+        .home a:hover,
+        .menu a:hover {
             color: #FFF;
-            text-shadow: 0 0 5px rgba(255,255,255,0.7);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
         }
-        
+
         .menu ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        
+
         .menu li {
             display: inline-block;
             margin: 0 10px;
             position: relative;
         }
-        
+
         /* 修改为只针对导航菜单的li */
         /*.head .menu li:after {
             content: "•";
@@ -93,36 +96,36 @@
         /*.tit:after, .boxnav li:after {
             content: none !important;
         }*/
-        
+
         .menu li:last-child:after {
             display: none;
         }
-        
+
         .time {
             font-family: 'Courier New', monospace;
             background-color: rgba(139, 69, 19, 0.7);
             padding: 5px 10px;
             border-radius: 3px;
             border: 1px solid #5D2906;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
             margin-left: 45px;
         }
-        
+
         .mainbox {
             padding: 20px;
             max-width: 1400px;
             margin: 0 auto;
         }
-        
+
         .box {
             background-color: #FFF8E7;
             border: 1px solid #D2B48C;
             margin-bottom: 20px;
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
         }
-        
+
         .box:before {
             content: "";
             position: absolute;
@@ -130,10 +133,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(210,180,140,0.1) 0%, rgba(255,255,255,0) 50%, rgba(210,180,140,0.1) 100%);
+            background: linear-gradient(135deg, rgba(210, 180, 140, 0.1) 0%, rgba(255, 255, 255, 0) 50%, rgba(210, 180, 140, 0.1) 100%);
             pointer-events: none;
         }
-        
+
         .tit {
             background-color: #8B4513;
             color: #FFEBCD;
@@ -143,58 +146,59 @@
             font-weight: bold;
             letter-spacing: 1px;
         }
-        
+
         .boxnav {
             padding: 15px;
             background-color: #FFF8E7;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
         }
-        
-        th, td {
+
+        th,
+        td {
             border: 1px solid #D2B48C;
             padding: 8px;
             text-align: left;
         }
-        
+
         th {
             background-color: #8B4513;
             color: #FFEBCD;
             font-weight: normal;
         }
-        
+
         tr:nth-child(even) {
             background-color: rgba(210, 180, 140, 0.1);
         }
-        
+
         tr:hover {
             background-color: rgba(210, 180, 140, 0.3);
         }
-        
+
         .mapc {
             position: relative;
             border: 8px solid #8B4513;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
             background-color: #FFF8E7;
         }
-        
+
         .mapnav {
             position: absolute;
             top: 20px;
             left: 120px;
             z-index: 10;
         }
-        
+
         .mapnav ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        
+
         .mapnav li {
             margin-bottom: 10px;
             background-color: rgba(139, 69, 19, 0.8);
@@ -202,26 +206,26 @@
             padding: 8px 12px;
             border-radius: 3px;
             border: 1px solid #5D2906;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             font-size: 14px;
         }
-        
+
         .mapnav li div span {
             display: block;
             font-size: 12px;
         }
-        
+
         .mapnav li div p {
             margin: 5px 0 0;
             font-size: 18px;
             font-weight: bold;
         }
-        
+
         #map {
             width: 100%;
             height: 100%;
         }
-        
+
         .leidanav ul {
             list-style: none;
             padding: 0;
@@ -229,7 +233,7 @@
             display: flex;
             justify-content: space-between;
         }
-        
+
         .leidanav li {
             text-align: center;
             background-color: rgba(139, 69, 19, 0.1);
@@ -239,20 +243,20 @@
             flex: 1;
             margin: 0 5px;
         }
-        
+
         .leidanav li span {
             display: block;
             font-size: 12px;
             color: #5D2906;
         }
-        
+
         .leidanav li p {
             margin: 5px 0 0;
             font-size: 16px;
             font-weight: bold;
             color: #8B4513;
         }
-        
+
         .tit01 {
             background-color: #8B4513;
             color: #FFEBCD;
@@ -265,50 +269,53 @@
         }
 
         /* 移除所有标题左侧的黑点 */
-        .tit::before, .tit01::before {
+        .tit::before,
+        .tit01::before {
             content: none !important;
         }
 
         /* 确保列表项不显示默认的项目符号 */
-        .nav1 li, .nav2 li {
+        .nav1 li,
+        .nav2 li {
             list-style-type: none;
         }
 
         /* 为确保完全覆盖所有可能的情况 */
-        .tit, .tit01 {
+        .tit,
+        .tit01 {
             list-style-type: none;
             display: block;
         }
-        
+
         .ftechart {
             height: 200px;
             background-color: #FFF8E7;
             border: 1px solid #D2B48C;
             padding: 10px;
         }
-        
+
         .clearfix:after {
             content: "";
             display: table;
             clear: both;
         }
-        
+
         .pulll_left {
             margin: 0 5px;
         }
-        
+
         .nav1 li {
             float: left;
             padding: 0 10px;
             box-sizing: border-box;
         }
-        
+
         .nav2 li {
             float: left;
             padding: 0 10px;
             box-sizing: border-box;
         }
-        
+
         .ybp li {
             float: left;
             width: 50%;
@@ -316,26 +323,26 @@
             box-sizing: border-box;
             padding: 5px;
         }
-        
+
         /* Vintage scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 10px;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: #8B4513;
             border-radius: 10px;
         }
-        
+
         ::-webkit-scrollbar-thumb:hover {
             background: #5D2906;
         }
-        
+
         /* 只移动"灵枢AI" */
         .menu.menu1 ul li:first-child {
             position: relative;
@@ -364,28 +371,36 @@
             display: inline-flex;
             align-items: center;
         }
+
         .home i {
             position: relative;
             top: 0px;
-            margin-left: 4px; /* 可选：增加文字和图标的间距 */
-            font-style: normal; /* 移除斜体效果 */
-            font-family: 'SimSun', serif; /* 添加与导航菜单相同的字体 */
+            margin-left: 4px;
+            /* 可选：增加文字和图标的间距 */
+            font-style: normal;
+            /* 移除斜体效果 */
+            font-family: 'SimSun', serif;
+            /* 添加与导航菜单相同的字体 */
         }
 
         /* 将包含"中国古代自然科学名著"和"著作统计"的盒子往左移动 */
         .nav1 li:first-child {
-            margin-left: -25px; /* 可以根据需要调整这个负值大小 */
+            margin-left: -25px;
+            /* 可以根据需要调整这个负值大小 */
         }
 
         /* 为表格容器添加滚动功能 */
         .box .boxnav {
-            overflow-y: auto; /* 启用垂直滚动 */
+            overflow-y: auto;
+            /* 启用垂直滚动 */
         }
 
         /* 特别为表格容器设置样式 */
         .box .boxnav:has(table.table1) {
-            overflow-y: auto; /* 启用垂直滚动 */
-            max-height: 200px; /* 保持原高度限制 */
+            overflow-y: auto;
+            /* 启用垂直滚动 */
+            max-height: 200px;
+            /* 保持原高度限制 */
         }
 
         /* 美化滚动条样式，保持复古风格 */
@@ -410,32 +425,47 @@
 
         /* 控制表格中的文本换行和高度 */
         .table1 td {
-            max-height: 40px;       /* 控制单元格最大高度 */
-            line-height: 1.2;       /* 控制行间距 */
-            white-space: normal;    /* 允许文本换行 */
-            overflow: hidden;       /* 隐藏溢出内容 */
-            text-overflow: ellipsis; /* 显示省略号 */
-            max-width: 0;           /* 强制文本截断 */
+            max-height: 40px;
+            /* 控制单元格最大高度 */
+            line-height: 1.2;
+            /* 控制行间距 */
+            white-space: normal;
+            /* 允许文本换行 */
+            overflow: hidden;
+            /* 隐藏溢出内容 */
+            text-overflow: ellipsis;
+            /* 显示省略号 */
+            max-width: 0;
+            /* 强制文本截断 */
         }
 
         /* 让表格标题居中显示 */
-        .table1 th, .table1 td {
-            text-align: center;     /* 水平居中 */
-            vertical-align: middle; /* 垂直居中 */
+        .table1 th,
+        .table1 td {
+            text-align: center;
+            /* 水平居中 */
+            vertical-align: middle;
+            /* 垂直居中 */
         }
 
         .leidanav ul.clearfix {
-            padding-left: 25px; /* 将整个列表向右移动 */
+            padding-left: 25px;
+            /* 将整个列表向右移动 */
             display: flex;
-            justify-content: space-around; /* 更均匀地分布这些元素 */
+            justify-content: space-around;
+            /* 更均匀地分布这些元素 */
         }
 
         /* 设置著作统计图表中的文字颜色为棕色 */
         .ybp li text,
         .ybp canvas text,
         .ybp .echart-text,
-        #echart5 text, #echart6 text, #echart7 text, #echart8 text {
-            fill: #8B4513 !important;  /* 使用棕色 */
+        #echart5 text,
+        #echart6 text,
+        #echart7 text,
+        #echart8 text {
+            fill: #8B4513 !important;
+            /* 使用棕色 */
             color: #8B4513 !important;
         }
 
@@ -447,9 +477,9 @@
         }
 
         .nav2 {
-            margin-left: -40px; /* 添加负左边距将四个盒子整体向左移动 */
+            margin-left: -40px;
+            /* 添加负左边距将四个盒子整体向左移动 */
         }
-
     </style>
 </head>
 
@@ -492,11 +522,12 @@
     <div class="mainbox">
 
         <ul class="clearfix nav1">
-            <li style="width: 28%">  <!-- 从22%增加到28% -->
+            <li style="width: 28%"> <!-- 从22%增加到28% -->
                 <div class="box">
                     <div class="tit">中国古代自然科学名著</div>
                     <div class="boxnav" style="height: 200px; overflow-y: auto;">
-                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; word-break: break-word;">
+                        <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0"
+                            style="table-layout: fixed; word-break: break-word;">
                             <tbody>
                                 <tr>
                                     <th>著作<br>名称</th>
@@ -591,9 +622,10 @@
 
                         <!-- 替换为新的地图容器 -->
                         <div id="map-container" style="width: 100%; height: 100%;"></div>
-                        
+
                         <!-- 添加高德地图相关脚本 -->
-                        <script src="https://webapi.amap.com/maps?v=1.4.15&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
+                        <script
+                            src="https://webapi.amap.com/maps?v=1.4.15&key=a8dad1da6df32d5e626e8ddcc8a1a7de"></script>
                         <script>
                             // 初始化地图
                             var map = new AMap.Map('map-container', {
@@ -604,14 +636,14 @@
                                 showBuildingBlock: false,
                                 showIndoorMap: false
                             });
-                            
+
                             // 添加这一行以确保显示审图号
-                            map.on('complete', function() {
+                            map.on('complete', function () {
                                 // 确保审图号显示
                                 document.getElementsByClassName('amap-logo')[0].style.display = 'block';
                                 document.getElementsByClassName('amap-copyright')[0].style.display = 'block';
                             });
-                            
+
                             // 设置自定义地图样式，包括海洋颜色
                             map.setMapStyle({
                                 styleJson: [
@@ -624,7 +656,7 @@
                                     }
                                 ]
                             });
-                            
+
                             // 定义所有省份的范围
                             var provinces = {
                                 // 湖北省
@@ -810,12 +842,12 @@
                                     }
                                 }
                             };
-                            
+
                             // 监听地图点击事件
-                            map.on('click', function(e) {
+                            map.on('click', function (e) {
                                 var lng = e.lnglat.getLng();
                                 var lat = e.lnglat.getLat();
-                                
+
                                 // 检查点击位置是否在任何省份的核心区域内
                                 for (var key in provinces) {
                                     var province = provinces[key];
@@ -825,7 +857,7 @@
                                         return;
                                     }
                                 }
-                                
+
                                 // 如果不在核心区域，检查是否在大致范围内
                                 var possibleProvinces = [];
                                 for (var key in provinces) {
@@ -834,18 +866,18 @@
                                         possibleProvinces.push(province);
                                     }
                                 }
-                                
+
                                 // 如果只有一个可能的省份，直接跳转
                                 if (possibleProvinces.length === 1) {
                                     window.location.href = possibleProvinces[0].url;
                                     return;
                                 }
-                                
+
                                 // 如果有多个可能的省份，使用逆地理编码确认
                                 if (possibleProvinces.length > 0) {
-                                    AMap.plugin('AMap.Geocoder', function() {
+                                    AMap.plugin('AMap.Geocoder', function () {
                                         var geocoder = new AMap.Geocoder();
-                                        geocoder.getAddress(e.lnglat, function(status, result) {
+                                        geocoder.getAddress(e.lnglat, function (status, result) {
                                             if (status === 'complete' && result.regeocode) {
                                                 var address = result.regeocode.addressComponent;
                                                 if (address.province) {
@@ -863,11 +895,11 @@
                                     });
                                 }
                             });
-                            
+
                             // 辅助函数：判断点是否在范围内
                             function isInRange(lng, lat, range) {
-                                return lng >= range.minLng && lng <= range.maxLng && 
-                                       lat >= range.minLat && lat <= range.maxLat;
+                                return lng >= range.minLng && lng <= range.maxLng &&
+                                    lat >= range.minLat && lat <= range.maxLat;
                             }
                         </script>
                     </div>
