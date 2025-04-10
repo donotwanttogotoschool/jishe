@@ -511,6 +511,15 @@
                     $('#fieldCards').prepend(reopenBtn);
                 });
             });
+
+            // 添加侧边栏菜单初始化代码
+            $(document).ready(function () {
+                // 为所有有子菜单的项添加点击事件
+                $('.nav-item.has-treeview > a').on('click', function (e) {
+                    e.preventDefault();
+                    $(this).parent().toggleClass('menu-open');
+                });
+            });
         });
     </script>
 </body>
