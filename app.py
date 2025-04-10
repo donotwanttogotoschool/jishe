@@ -109,7 +109,7 @@ def index():
 @app.route('/home')
 def home():
     # 可以添加一个别名路由，也指向首页
-    return render_template('index.html')
+    return render_template('index_achievement.html')
 
 @app.route('/overview')
 def overview():
@@ -132,9 +132,9 @@ def timeline():
     return render_template('timeline.html')
 
 # 添加静态首页路由
-@app.route('/index.html')
+@app.route('/index_achievement.html')
 def static_index():
-    return send_from_directory(os.path.dirname(app.root_path), 'index.html')
+    return send_from_directory(os.path.dirname(app.root_path), 'index_achievement.html')
 
 # API路由
 @app.route('/api/search')
@@ -233,7 +233,7 @@ def physics():
 
 @app.route('/templates/index.html')
 def templates_index():
-    return render_template('index.html')
+    return render_template('index_achievement.html')
 
 if __name__ == '__main__':
     load_all_data()
