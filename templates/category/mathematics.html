@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
     <!-- Highcharts -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script> <!-- 新增：treemap 依赖 -->
     <script src="https://code.highcharts.com/modules/treemap.js"></script>
     <script src="https://code.highcharts.com/modules/sankey.js"></script>
     <script src="https://code.highcharts.com/modules/timeline.js"></script>
@@ -43,9 +45,6 @@
                         <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                             <i class="fas fa-bars"></i>
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/" class="nav-link">首页</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">关于</a>
@@ -204,7 +203,7 @@
                                     <h3 class="card-title">九章算术内容结构</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div id="jiuzhangChart" style="height: 500px;"></div>
+                                    <div id="jiuzhangChart" style="min-height: 500px; width: 100%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +215,7 @@
                                     <h3 class="card-title">古代计量单位换算关系</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div id="measurementChart" style="height: 400px;"></div>
+                                    <div id="measurementChart" style="min-height: 400px; width: 100%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -228,7 +227,7 @@
                                     <h3 class="card-title">重要数学成就时间线</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div id="timelineChart" style="height: 400px;"></div>
+                                    <div id="timelineChart" style="min-height: 400px; width: 100%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -239,7 +238,7 @@
 
         <!-- Footer -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2024</strong> All rights reserved.
+            <strong>千载格物</strong> 2025
         </footer>
     </div>
 
@@ -251,106 +250,108 @@
 
     <!-- 原有的 Highcharts 初始化脚本保持不变 -->
     <script>
-        // 九章算术内容结构树图
-        Highcharts.chart('jiuzhangChart', {
-            series: [{
-                type: 'treemap',
-                layoutAlgorithm: 'squarified',
-                data: [{
-                    name: '方田',
-                    value: 38,
-                    colorValue: 1
-                }, {
-                    name: '粟米',
-                    value: 46,
-                    colorValue: 2
-                }, {
-                    name: '衰分',
-                    value: 20,
-                    colorValue: 3
-                }, {
-                    name: '少广',
-                    value: 24,
-                    colorValue: 4
-                }, {
-                    name: '商功',
-                    value: 28,
-                    colorValue: 5
-                }, {
-                    name: '均输',
-                    value: 28,
-                    colorValue: 6
-                }, {
-                    name: '盈不足',
-                    value: 20,
-                    colorValue: 7
-                }, {
-                    name: '方程',
-                    value: 18,
-                    colorValue: 8
-                }, {
-                    name: '勾股',
-                    value: 24,
-                    colorValue: 9
-                }]
-            }],
-            title: {
-                text: '九章算术各章节内容比重'
-            }
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // 九章算术内容结构树图
+            Highcharts.chart('jiuzhangChart', {
+                series: [{
+                    type: 'treemap',
+                    layoutAlgorithm: 'squarified',
+                    data: [{
+                        name: '方田',
+                        value: 38,
+                        colorValue: 1
+                    }, {
+                        name: '粟米',
+                        value: 46,
+                        colorValue: 2
+                    }, {
+                        name: '衰分',
+                        value: 20,
+                        colorValue: 3
+                    }, {
+                        name: '少广',
+                        value: 24,
+                        colorValue: 4
+                    }, {
+                        name: '商功',
+                        value: 28,
+                        colorValue: 5
+                    }, {
+                        name: '均输',
+                        value: 28,
+                        colorValue: 6
+                    }, {
+                        name: '盈不足',
+                        value: 20,
+                        colorValue: 7
+                    }, {
+                        name: '方程',
+                        value: 18,
+                        colorValue: 8
+                    }, {
+                        name: '勾股',
+                        value: 24,
+                        colorValue: 9
+                    }]
+                }],
+                title: {
+                    text: '九章算术各章节内容比重'
+                }
+            });
 
-        // 古代计量单位换算关系
-        Highcharts.chart('measurementChart', {
-            chart: {
-                type: 'sankey'
-            },
-            title: {
-                text: '古代长度单位换算关系'
-            },
-            series: [{
-                data: [
-                    ['分', '寸', 10],
-                    ['寸', '尺', 10],
-                    ['尺', '丈', 10],
-                    ['丈', '引', 10],
-                    ['引', '里', 30]
-                ]
-            }]
-        });
-
-        // 数学成就时间线
-        Highcharts.chart('timelineChart', {
-            chart: {
-                type: 'timeline'
-            },
-            title: {
-                text: '中国古代重要数学成就'
-            },
-            xAxis: {
-                visible: false
-            },
-            yAxis: {
-                visible: false
-            },
-            series: [{
-                data: [{
-                    x: Date.UTC(-500, 0, 1),
-                    name: '周髀算经',
-                    description: '最早的数学著作之一'
-                }, {
-                    x: Date.UTC(100, 0, 1),
-                    name: '九章算术',
-                    description: '系统性数学著作'
-                }, {
-                    x: Date.UTC(263, 0, 1),
-                    name: '刘徽注九章算术',
-                    description: '引入割圆术'
-                }, {
-                    x: Date.UTC(1247, 0, 1),
-                    name: '秦九韶数学',
-                    description: '高次方程求解'
+            // 古代计量单位换算关系
+            Highcharts.chart('measurementChart', {
+                chart: {
+                    type: 'sankey'
+                },
+                title: {
+                    text: '古代长度单位换算关系'
+                },
+                series: [{
+                    data: [
+                        ['分', '寸', 10],
+                        ['寸', '尺', 10],
+                        ['尺', '丈', 10],
+                        ['丈', '引', 10],
+                        ['引', '里', 30]
+                    ]
                 }]
-            }]
+            });
+
+            // 数学成就时间线
+            Highcharts.chart('timelineChart', {
+                chart: {
+                    type: 'timeline'
+                },
+                title: {
+                    text: '中国古代重要数学成就'
+                },
+                xAxis: {
+                    visible: false
+                },
+                yAxis: {
+                    visible: false
+                },
+                series: [{
+                    data: [{
+                        x: Date.UTC(-500, 0, 1),
+                        name: '周髀算经',
+                        description: '最早的数学著作之一'
+                    }, {
+                        x: Date.UTC(100, 0, 1),
+                        name: '九章算术',
+                        description: '系统性数学著作'
+                    }, {
+                        x: Date.UTC(263, 0, 1),
+                        name: '刘徽注九章算术',
+                        description: '引入割圆术'
+                    }, {
+                        x: Date.UTC(1247, 0, 1),
+                        name: '秦九韶数学',
+                        description: '高次方程求解'
+                    }]
+                }]
+            });
         });
     </script>
 </body>
