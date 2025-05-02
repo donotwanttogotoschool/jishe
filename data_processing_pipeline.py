@@ -3,8 +3,6 @@
 """
 《千载格物》项目数据处理流水线
 Data Processing Pipeline for Ancient Chinese Science Project
-
-作者: AI Assistant
 日期: 2025
 描述: 完整的ETL流程，从原始数据到结构化数据库
 """
