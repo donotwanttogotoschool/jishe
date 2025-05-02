@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高德地图示例</title>
+    <!-- 引入高德地图API -->
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=您的高德地图Key"></script>
+    <script src="https://webapi.amap.com/ui/1.1/main.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 20px;
+            background-color: #2E4E7E;
+            color: white;
+            text-align: center;
+        }
+
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-copyright {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2px 5px;
+            border-radius: 2px;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>中国古代科技地图</h1>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+            <!-- 审图号 -->
+
+        </div>
+    </div>
+
+    <script>
+        // 确保在DOM加载完成后执行
+        document.addEventListener('DOMContentLoaded', initMap);
+
+        function initMap() {
+            try {
+                // 创建地图实例
+                const map = new AMap.Map('map', {
+                    zoom: 5,                    // 初始缩放级别
+                    center: [112.29, 31.20],    // 初始地图中心点（中国中部）
+                    viewMode: '2D',             // 地图视图模式
+                    mapStyle: 'amap://styles/normal'  // 使用标准地图样式
+                });
+
+                // 添加控件
+                map.plugin([
+                    'AMap.ToolBar',
+                    'AMap.Scale',
+                    'AMap.OverView',
+                ], function () {
+                    // 添加工具条
+                    map.addControl(new AMap.ToolBar({
+                        position: 'RT'
+                    }));
+
+                    // 添加比例尺
+                    map.addControl(new AMap.Scale());
+
+                    // 添加鹰眼
+                    map.addControl(new AMap.OverView({
+                        isOpen: true
+                    }));
+                });
+
+                // 定义要展示的主要城市
+                const majorCities = [
+                    { name: '长安/西安', location: [108.93, 34.27], importance: 10 },
+                    { name: '洛阳', location: [112.45, 34.62], importance: 9 },
+                    { name: '开封', location: [114.35, 34.79], importance: 8 },
+                    { name: '杭州', location: [120.21, 30.25], importance: 7 },
+                    { name: '南京', location: [118.78, 32.07], importance: 7 },
+                    { name: '苏州', location: [120.59, 31.30], importance: 6 },
+                    { name: '北京', location: [116.41, 39.90], importance: 8 }
+                ];
+
+                // 为每个城市添加标记
+                majorCities.forEach(city => {
+                    // 创建标记
+                    const marker = new AMap.Marker({
+                        position: city.location,
+                        title: city.name,
+                        // 标记大小根据重要性缩放
+                        icon: new AMap.Icon({
+                            size: new AMap.Size(6 + city.importance * 2, 6 + city.importance * 2),
+                            image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
+                            imageSize: new AMap.Size(6 + city.importance * 2, 6 + city.importance * 2),
+                        }),
+                        offset: new AMap.Pixel(-13, -30)
+                    });
+
+                    // 将标记添加到地图
+                    marker.setMap(map);
+
+                    // 创建信息窗口
+                    const infoWindow = new AMap.InfoWindow({
+                        content: `<div style="padding:10px;">
+                                    <h3>${city.name}</h3>
+                                    <p>中国古代重要科技中心</p>
+                                  </div>`,
+                        offset: new AMap.Pixel(0, -30)
+                    });
+
+                    // 绑定点击事件
+                    marker.on('click', () => {
+                        infoWindow.open(map, marker.getPosition());
+                    });
+                });
+
+            } catch (e) {
+                console.error('地图初始化错误:', e);
+                document.getElementById('map').innerHTML =
+                    '<div style="text-align:center;padding:20px;">地图加载失败</div>';
+            }
+        }
+    </script>
+</body>
+
+</html>

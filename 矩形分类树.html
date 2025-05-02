@@ -1,0 +1,29 @@
+// 初始化分类树图表（增大字体尺寸）
+const chart = Highcharts.chart('subjectTreeChart', {
+chart: {
+backgroundColor: '#faf6f1',
+style: {
+fontFamily: 'KaiTi, 楷体, SimSun, serif',
+fontWeight: 'bold' // 图表全局字体加粗
+},
+events: {
+mousemove: function (e) {
+const chartPosition = this.container.getBoundingClientRect();
+tooltip.style.left = (e.clientX - chartPosition.left + 10) + 'px';
+tooltip.style.top = (e.clientY - chartPosition.top + 10) + 'px';
+}
+}
+},
+credits: {
+enabled: false // 隐藏Highcharts水印
+},
+title: {
+text: '中国古代自然科学分类体系',
+style: {
+color: '#6b4423',
+fontSize: '24px', // 增大图表标题字体
+fontFamily: 'KaiTi, 楷体, SimSun, serif',
+fontWeight: 'bold'
+}
+},
+});
